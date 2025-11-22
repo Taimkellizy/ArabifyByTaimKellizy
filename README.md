@@ -6,7 +6,7 @@
 Upload your HTML/CSS → click **Scan** → get a score + issues → preview auto-fixes → download fixed version.
 
 ## 🛠️ Tech stack
-- Frontend: plain React with components from [**React Bits**](www.reactbits.dev), [**GSAP**](www.gsap.com), and icons from [**FontAwesome**](fontawesome.com).  
+- Frontend: plain React with components from [**React Bits**](https://reactbits.dev), [**GSAP**](https://gsap.com), and icons from [**FontAwesome**](https://fontawesome.com/).  
 - Client parsing: `DOMParser` + sandboxed `iframe` preview.  
 - No server required (MVP).  
 - License: MIT
