@@ -1,9 +1,3 @@
-
-# Project Title
-
-A brief description of what this project does and who it's for
-
-
 # 🌐 Arabify (عَرِّب)
 
 **Arabify** scans HTML & CSS files and scores how well a page is “Arabified”. It checks AR-SEO signals, RTL layout, Arabic-friendly fonts & typography, accessibility (alt, labels, ARIA), and basic performance heuristics — then returns a 0–100 score, a categorized breakdown, copyable fixes, and a patched preview. All processing runs client-side (no server, free, hackathon-ready).
