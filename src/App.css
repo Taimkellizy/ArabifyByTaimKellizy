@@ -1,0 +1,341 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&family=Righteous&family=Stack+Sans+Text:wght@200..700&display=swap');
+
+:root {
+  --bright: #f1e9db;
+  --dark: #07020d;
+  --accent-color: hsl(2, 67%, 57%);
+  --border-color: hsl(7.12,25.11%,53.92%);
+  --accent-shade: hsl(1.28,58.02%,52.35%);
+  --border-width: 1px;
+  --font-en: "Righteous", sans-serif;
+  --font-ar: "IBM Plex Sans Arabic", sans-serif;
+  --main-font: var(--font-en)
+  --btn-font: "Stack Sans Text", sans-serif;
+}
+
+:root:lang(ar) {
+  --main-font: var(--font-ar);
+}
+
+* {
+  font-family: var(--main-font);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  word-break: keep-all;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+header, section, footer {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--dark);
+}
+
+.App {
+  width: 100%;
+  max-width: 1400px; 
+  margin: 0 auto;    
+  padding: 0 5%;
+  min-height: 100vh;
+  position: relative;     
+}
+
+.boarders {
+  border-left: var(--border-width) solid var(--border-color);
+  border-right: var(--border-width) solid var(--border-color);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(7, 2, 13, 0.3);
+  backdrop-filter: blur(10px);
+  padding-block: 1rem;
+  padding-inline: 10%;
+  transition: padding 0.3s ease;
+}
+
+nav {
+  font-weight: normal;
+  color: var(--bright);
+  font-size: 1rem; 
+}
+
+nav ul {
+  width: 100%;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; 
+  gap: 5vw; 
+  flex-wrap: wrap;
+}
+
+nav .logo-item {
+  margin-inline-end: auto; 
+}
+
+nav li {
+  display: flex;
+  align-items: center;
+}
+
+nav a {
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+  transition: background-color 0.2s ease-in-out, color 0.2s;
+  color: var(--bright);
+  white-space: nowrap;
+}
+
+nav a:hover {
+  background-color: var(--accent-color)
+}
+
+nav .logo {
+  padding: 0;
+  background-color: transparent !important;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.icons-start {
+  padding-inline-start: 10px;
+}
+
+.icons-end {
+  padding-inline-end: 10px;
+}
+
+.low_opacity_bg {
+  background-color: var(--accent-shade);
+}
+
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--bright);
+  color: var(--bright);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-family: "Stack Sans Text", sans-serif;
+}
+
+.lang-btn:hover {
+  background-color: var(--bright);
+  color: var(--dark);
+}
+
+.lang-btn .icons-end {
+  padding-inline-end: 8px; /* RTL safe padding */
+}
+
+.hero-section {
+  min-height: calc(100vh - 150px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* For 3D rotation visibility */
+  perspective: 1000px;
+  position: relative;
+}
+
+.hero-title {
+  font-family: "Stack Sans Text", sans-serif;
+  font-size: clamp(1.8rem, 10vw, 3.5rem);
+  font-weight: bold;
+  color: var(--bright);
+  text-align: center;
+  white-space: normal;   
+  word-wrap: break-word;
+  margin-bottom: 2rem;
+  padding-inline: 10px;
+  width: 100%;
+}
+
+@keyframes fadeInParagraph {
+    from { opacity: 0; }  /* Starting state */
+    to { opacity: 0.8; }    /* Ending state */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }  
+}
+
+.hero-desc {
+  color: var(--bright);
+  text-align: center;
+  max-width: 800px;
+  animation: fadeInParagraph 6s ease forwards;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+section {
+  min-height: 500px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  scroll-margin-top: 100px;
+}
+
+.split-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+p{
+  color: var(--bright);
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  text-align: center;
+  max-width: 800px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--bright);
+  color: var(--bright);
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  font-family: var(--btn-font);
+  display: inline-flex;
+  width: fit-content;
+  justify-content: center;
+  margin: 0 10px;
+  animation: fadeIn 4s ease forwards;
+}
+
+.btn:hover {
+  background-color: var(--accent-shade);
+  border-color: var(--dark);
+}
+
+.btn .icons-end {
+  padding-inline-end: 8px; /* RTL safe padding */
+}
+
+footer {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  width: 100%;
+  padding-top: 2rem;       
+  padding-bottom: 0.5rem;
+  font-family: var(--font-en);
+}
+
+footer p {
+  color: var(--bright);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 0; /* Use full width on mobile */
+  }
+
+  .boarders {
+    border: none; /* Remove side borders on mobile for more space */
+  }
+
+  nav ul {
+    justify-content: center; /* Center everything on mobile */
+    gap: 10px;
+  }
+
+  nav .logo-item {
+    margin-right: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  
+  nav a {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .lang-btn {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .lang-btn .icons-end {
+    padding-inline-end: 2px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    margin: 0 10px;
+  }
+
+  .icons-end {
+    padding-inline-end: 3px;
+  }
+}
