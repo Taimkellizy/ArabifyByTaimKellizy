@@ -29,11 +29,15 @@
 html {
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
 }
 
-header, section, footer {
+section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  scroll-margin-top: 100px;
 }
 
 body {
@@ -267,11 +271,13 @@ p{
 footer {
   display: flex;
   justify-content: center; 
-  align-items: center;     
+  align-items: center;   
   width: 100%;
   padding-top: 2rem;       
   padding-bottom: 0.5rem;
   font-family: var(--font-en);
+  scroll-snap-align: end; 
+  padding-bottom: 1rem;
 }
 
 footer p {

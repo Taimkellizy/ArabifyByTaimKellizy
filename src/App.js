@@ -98,8 +98,19 @@ function App() {
           </div>
         </div>
       </section>
-      <section className="code-section boarders" id="tool">
-        
+      
+      <section className="code-section boarders">
+        {/* THE CODE SECTION - Only shows if uploadedCode is not null */}
+        {uploadedCode && (
+          <div className="container">
+            {/* We force the filename here to ensure it passes down */}
+            <CodeWindow 
+              code={uploadedCode} 
+              fileName={fileName} 
+              language="javascript" 
+            />
+          </div>
+        )}
         {/* THE UPLOAD BUTTON */}
         <div>
           <input 
@@ -109,29 +120,16 @@ function App() {
             style={{ display: 'none' }} 
           />
           <label htmlFor="file-upload" className="btn">
-             {/* LOGIC: Change Text/Icon based on state */}
-             <FontAwesomeIcon 
-                icon={uploadedCode ? faCheck : faUpload} 
-                className="icons-end" 
-             />
-             {uploadedCode ? text.fileUped : text.upFile}
+            {/* LOGIC: Change Text/Icon based on state */}
+            <FontAwesomeIcon 
+              icon={uploadedCode ? faCheck : faUpload} 
+              className="icons-end" 
+            />
+            {uploadedCode ? text.fileUped : text.upFile}
           </label>
         </div>
       </section>
-
-      {/* THE CODE SECTION - Only shows if uploadedCode is not null */}
-      {uploadedCode && (
-        <section className="code-section boarders">
-          <div className="container">
-             {/* We force the filename here to ensure it passes down */}
-             <CodeWindow 
-               code={uploadedCode} 
-               fileName={fileName} 
-               language="javascript" 
-             />
-          </div>
-        </section>
-      )}
+      
       <footer className="boarders">
         <p>{text.copyrights}</p>
       </footer>
