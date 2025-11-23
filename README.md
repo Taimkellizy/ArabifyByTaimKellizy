@@ -6,8 +6,7 @@
 Upload your HTML/CSS → click **Scan** → get a score + issues → preview auto-fixes → download fixed version.
 
 ## 🛠️ Tech stack
-- Frontend: plain React with components from [**React Bits**](https://reactbits.dev), [**GSAP**](https://gsap.com), and icons from [**FontAwesome**](https://fontawesome.com/).  
-- Client parsing: `DOMParser` + sandboxed `iframe` preview.  
+- Frontend: plain React with components from [**React Bits**](https://reactbits.dev), [**GSAP**](https://gsap.com), and icons from [**FontAwesome**](https://fontawesome.com/).
 - No server required (MVP).  
 - License: MIT
 
@@ -69,7 +68,8 @@ The app will automatically open in your browser at `http://localhost:3000`.
 src/
 ├── App.js          # Main application logic & Language state
 ├── App.css         # Global styles & Responsive rules
+├── CodeWindow.css  # Styles for CodeWindow.js
+├── CodeWindow.js   # Custom component for code preview
 ├── content.js      # Dictionary for English/Arabic text
 ├── split_text.js   # Custom GSAP animation component
 └── index.js        # Entry point
-
