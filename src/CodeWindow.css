@@ -9,6 +9,7 @@
   border: 1px solid #333;
   direction: ltr; 
   text-align: left;
+  font-family: monospace !important;
 }
 
 .window-header {
@@ -21,7 +22,7 @@
 }
 
 .filename {
-  color: #ffffff !important;
+  color: #cccccc !important;
   font-family: 'Segoe UI', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
@@ -41,4 +42,41 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.code-fade-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* How tall the fade is */
+  background: linear-gradient(to bottom, rgba(30, 30, 30, 0), #1e1e1e);
+  pointer-events: none; /* Lets clicks pass through if needed */
+  z-index: 5;
+}
+
+.code-footer-btn {
+  width: 100%;
+  background-color: #007acc; /* VS Code Blue */
+  color: white;
+  border: none;
+  padding: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.code-footer-btn:hover {
+  background-color: #0063a5; /* Darker blue on hover */
+}
+
+.code-window code,
+.code-window pre,
+.code-window span {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
 }

@@ -9,7 +9,7 @@
   --border-width: 1px;
   --font-en: "Righteous", sans-serif;
   --font-ar: "IBM Plex Sans Arabic", sans-serif;
-  --main-font: var(--font-en)
+  --main-font: var(--font-en);
   --btn-font: "Stack Sans Text", sans-serif;
 }
 
@@ -299,8 +299,13 @@ footer a:hover {
 
 .results-section{
   color: var(--accent-shade);
-  padding-top: 1rem;
+  padding-top: 2rem;
   padding-inline: 3rem;
+}
+
+.results-section li {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+  padding-top: 0.6rem;
 }
 
 @media (max-width: 768px) {

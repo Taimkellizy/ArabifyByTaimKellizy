@@ -59,7 +59,7 @@ const analyzeHTML = (htmlString, text) => {
   // This checks the <html lang="..."> attribute specifically
   const htmlTag = doc.documentElement; // This gets the <html> tag
   if (!htmlTag.hasAttribute("lang")) {
-    score -= 10;
+    score -= 5;
     warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingLangAttribute });
   }
 

@@ -187,13 +187,13 @@ function App() {
     
           {/* THE ANALYZE BUTTON */}
           <button onClick={handleAnalysis} className="btn">
-            Analyze Code
+            {text.analyzeBtn}
           </button>
 
           {/* THE DOWNLOAD BUTTON (Only shows if fixed code exists) */}
           {downloadableCode && (
             <button onClick={() => downloadFile(downloadableCode, fileName)} className="btn">
-                Download Fix
+              {text.downloadFixed}
             </button>
           )}
         </div>
