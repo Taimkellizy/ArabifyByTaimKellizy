@@ -108,7 +108,7 @@ function App() {
             {/* LOGO */}
             <li className="logo-item">
               <a href="#header" className="logo">
-                <img src="./arabify-logo-3.svg" alt="logo" className='logo-img' />
+                <img src="./arabify-logo-4.svg" alt="logo" className='logo-img' />
               </a>
             </li>
 
