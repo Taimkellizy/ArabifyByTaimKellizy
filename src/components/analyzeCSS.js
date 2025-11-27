@@ -50,10 +50,24 @@ const analyzeCSS = (cssString, text) => {
   autoFix(/text-align:\s*right/g, "text-align: end", text.fixTextAlign);
 
 
-  // --- PIXEL UNIT CHECK (Just Warning, No Auto-Fix) ---
-  // don't auto-fix this because converting px to rem requires complex math 
-  // and context (root font size) which we don't have.
-  if (fixedCSS.match(/\d+px/g)) {
+  // PIXEL UNIT CHECK (Smart Version) ---
+  
+  // Create a temporary string for analysis
+  // We remove the definition line of media queries (e.g., "@media (max-width: 768px) {")
+  // So that '768px' doesn't get flagged.
+  // Regex explanation: Match "@media", then anything that is NOT a "{", then the "{"
+  const codeForPxCheck = fixedCSS.replace(/@media[^{]+\{/g, "");
+
+  // Find matches in the CLEANED string
+  const pxMatches = [...codeForPxCheck.matchAll(/(\d*\.?\d+)px/g)];
+  
+  // Check values > 10
+  const hasLargePixels = pxMatches.some(match => {
+    const value = parseFloat(match[1]); 
+    return value > 10;
+  });
+
+  if (hasLargePixels) {
     score -= 5;
     warnings.push({
       type: "Responsiveness",

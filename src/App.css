@@ -37,7 +37,7 @@ html {
 section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  scroll-margin-top: 100px;
+  scroll-margin-top: 6.25rem;
 }
 
 body {
@@ -47,10 +47,10 @@ body {
 
 .App {
   width: 80%; 
-  max-width: 1400px;
+  max-width: 87.5rem;
   margin: 0 auto;
-  border-left: var(--border-width) solid var(--border-color);
-  border-right: var(--border-width) solid var(--border-color);
+  border-inline-end: var(--border-width) solid var(--border-color);
+  border-inline-start: var(--border-width) solid var(--border-color);
   min-height: 100vh;
   box-sizing: border-box;
   position: relative;
@@ -58,8 +58,8 @@ body {
 
 header, section, footer {
   width: 100%;
-  padding-left: 5%; 
-  padding-right: 5%;
+  padding-inline-start: 5%; 
+  padding-inline-end: 5%;
   box-sizing: border-box; 
 }
 
@@ -105,7 +105,7 @@ nav a {
   text-decoration: none;
   display: flex;
   align-items: center;
-  border-radius: 50px;
+  border-radius: 3.125rem;
   transition: background-color 0.2s ease-in-out, color 0.2s;
   color: var(--bright);
   white-space: nowrap;
@@ -121,7 +121,7 @@ nav .logo {
 }
 
 .logo-img {
-  height: 60px;
+  height: 3.75rem;
   width: auto;
   display: block;
 }
@@ -143,7 +143,7 @@ nav .logo {
   border: 1px solid var(--bright);
   color: var(--bright);
   padding: 0.5rem 1.2rem;
-  border-radius: 50px;
+  border-radius: 3.125rem;
   cursor: pointer;
   font-size: 1rem;
   display: flex;
@@ -162,13 +162,13 @@ nav .logo {
 }
 
 .hero-section {
-  min-height: calc(100vh - 150px); 
+  min-height: calc(100vh - 9.375rem); 
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   /* For 3D rotation visibility */
-  perspective: 1000px;
+  perspective: 62.5rem;
   position: relative;
 }
 
@@ -198,7 +198,7 @@ nav .logo {
 .hero-desc {
   color: var(--bright);
   text-align: center;
-  max-width: 800px;
+  max-width: 50rem;
   animation: fadeInParagraph 6s ease forwards;
 }
 
@@ -211,12 +211,12 @@ nav .logo {
 }
 
 section {
-  min-height: 500px; 
+  min-height: 31.25rem; 
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  scroll-margin-top: 100px;
+  scroll-margin-top: 6.25rem;
 }
 
 .split-char {
@@ -232,12 +232,12 @@ p{
   font-size: 1.2rem;
   margin-top: 1rem;
   text-align: center;
-  max-width: 800px;
+  max-width: 50rem;
 }
 
 .btn-group {
   display: flex;
-  gap: 20px;
+  gap: 1.25rem;
   justify-content: center;
   flex-wrap: wrap;
   margin-top: 1rem;
@@ -248,7 +248,7 @@ p{
   border: 1px solid var(--bright);
   color: var(--bright);
   padding: 0.5rem 1.5rem;
-  border-radius: 50px;
+  border-radius: 3.125rem;
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
@@ -304,7 +304,43 @@ footer a:hover {
 .results-section{
   color: var(--accent-shade);
   padding-top: 2rem;
+  padding-bottom: 2rem;
   padding-inline: 3rem;
+  margin: 5rem;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.05); /* Slight background to make it pop */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* 1. Perfect Score (100) */
+.res-green {
+  color: #27c93f; /* Green */
+  text-align: center; /* Centered */
+  border-color: #27c93f;
+}
+
+/* 2. Good Score (70-99) */
+.res-yellow {
+  color: #ffbd2e; /* Yellow */
+  text-align: start; /* Normal Align (Left/Right based on lang) */
+  border-color: #ffbd2e;
+}
+
+/* 3. Bad Score (< 70) */
+.res-red {
+  color: #ff5f56; /* Red */
+  text-align: start; /* Normal Align */
+  border-color: #ff5f56;
+}
+
+.results-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.results-section ul {
+  list-style-position: inside; /* Keeps bullets aligned nicely */
 }
 
 .results-section li {
@@ -315,10 +351,7 @@ footer a:hover {
 @media (max-width: 768px) {
   .App {
     padding: 0; /* Use full width on mobile */
-  }
-
-  .boarders {
-    border: none; /* Remove side borders on mobile for more space */
+    border: none;
   }
 
   nav ul {
@@ -354,7 +387,7 @@ footer a:hover {
 
   .btn-group {
     display: flex;
-    gap: 20px;
+    gap: 1.25rem;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 1rem;

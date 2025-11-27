@@ -6,6 +6,7 @@ import analyzeCSS from '../components/analyzeCSS';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faUpload, faCode } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import Confetti from 'react-confetti';
 
 const Home = ({ text, lang }) => {
   // New State for the uploaded code
@@ -16,6 +17,7 @@ const Home = ({ text, lang }) => {
   const [warnings, setWarnings] = useState([]);
   const [score, setScore] = useState(null);
   const [downloadableCode, setDownloadableCode] = useState(null);
+  const [confettiKey, setConfettiKey] = useState(0);
 
   // File Upload Logic
   const handleFileUpload = (e) => {
@@ -51,13 +53,15 @@ const Home = ({ text, lang }) => {
       setScore(score);
       // You can't easily auto-fix HTML structure logic safely, 
       // so just show warnings for HTML.
+      setConfettiKey(prev => prev + 1);
     } 
     else if (fileType === 'css') {
       const { score, warnings, fixedCSS } = analyzeCSS(uploadedCode, text);
       setScore(score);
       setWarnings(warnings);
       // Save the fixed code to state so the user can download it
-      setDownloadableCode(fixedCSS); 
+      setDownloadableCode(fixedCSS);
+      setConfettiKey(prev => prev + 1);
     }
   };
 
@@ -74,6 +78,13 @@ const Home = ({ text, lang }) => {
     document.body.appendChild(element); // Required for FireFox
     element.click();
     document.body.removeChild(element);
+  };
+
+  // Helper logic to pick the class
+  const getResultClass = () => {
+    if (score === 100) return "res-green";
+    if (score >= 70) return "res-yellow";
+    return "res-red";
   };
 
   return (
@@ -143,14 +154,32 @@ const Home = ({ text, lang }) => {
             </div>
         )}
         {score !== null && (
-            <div className='results-section'>
-              <h3>{text.score} {score}/100</h3>
-              <ul>
-                {warnings.map((warn, index) => (
-                <li key={index}>{warn.msg}</li>
-                ))}
-              </ul>
-            </div>
+          <div className={`results-section ${getResultClass()}`}>
+            
+            <h3>{text.score} {score}/100</h3>
+            
+            {score === 100 && (
+              <>
+                <Confetti
+                  key={confettiKey} 
+                  width={window.innerWidth} 
+                  height={window.innerHeight} 
+                  recycle={false}
+                  numberOfPieces={500}
+                  style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, pointerEvents: 'none' }}
+                />
+              </>
+            )}
+
+            <ul>
+              {warnings.map((warn, index) => (
+                <li key={index} style={{ marginBottom: '8px' }}>
+                  {warn.msg}
+                </li>
+              ))}
+            </ul>
+            
+          </div>
         )}
       </div>
     </div>

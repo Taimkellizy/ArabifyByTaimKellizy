@@ -25,7 +25,7 @@ const Header = ({ text, toggleLanguage }) => {
           {/* CONTACT LINK (Anchor tag is fine for scrolling if on Home, 
               but usually you might want a separate contact page later) */}
           <li>
-            <a href="#contact" className="low_opacity_bg">
+            <a href="https://www.linkedin.com/in/taimkellizy/" className="low_opacity_bg">
               <FontAwesomeIcon icon={faAddressBook} className='icons-end' /> {text.contact}
             </a>
           </li>

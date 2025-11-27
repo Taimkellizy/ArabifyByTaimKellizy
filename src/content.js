@@ -34,7 +34,7 @@ export const content = {
     fixPaddingLeft: "Replaced 'padding-left' with 'padding-inline-start' to support RTL.",
     fixPaddingRight: "Replaced 'padding-right' with 'padding-inline-end' to support RTL.",
     fixTextAlign: "Replaced 'text-align: left/right' with 'start/end' so text aligns correctly in Arabic.",
-    warnPx: "Found fixed 'px' units. Consider using 'rem' for better zooming and accessibility."
+    warnPx: "Found fixed 'px' values larger than 5px. Use 'rem' for fonts and spacing to ensure accessibility."
   },
   ar: {
     blog: "مدونة",
@@ -71,6 +71,6 @@ export const content = {
     fixPaddingLeft: "تم استبدال 'padding-left' بـ 'padding-inline-start' لدعم الاتجاهين.",
     fixPaddingRight: "تم استبدال 'padding-right' بـ 'padding-inline-end' لدعم الاتجاهين.",
     fixTextAlign: "تم استبدال 'text-align' بـ 'start/end' لضمان محاذاة النص بشكل صحيح.",
-    warnPx: "تم العثور على وحدات 'px' ثابتة. يُفضل استخدام 'rem' لتكبير الخطوط بشكل أفضل."
+    warnPx: "تم العثور على قيم 'px' أكبر من 5px. استخدم 'rem' للخطوط والمسافات لضمان سهولة الوصول."
   }
 };
