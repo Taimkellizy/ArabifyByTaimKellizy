@@ -14,25 +14,25 @@ Upload your HTML/CSS → click **Scan** → get a score + issues → download fi
 - Categories & weights for HTML:
   - Semantic Tags => header, nav, footer — (-20 points each -60 points max)
   - SEO => meta tags — (-5 points each -25 points max)
-  - Accessibility => alt attribute — (-10 pints once)
+  - Accessibility => alt attribute — (-10 points once)
   - Language => lang, dir attributes — (-5 points each once)
 - 
 
-- Categoreis & weights for CSS:
-  - Scroll behaiver => if "scroll-behavior: smooth;" is missing — (-10 points once)
+- Categories & weights for CSS:
+  - Scroll behavior => if "scroll-behavior: smooth;" is missing — (-10 points once)
   - RTL => any fixed right/left — (-5 points for every match no max)
   - Units => any fixed units like px — (-5 points once)
 - 
 ## Notes: 
     1. there is no negative score.
-    2. auto-fix is only availabe for CSS but not for the Units because they are relative to a lot of parameters.
+    2. auto-fix is only available for CSS but not for the Units because they are relative to a lot of parameters.
 
 
 ## 📐 How it works (high level)
     1. User uploads HTML and CSS files, or pastes them into textareas.  
     2. App parses the HTML with `DOMParser`, inspects markup and CSS heuristics, and runs a set of deterministic checks.  
     3. App suggests fixes (full fixed version), and offers naive auto-fixes that are safe to preview (e.g., add `lang="ar"`, add `dir="rtl"`, convert `margin-left` → `margin-inline-start`).
-    4. Results are showen with links for blog sections to learn how to fix them if not auto-fix supported.
+    4. Results are shown with links for blog sections to learn how to fix them if not auto-fix supported.
 
 ## ⭕ Limitations (clear & exact)
 - **HTML & React:** The app works with static HTML files. It can also help with React projects — copy the JSX/HTML snippet you want checked into a separate file (or paste it into the app), run the scan and apply fixes, then paste the fixed JSX/HTML back into your React file. This is manual but works fine for component-level fixes.  
@@ -77,10 +77,16 @@ The app will automatically open in your browser at `http://localhost:3000`.
 src/
 ├── App.js          # Main application logic & Language state
 ├── App.css         # Global styles & Responsive rules
-├── analyzeCSS.js   # Algorithm for processing the CSS
-├── analyzeHTML.js  # ALgorithm for processing the HTML
-├── CodeWindow.css  # Styles for CodeWindow.js
-├── CodeWindow.js   # Custom component for code preview
+├── components/     # Reusable UI & Logic components
+│   ├── analyzeCSS.js   # Algorithm for processing the CSS
+│   ├── analyzeHTML.js  # Algorithm for processing the HTML
+│   ├── CodeWindow.js   # Custom component for code preview
+│   ├── CodeWindow.css  # Styles for CodeWindow.js
+│   ├── Header.js       # Header component
+│   ├── Footer.js       # Footer component
+│   └── split_text.js   # Custom GSAP animation component
+├── pages/          # Route pages
+│   ├── Home.js         # Main landing & tool page
+│   └── Blog.js         # Educational content page
 ├── content.js      # Dictionary for English/Arabic text
-├── split_text.js   # Custom GSAP animation component
 └── index.js        # Entry point

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Import useState
+import React, { useState, useRef, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,6 +7,24 @@ import './CodeWindow.css';
 
 const CodeWindow = ({ code, fileName, language = "javascript" }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false); // New State
+  
+  // Ref to measure the inner content
+  const contentRef = useRef(null);
+  
+  const MAX_HEIGHT = 300; // Define your threshold
+
+  useEffect(() => {
+    // Check height whenever code changes
+    if (contentRef.current) {
+      // scrollHeight is the full height of the content
+      if (contentRef.current.scrollHeight > MAX_HEIGHT) {
+        setIsOverflowing(true);
+      } else {
+        setIsOverflowing(false);
+      }
+    }
+  }, [code]);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -14,17 +32,17 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
 
   return (
     <div className="code-window">
-      {/* Header */}
       <div className="window-header">
         <div className="filename">{fileName || "code.js"}</div>
       </div>
 
-      {/* Body Wrapper - This controls the height */}
       <div 
         className="window-body-wrapper"
+        // Bind the ref here to measure this div
+        ref={contentRef} 
         style={{
-          // If expanded, let it grow. If not, cap it at 300px.
-          maxHeight: isExpanded ? 'none' : '300px',
+          // Only limit height if it is actually overflowing AND not expanded
+          maxHeight: (isExpanded || !isOverflowing) ? 'none' : `${MAX_HEIGHT}px`,
           overflow: 'hidden',
           position: 'relative'
         }}
@@ -38,11 +56,9 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
             background: '#1e1e1e',
             fontSize: '0.9rem',
             lineHeight: '1.6',
-            minHeight: '200px',
+            minHeight: '100px', // Lower min-height for small snippets
             fontFamily: "'Consolas', 'Monaco', 'Courier New', monospace",
-            paddingBottom: '50px',
-            
-            /* ADD THIS: Forces the code to respect the container width */
+            paddingBottom: isOverflowing && !isExpanded ? '50px' : '20px', 
             maxWidth: '100%', 
             boxSizing: 'border-box'
           }}
@@ -52,15 +68,17 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
           {code}
         </SyntaxHighlighter>
 
-        {/* The Fade Out Overlay - Only show when collapsed */}
-        {!isExpanded && <div className="code-fade-overlay"></div>}
+        {/* Show overlay ONLY if it's overflowing AND currently collapsed */}
+        {isOverflowing && !isExpanded && <div className="code-fade-overlay"></div>}
       </div>
 
-      {/* The Toggle Button Bar (Like a VS Code Status Bar) */}
-      <button className="code-footer-btn" onClick={toggleExpand}>
-        <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} /> 
-        {isExpanded ? " Collapse Code" : " Show All Code"}
-      </button>
+      {/* Show button ONLY if it's overflowing */}
+      {isOverflowing && (
+        <button className="code-footer-btn" onClick={toggleExpand}>
+          <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} /> 
+          {isExpanded ? " Collapse Code" : " Show All Code"}
+        </button>
+      )}
     </div>
   );
 };

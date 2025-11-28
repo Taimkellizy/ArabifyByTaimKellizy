@@ -9,17 +9,17 @@ const analyzeHTML = (htmlString, text) => {
   // Check for Semantic Tags
   if (!doc.querySelector("header")) {
     score -= 20;
-    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingHeader });
+    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingHeader, blogID: 1 });
   }
   
   if (!doc.querySelector("nav")) {
     score -= 20;
-    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingNav });
+    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingNav, blogID: 1 });
   }
 
   if (!doc.querySelector("footer")) {
     score -= 20;
-    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingFooter });
+    warnings.push({ type: text.errtypeStructure, msg: text.msgMissingFooter, blogID: 1 });
   }
 
   // --- META CHECKS (Using DOMParser) ---
@@ -27,31 +27,31 @@ const analyzeHTML = (htmlString, text) => {
   // Check Charset
   if (!doc.querySelector("meta[charset]")) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaCharset });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaCharset, blogID: 7 });
   }
 
   // Check Viewport
   if (!doc.querySelector('meta[name="viewport"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaViewport });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaViewport, blogID: 7 });
   }
 
   // Check Description
   if (!doc.querySelector('meta[name="description"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaDescription });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaDescription, blogID: 7 });
   }
 
   // Check Keywords
   if (!doc.querySelector('meta[name="keywords"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaKeywords });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaKeywords, blogID: 7 });
   }
 
   // Check Author
   if (!doc.querySelector('meta[name="author"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaAuthor });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaAuthor, blogID: 7 });
   }
 
   // --- LANG ATTRIBUTE CHECK ---
@@ -60,12 +60,12 @@ const analyzeHTML = (htmlString, text) => {
   const htmlTag = doc.documentElement; // This gets the <html> tag
   if (!htmlTag.hasAttribute("lang")) {
     score -= 5;
-    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingLangAttribute });
+    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingLangAttribute, blogID: 6 });
   }
 
   if (!htmlTag.hasAttribute("dir")) {
     score -= 5;
-    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingDirAttribute });
+    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingDirAttribute, blogID: 6 });
   }
 
   // Check Images for Alt
@@ -75,12 +75,12 @@ const analyzeHTML = (htmlString, text) => {
     if (!img.hasAttribute("alt")) {
       score -= 5;
       
-      let rawMessage = text.msgMissingAlt;
-      let finalMessage = rawMessage.replace("{id}", index + 1);
+      let finalMessage = text.msgMissingAlt(index + 1);
       
       warnings.push({
         type: text.errtypeAlt,
-        msg: finalMessage
+        msg: finalMessage,
+        blogID: 2
       });
     }
   });
