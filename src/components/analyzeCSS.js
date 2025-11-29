@@ -16,7 +16,7 @@ const analyzeCSS = (cssString, text) => {
   }
 
   // --- AUTOMATED RTL FIXES (Replacements) ---
-  
+
   // Helper to run replace and log it
   const autoFix = (regex, replacement, message, id) => {
     if (fixedCSS.match(regex)) {
@@ -33,11 +33,11 @@ const analyzeCSS = (cssString, text) => {
   };
 
   // Run the Fixers
-  
+
   // Margins
   autoFix(/margin-left/g, "margin-inline-start", text.fixMarginLeft, 3);
   autoFix(/margin-right/g, "margin-inline-end", text.fixMarginRight, 3);
-  
+
   // Paddings
   autoFix(/padding-left/g, "padding-inline-start", text.fixPaddingLeft, 3);
   autoFix(/padding-right/g, "padding-inline-end", text.fixPaddingRight, 3);
@@ -51,9 +51,33 @@ const analyzeCSS = (cssString, text) => {
   autoFix(/text-align:\s*left/g, "text-align: start", text.fixTextAlign, 8);
   autoFix(/text-align:\s*right/g, "text-align: end", text.fixTextAlign, 8);
 
+  // 1. Specific Corners (Physical -> Logical)
+  // This converts "border-top-left-radius" to "border-start-start-radius" so it flips automatically.
+  autoFix(/border-top-left-radius/g, "border-start-start-radius", "Fixed top-left radius to logical start-start", 3);
+  autoFix(/border-top-right-radius/g, "border-start-end-radius", "Fixed top-right radius to logical start-end", 3);
+  autoFix(/border-bottom-right-radius/g, "border-end-end-radius", "Fixed bottom-right radius to logical end-end", 3);
+  autoFix(/border-bottom-left-radius/g, "border-end-start-radius", "Fixed bottom-left radius to logical end-start", 3);
+
+  // 2. Shorthand Explosion (The Magic Fix for inputs & buttons)
+  // This catches "border-radius: 8px 0 0 8px;" and explodes it into 4 logical lines.
+  // We use a callback function as the replacement to capture the 4 values (tl, tr, br, bl).
+  autoFix(
+    /border-radius:\s*([^\s;]+)\s+([^\s;]+)\s+([^\s;]+)\s+([^\s;]+);/g,
+    (match, tl, tr, br, bl) => {
+      return `
+      border-start-start-radius: ${tl};
+      border-start-end-radius: ${tr};
+      border-end-end-radius: ${br};
+      border-end-start-radius: ${bl};
+      `;
+    },
+    "Converted physical border-radius shorthand to logical properties",
+    3
+  );
+
 
   // PIXEL UNIT CHECK (Smart Version) ---
-  
+
   // Create a temporary string for analysis
   // We remove the definition line of media queries (e.g., "@media (max-width: 768px) {")
   // So that '768px' doesn't get flagged.
@@ -62,10 +86,10 @@ const analyzeCSS = (cssString, text) => {
 
   // Find matches in the CLEANED string
   const pxMatches = [...codeForPxCheck.matchAll(/(\d*\.?\d+)px/g)];
-  
+
   // Check values > 10
   const hasLargePixels = pxMatches.some(match => {
-    const value = parseFloat(match[1]); 
+    const value = parseFloat(match[1]);
     return value > 10;
   });
 

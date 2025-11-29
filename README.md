@@ -20,16 +20,21 @@ Upload your HTML/CSS → click **Scan** → get a score + issues → download fi
 
 - Categories & weights for CSS:
   - Scroll behavior => if "scroll-behavior: smooth;" is missing — (-10 points once)
-  - RTL => any fixed right/left — (-5 points for every match no max)
+  - RTL => Checks for physical properties that should be logical:
+    - Margins (left/right -> inline-start/end)
+    - Paddings (left/right -> inline-start/end)
+    - Borders (left/right -> inline-start/end)
+    - Text Align (left/right -> start/end)
+    - Border Radius (top-left/etc -> start-start/etc) — (-5 points for every match no max)
   - Units => any fixed units like px — (-5 points once)
 
->**Notes:** 1. There is no negative score. 2. Auto-fix is only available for CSS but not for the Units because they are relative to a lot of parameters.
+> **Notes:** 1. There is no negative score. 2. Auto-fix is only available for CSS but not for the Units because they are relative to a lot of parameters.
 
 
 ## 📐 How it works (high level)
     1. User uploads HTML and CSS files, or pastes them into textareas.  
     2. App parses the HTML with `DOMParser`, inspects markup and CSS heuristics, and runs a set of deterministic checks.  
-    3. App suggests fixes (full fixed version), and offers naive auto-fixes that are safe to preview (e.g., add `lang="ar"`, add `dir="rtl"`, convert `margin-left` → `margin-inline-start`).
+    3. App suggests fixes (full fixed version), and offers naive auto-fixes that are safe to preview (e.g., add `lang="ar"`, add `dir="rtl"`, convert `margin-left` → `margin-inline-start`, and "explodes" shorthand `border-radius: 8px 0 0 8px` into 4 logical lines).
     4. Results are shown with links for blog sections to learn how to fix them if not auto-fix supported.
 
 ## ⭕ Limitations (clear & exact)
