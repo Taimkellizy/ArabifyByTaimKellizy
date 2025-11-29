@@ -55,7 +55,7 @@ const Blog = ({ text, lang }) => {
               <CodeWindow
                 code={post.code}
                 fileName={isAr ? "مثال.css" : "Example.css"}
-                language="css"
+                language={post.language || "css"}
               />
             </div>
 

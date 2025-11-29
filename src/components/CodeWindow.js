@@ -2,16 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import './CodeWindow.css';
 
 const CodeWindow = ({ code, fileName, language = "javascript" }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isOverflowing, setIsOverflowing] = useState(false); // New State
-  
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
   // Ref to measure the inner content
   const contentRef = useRef(null);
-  
+
   const MAX_HEIGHT = 300; // Define your threshold
 
   useEffect(() => {
@@ -30,16 +31,34 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy!', err);
+    }
+  };
+
   return (
     <div className="code-window">
       <div className="window-header">
         <div className="filename">{fileName || "code.js"}</div>
+        <button
+          className={`copy-btn ${isCopied ? 'copied' : ''}`}
+          onClick={handleCopy}
+          title="Copy code"
+        >
+          <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} />
+          <span>{isCopied ? "Copied!" : "Copy"}</span>
+        </button>
       </div>
 
-      <div 
+      <div
         className="window-body-wrapper"
         // Bind the ref here to measure this div
-        ref={contentRef} 
+        ref={contentRef}
         style={{
           // Only limit height if it is actually overflowing AND not expanded
           maxHeight: (isExpanded || !isOverflowing) ? 'none' : `${MAX_HEIGHT}px`,
@@ -47,8 +66,8 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
           position: 'relative'
         }}
       >
-        <SyntaxHighlighter 
-          language={language} 
+        <SyntaxHighlighter
+          language={language}
           style={vscDarkPlus}
           customStyle={{
             margin: 0,
@@ -58,12 +77,12 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
             lineHeight: '1.6',
             minHeight: '100px', // Lower min-height for small snippets
             fontFamily: "'Consolas', 'Monaco', 'Courier New', monospace",
-            paddingBottom: isOverflowing && !isExpanded ? '50px' : '20px', 
-            maxWidth: '100%', 
+            paddingBottom: isOverflowing && !isExpanded ? '50px' : '20px',
+            maxWidth: '100%',
             boxSizing: 'border-box'
           }}
           showLineNumbers={true}
-          wrapLongLines={true} 
+          wrapLongLines={true}
         >
           {code}
         </SyntaxHighlighter>
@@ -75,7 +94,7 @@ const CodeWindow = ({ code, fileName, language = "javascript" }) => {
       {/* Show button ONLY if it's overflowing */}
       {isOverflowing && (
         <button className="code-footer-btn" onClick={toggleExpand}>
-          <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} /> 
+          <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} />
           {isExpanded ? " Collapse Code" : " Show All Code"}
         </button>
       )}

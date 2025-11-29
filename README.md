@@ -7,6 +7,7 @@ Upload your HTML/CSS → click **Scan** → get a score + issues → download fi
 
 ## 🛠️ Tech stack
 - Frontend: plain React with components from [**React Bits**](https://reactbits.dev), [**GSAP**](https://gsap.com), and icons from [**FontAwesome**](https://fontawesome.com/).
+- Syntax Highlighting: [**react-syntax-highlighter**](https://github.com/react-syntax-highlighter/react-syntax-highlighter) (Prism) for code previews.
 - No server required (MVP).  
 - License: MIT
 
@@ -16,14 +17,13 @@ Upload your HTML/CSS → click **Scan** → get a score + issues → download fi
   - SEO => meta tags — (-5 points each -25 points max)
   - Accessibility => alt attribute — (-10 points once)
   - Language => lang, dir attributes — (-5 points each once)
-- 
 
 - Categories & weights for CSS:
   - Scroll behavior => if "scroll-behavior: smooth;" is missing — (-10 points once)
   - RTL => any fixed right/left — (-5 points for every match no max)
   - Units => any fixed units like px — (-5 points once)
-- 
-## Notes: 
+
+>**Notes:** 
     1. there is no negative score.
     2. auto-fix is only available for CSS but not for the Units because they are relative to a lot of parameters.
 
@@ -38,6 +38,10 @@ Upload your HTML/CSS → click **Scan** → get a score + issues → download fi
 - **HTML & React:** The app works with static HTML files. It can also help with React projects — copy the JSX/HTML snippet you want checked into a separate file (or paste it into the app), run the scan and apply fixes, then paste the fixed JSX/HTML back into your React file. This is manual but works fine for component-level fixes.  
 - **Images:** The scanner does **not** analyze image content, so images are not a problem.  
 - **Heuristics:** The checks are heuristic and conservative. They may sometimes flag items that are actually fine. Auto-fixes are safe and reversible, but always double-check the suggested changes before applying them to production.
+  > **Note:** You don't need to follow all the fixes shown because they are meant for a full UI page in HTML. For React, you may put each one in its own component, and you may only include the meta tags to the main `index.html` (which doesn't have any semantic elements because they are in the JS files).
+
+## 🌐 Online Demo
+You can use an online demo on Vercel at this link: [arabify-by-taim-kellizy.vercel.app](https://arabify-by-taim-kellizy.vercel.app)
 
 ## 🚀 Getting Started
 
@@ -89,4 +93,5 @@ src/
 │   ├── Home.js         # Main landing & tool page
 │   └── Blog.js         # Educational content page
 ├── content.js      # Dictionary for English/Arabic text
+├── codeSnippets.js # Shared code examples for Blog
 └── index.js        # Entry point
