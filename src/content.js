@@ -16,12 +16,22 @@ export const content = {
     copyrights: "© 2025 Arabify. All rights reserved.",
     upFile: "Upload File",
     fileUped: "File Uploaded (Change?)",
+    analyzing: "Analyzing...",
+    downloadZip: "Download Project (Zip)",
+    noIssues: "No issues found!",
+    howToFix: "How to fix?",
+    uploadFiles: "Upload File(s)",
+    uploadFolder: "Upload Folder",
+    upload: "Upload",
+    files: "Files",
 
     // Error Types
-    errtypeStructure: "Structure",
-    errtypeAlt: "Accessibility (a11y)",
-    errtypeMeta: "Meta Tags",
-    errtypeLanguage: "Language",
+    errtypeStructure: "HTML Structure",
+    errtypeAlt: "Accessibility",
+    errtypeMeta: "SEO & Meta Tags",
+    errtypeLanguage: "Language Configuration",
+    errtypeRTL: "RTL Styling",
+    errtypeResponsiveness: "Responsiveness",
 
     // --- HTML WARNINGS (Using JSX for styling) ---
     msgMissingHeader: <>We couldn't find a <span className="en-code">&lt;header&gt;</span> tag. Consider replacing <span className="en-code">&lt;div className='header'&gt;</span> with <span className="en-code">&lt;header&gt;</span>.</>,
@@ -38,6 +48,14 @@ export const content = {
     msgMissingMetaAuthor: <>Missing <span className="en-code">&lt;meta name='author'...&gt;</span> tag for SEO.</>,
     msgMissingLangAttribute: <>The <span className="en-code">&lt;html&gt;</span> tag is missing a <span className="en-code">lang</span> attribute.</>,
     msgMissingDirAttribute: <>The <span className="en-code">&lt;html&gt;</span> tag is missing a <span className="en-code">dir</span> attribute.</>,
+    msgAvoidTextAlign: <>Avoid <span className="en-code">text-align: left/right</span>. Use <span className="en-code">start/end</span> for RTL support.</>,
+    msgAvoidFloat: <>Avoid <span className="en-code">float: left/right</span>. Use CSS Grid or Flexbox for layout.</>,
+    msgParseError: "Could not parse file. Please check for syntax errors.",
+    msgEmptyButton: "Empty button found without aria-label.",
+    msgAvoidPhysicalProp: (key) => <>Avoid physical property <span className="en-code">'{key}'</span>. Use logical properties (e.g., marginInlineStart).</>,
+    msgAvoidBorderRadiusShorthand: "Avoid 4-value borderRadius shorthand. It is direction-sensitive.",
+    msgAvoidTextLeftRightClass: "Avoid 'text-left'/'text-right'. Use logical alignment.",
+    msgAvoidPhysicalMarginPaddingClass: "Avoid physical margin/padding (ml-, mr-). Use logical properties (ms-, me-).",
 
     // --- CSS WARNINGS ---
     fixScroll: <>Added <span className="en-code">scroll-behavior: smooth</span> to html for better user experience.</>,
@@ -47,6 +65,15 @@ export const content = {
     fixPaddingRight: <>Replaced <span className="en-code">padding-right</span> with <span className="en-code">padding-inline-end</span> to support RTL.</>,
     fixTextAlign: <>Replaced <span className="en-code">text-align: left/right</span> with <span className="en-code">start/end</span> so text aligns correctly in Arabic.</>,
     warnPx: <>Found fixed <span className="en-code">px</span> values larger than 10px. Use <span className="en-code">rem</span> for fonts and spacing.</>,
+    fixBorderLeft: <>Replaced <span className="en-code">border-left</span> with <span className="en-code">border-inline-start</span>.</>,
+    fixBorderRight: <>Replaced <span className="en-code">border-right</span> with <span className="en-code">border-inline-end</span>.</>,
+    fixBorderTopLeftRadius: <>Fixed <span className="en-code">border-top-left-radius</span> to logical <span className="en-code">border-start-start-radius</span>.</>,
+    fixBorderTopRightRadius: <>Fixed <span className="en-code">border-top-right-radius</span> to logical <span className="en-code">border-start-end-radius</span>.</>,
+    fixBorderBottomRightRadius: <>Fixed <span className="en-code">border-bottom-right-radius</span> to logical <span className="en-code">border-end-end-radius</span>.</>,
+    fixBorderBottomLeftRadius: <>Fixed <span className="en-code">border-bottom-left-radius</span> to logical <span className="en-code">border-end-start-radius</span>.</>,
+    fixBorderRadiusShorthand: <>Converted physical <span className="en-code">border-radius</span> shorthand to logical properties.</>,
+    fixLeftPosition: <>Fixed absolute positioning <span className="en-code">left</span> to <span className="en-code">inset-inline-start</span>.</>,
+    fixRightPosition: <>Fixed absolute positioning <span className="en-code">right</span> to <span className="en-code">inset-inline-end</span>.</>,
 
     // New Blog Specific Labels
     blogSubtitle: "Your comprehensive guide to Accessibility, RTL support, and Modern CSS.",
@@ -97,17 +124,7 @@ export const content = {
       },
       {
         id: 5,
-        title: "5. Scroll Behavior",
-        desc: "Instant jumps when clicking anchor links can be disorienting for users with motion sensitivity.",
-        fix: "Enable smooth scrolling in your global CSS.",
-        code: CODE_SNIPPETS.scrollBehavior,
-        language: "css",
-        videoUrl: null,
-        videoTitle: null
-      },
-      {
-        id: 6,
-        title: "6. HTML Language and Direction",
+        title: "5. HTML Language and Direction",
         desc: "Without a 'lang' attribute, screen readers will read Arabic with an English accent (unintelligible). Without 'dir=rtl', the browser assumes Left-to-Right layout, breaking the reading order.",
         fix: "Always declare the language and direction on the HTML tag.",
         code: CODE_SNIPPETS.langDir,
@@ -116,8 +133,8 @@ export const content = {
         videoTitle: "How I do an accessibility check"
       },
       {
-        id: 7,
-        title: "7. Essential Meta Tags",
+        id: 6,
+        title: "6. Essential Meta Tags",
         desc: "Meta tags are invisible to users but critical for browsers and bots. Missing the 'viewport' tag causes your site to look tiny on mobile phones. Missing 'description' hurts your SEO.",
         fix: "Include standard meta tags in your <head>.",
         code: CODE_SNIPPETS.metaTags,
@@ -126,8 +143,8 @@ export const content = {
         videoTitle: "Learn HTML Meta-Tags in 4 Minutes!"
       },
       {
-        id: 8,
-        title: "8. Text Alignment",
+        id: 7,
+        title: "7. Text Alignment",
         desc: "Forcing 'text-align: left' on an Arabic paragraph makes it look ragged and hard to read. Arabic is read from Right to Left.",
         fix: "Avoid 'left' or 'right'. Use 'start' and 'end' to let the browser decide based on the language.",
         code: CODE_SNIPPETS.textAlign,
@@ -152,11 +169,21 @@ export const content = {
     copyrights: "© 2025 عَرِّب. جميع الحقوق محفوظة.",
     upFile: "رفع ملف",
     fileUped: "تم رفع الملف (تغيير؟)",
+    analyzing: "جاري التحليل...",
+    downloadZip: "تحميل المشروع (Zip)",
+    noIssues: "لم يتم العثور على مشاكل!",
+    howToFix: "كيف أصلحه؟",
+    uploadFiles: "رفع ملفات",
+    uploadFolder: "رفع مجلد",
+    upload: "رفع",
+    files: "ملفات",
 
-    errtypeStructure: "الهيكلية",
+    errtypeStructure: "هيكلية الصفحة",
     errtypeAlt: "سهولة الوصول",
-    errtypeMeta: "الميتا",
-    errtypeLanguage: "اللغة",
+    errtypeMeta: "تحسين محركات البحث (SEO)",
+    errtypeLanguage: "إعدادات اللغة",
+    errtypeRTL: "دعم العربية (RTL)",
+    errtypeResponsiveness: "التجاوب",
 
     // --- HTML WARNINGS (Arabic with Fixed English Direction) ---
     msgMissingHeader: <>لم نتمكن من العثور على وسم <span className="en-code">&lt;header&gt;</span>. فكر في استبدال <span className="en-code">&lt;div className='header'&gt;</span> بـ <span className="en-code">&lt;header&gt;</span>.</>,
@@ -173,6 +200,14 @@ export const content = {
     msgMissingMetaAuthor: <>يفتقد وسم <span className="en-code">&lt;meta name='author'...&gt;</span> لضبط محركات البحث.</>,
     msgMissingLangAttribute: <>وسم <span className="en-code">&lt;html&gt;</span> يفتقد وسم <span className="en-code">lang</span>.</>,
     msgMissingDirAttribute: <>وسم <span className="en-code">&lt;html&gt;</span> يفتقد وسم <span className="en-code">dir</span>.</>,
+    msgAvoidTextAlign: <>تجنب استخدام <span className="en-code">text-align: left/right</span>. استخدم <span className="en-code">start/end</span> لدعم العربية.</>,
+    msgAvoidFloat: <>تجنب استخدام <span className="en-code">float: left/right</span>. استخدم CSS Grid أو Flexbox للتخطيط.</>,
+    msgParseError: "لم نتمكن من تحليل الملف. يرجى التحقق من وجود أخطاء في بناء الجملة.",
+    msgEmptyButton: "تم العثور على زر فارغ بدون تسمية (aria-label).",
+    msgAvoidPhysicalProp: (key) => <>تجنب الخاصية المادية <span className="en-code">'{key}'</span>. استخدم الخصائص المنطقية (مثل marginInlineStart).</>,
+    msgAvoidBorderRadiusShorthand: "تجنب اختصار borderRadius بـ 4 قيم. إنه حساس للاتجاه.",
+    msgAvoidTextLeftRightClass: "تجنب 'text-left'/'text-right'. استخدم المحاذاة المنطقية.",
+    msgAvoidPhysicalMarginPaddingClass: "تجنب هوامش/حواشي مادية (ml-, mr-). استخدم خصائص منطقية (ms-, me-).",
 
     // --- CSS WARNINGS ---
     fixScroll: <>تم إضافة <span className="en-code">scroll-behavior: smooth</span> لتحسين تجربة التمرير.</>,
@@ -182,6 +217,16 @@ export const content = {
     fixPaddingRight: <>تم استبدال <span className="en-code">padding-right</span> بـ <span className="en-code">padding-inline-end</span> لدعم الاتجاهين.</>,
     fixTextAlign: <>تم استبدال <span className="en-code">text-align</span> بـ <span className="en-code">start/end</span> لضمان محاذاة النص بشكل صحيح.</>,
     warnPx: <>تم العثور على قيم <span className="en-code">px</span> أكبر من 10px. استخدم <span className="en-code">rem</span> للخطوط والمسافات.</>,
+    fixBorderLeft: <>تم استبدال <span className="en-code">border-left</span> بـ <span className="en-code">border-inline-start</span>.</>,
+    fixBorderRight: <>تم استبدال <span className="en-code">border-right</span> بـ <span className="en-code">border-inline-end</span>.</>,
+    fixBorderTopLeftRadius: <>تم إصلاح <span className="en-code">border-top-left-radius</span> إلى <span className="en-code">border-start-start-radius</span> المنطقي.</>,
+    fixBorderTopRightRadius: <>تم إصلاح <span className="en-code">border-top-right-radius</span> إلى <span className="en-code">border-start-end-radius</span> المنطقي.</>,
+    fixBorderBottomRightRadius: <>تم إصلاح <span className="en-code">border-bottom-right-radius</span> إلى <span className="en-code">border-end-end-radius</span> المنطقي.</>,
+    fixBorderBottomLeftRadius: <>تم إصلاح <span className="en-code">border-bottom-left-radius</span> إلى <span className="en-code">border-end-start-radius</span> المنطقي.</>,
+    fixBorderRadiusShorthand: <>تم تحويل اختصار <span className="en-code">border-radius</span> المادي إلى خصائص منطقية.</>,
+    fixLeftPosition: <>تم إصلاح التموضع المطلق <span className="en-code">left</span> إلى <span className="en-code">inset-inline-start</span>.</>,
+    fixRightPosition: <>تم إصلاح التموضع المطلق <span className="en-code">right</span> إلى <span className="en-code">inset-inline-end</span>.</>,
+
     // New Blog Specific Labels
     blogSubtitle: "دليلك الشامل لتحسين تجربة المستخدم، دعم العربية، وسهولة الوصول.",
     blogFixLabel: "💡 الحل:",
@@ -231,17 +276,7 @@ export const content = {
       },
       {
         id: 5,
-        title: "5. سلوك التمرير (Scroll Behavior)",
-        desc: "الانتقال المفاجئ عند النقر على الروابط قد يسبب الدوار لبعض المستخدمين.",
-        fix: "استخدم خاصية التمرير السلس في CSS.",
-        code: CODE_SNIPPETS.scrollBehavior,
-        language: "css",
-        videoUrl: null,
-        videoTitle: null
-      },
-      {
-        id: 6,
-        title: "6. سمات اللغة والاتجاه (Lang & Dir)",
+        title: "5. سمات اللغة والاتجاه (Lang & Dir)",
         desc: "بدون سمة اللغة (lang)، ستقرأ قارئات الشاشة النص العربي بلهجة إنجليزية (غير مفهوم). وبدون سمة الاتجاه (dir)، سيفترض المتصفح تخطيطاً من اليسار لليمين.",
         fix: "أضف دائماً سمات اللغة والاتجاه في وسم HTML الرئيسي.",
         code: CODE_SNIPPETS.langDir,
@@ -250,8 +285,8 @@ export const content = {
         videoTitle: "كيف أقوم بإجراء فحص إمكانية الوصول"
       },
       {
-        id: 7,
-        title: "7. وسوم الميتا (Meta Tags)",
+        id: 6,
+        title: "6. وسوم الميتا (Meta Tags)",
         desc: "وسوم الميتا غير مرئية للمستخدمين ولكنها حاسمة للمتصفحات. غياب وسم 'viewport' يجعل موقعك يبدو صغيراً جداً على الهواتف. وغياب 'description' يضر بظهورك في جوجل.",
         fix: "أضف وسوم الميتا القياسية في الـ <head>.",
         code: CODE_SNIPPETS.metaTags,
@@ -260,8 +295,8 @@ export const content = {
         videoTitle: "تعلم علامات HTML التعريفية في 4 دقائق!"
       },
       {
-        id: 8,
-        title: "8. محاذاة النصوص (Text Align)",
+        id: 7,
+        title: "7. محاذاة النصوص (Text Align)",
         desc: "إجبار النص على 'text-align: left' في الفقرات العربية يجعل القراءة صعبة وشكل النص غير متناسق.",
         fix: "تجنب استخدام 'left' أو 'right'. استخدم 'start' و 'end' ليقوم المتصفح بتحديد الجهة حسب اللغة.",
         code: CODE_SNIPPETS.textAlign,

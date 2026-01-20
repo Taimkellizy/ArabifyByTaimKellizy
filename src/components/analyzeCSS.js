@@ -1,130 +1,136 @@
-const analyzeCSS = (cssString, text) => {
+import postcss from 'postcss';
+import safeParser from 'postcss-safe-parser';
+
+const analyzeCSS = async (cssString, text) => {
   let score = 100;
   let warnings = [];
-  let fixedCSS = cssString; // start with the original and modify it
 
-  // --- CHECK SCROLL BEHAVIOR ---
-  if (!fixedCSS.includes("scroll-behavior: smooth")) {
-    score -= 10;
-    warnings.push({
-      type: "UX Fix",
-      msg: text.fixScroll,
-      blogID: 5
-    });
-    // Auto-fix: Append it to the top of the file
-    fixedCSS = "html { scroll-behavior: smooth; }\n" + fixedCSS;
-  }
+  const plugin = {
+    postcssPlugin: 'arabify-analyzer',
+    Declaration(decl) {
+      // --- RTL FIXES ---
 
-  // --- AUTOMATED RTL FIXES (Replacements) ---
+      // Margins
+      if (decl.prop === 'margin-left') {
+        decl.prop = 'margin-inline-start';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixMarginLeft, blogID: 3 });
+      } else if (decl.prop === 'margin-right') {
+        decl.prop = 'margin-inline-end';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixMarginRight, blogID: 3 });
+      }
 
-  // Helper to run replace and log it
-  const autoFix = (regex, replacement, message, id) => {
-    if (fixedCSS.match(regex)) {
-      // If we found a match, deduct score and log the fix
-      score -= 5;
-      warnings.push({
-        type: "RTL Auto-Fix",
-        msg: message,
-        blogID: id
-      });
-      // Perform the replacement globally ('g')
-      fixedCSS = fixedCSS.replace(regex, replacement);
+      // Paddings
+      else if (decl.prop === 'padding-left') {
+        decl.prop = 'padding-inline-start';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixPaddingLeft, blogID: 3 });
+      } else if (decl.prop === 'padding-right') {
+        decl.prop = 'padding-inline-end';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixPaddingRight, blogID: 3 });
+      }
+
+      // Borders (Physical -> Logical)
+      else if (decl.prop === 'border-left') {
+        decl.prop = 'border-inline-start';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderLeft, blogID: 3 });
+      } else if (decl.prop === 'border-right') {
+        decl.prop = 'border-inline-end';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderRight, blogID: 3 });
+      }
+
+      // Text Align
+      else if (decl.prop === 'text-align') {
+        if (decl.value === 'left') {
+          decl.value = 'start';
+          score -= 5;
+          warnings.push({ type: text.errtypeRTL, msg: text.fixTextAlign, blogID: 7 });
+        } else if (decl.value === 'right') {
+          decl.value = 'end';
+          score -= 5;
+          warnings.push({ type: text.errtypeRTL, msg: text.fixTextAlign, blogID: 7 });
+        }
+      }
+
+      // Specific Corners (Physical -> Logical)
+      else if (decl.prop === 'border-top-left-radius') {
+        decl.prop = 'border-start-start-radius';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderTopLeftRadius, blogID: 3 });
+      } else if (decl.prop === 'border-top-right-radius') {
+        decl.prop = 'border-start-end-radius';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderTopRightRadius, blogID: 3 });
+      } else if (decl.prop === 'border-bottom-right-radius') {
+        decl.prop = 'border-end-end-radius';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderBottomRightRadius, blogID: 3 });
+      } else if (decl.prop === 'border-bottom-left-radius') {
+        decl.prop = 'border-end-start-radius';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixBorderBottomLeftRadius, blogID: 3 });
+      }
+
+      // Shorthand Explosion (border-radius: tl tr br bl)
+      else if (decl.prop === 'border-radius') {
+        const parts = postcss.list.space(decl.value);
+        if (parts.length === 4) {
+          const [tl, tr, br, bl] = parts;
+          decl.replaceWith(
+            { prop: 'border-start-start-radius', value: tl },
+            { prop: 'border-start-end-radius', value: tr },
+            { prop: 'border-end-end-radius', value: br },
+            { prop: 'border-end-start-radius', value: bl }
+          );
+          score -= 5;
+          warnings.push({
+            type: text.errtypeRTL,
+            msg: text.fixBorderRadiusShorthand,
+            blogID: 3
+          });
+        }
+      }
+
+      // Positioning (left/right -> inset-inline-start/end)
+      else if (decl.prop === 'left') {
+        decl.prop = 'inset-inline-start';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixLeftPosition, blogID: 3 });
+      } else if (decl.prop === 'right') {
+        decl.prop = 'inset-inline-end';
+        score -= 5;
+        warnings.push({ type: text.errtypeRTL, msg: text.fixRightPosition, blogID: 3 });
+      }
+
+      // --- PIXEL UNIT CHECK ---
+      // Check for pixel values > 10px in any declaration value
+      const pxMatches = decl.value.match(/(\d*\.?\d+)px/g);
+      if (pxMatches) {
+        const hasLargePixels = pxMatches.some(match => parseFloat(match) > 10);
+        if (hasLargePixels) {
+          // We only want to warn once per file ideally, or maybe per declaration?
+          // The previous logic warned once if ANY large pixel was found.
+          // Let's check if we already have this warning.
+          const alreadyWarned = warnings.some(w => w.type === text.errtypeResponsiveness && w.msg === text.warnPx);
+          if (!alreadyWarned) {
+            score -= 5;
+            warnings.push({ type: text.errtypeResponsiveness, msg: text.warnPx, blogID: 4 });
+          }
+        }
+      }
     }
   };
 
-  // Run the Fixers
-
-  // Margins
-  autoFix(/margin-left/g, "margin-inline-start", text.fixMarginLeft, 3);
-  autoFix(/margin-right/g, "margin-inline-end", text.fixMarginRight, 3);
-
-  // Paddings
-  autoFix(/padding-left/g, "padding-inline-start", text.fixPaddingLeft, 3);
-  autoFix(/padding-right/g, "padding-inline-end", text.fixPaddingRight, 3);
-
-  // Borders (Physical sides -> Logical sides)
-  autoFix(/border-left/g, "border-inline-start", "Replaced border-left with border-inline-start", 3);
-  autoFix(/border-right/g, "border-inline-end", "Replaced border-right with border-inline-end", 3);
-
-  // Text Align (Left -> Start, Right -> End)
-  // We use regex with specific spacing checks so we don't break other words
-  autoFix(/text-align:\s*left/g, "text-align: start", text.fixTextAlign, 8);
-  autoFix(/text-align:\s*right/g, "text-align: end", text.fixTextAlign, 8);
-
-  // Specific Corners (Physical -> Logical)
-  // This converts "border-top-left-radius" to "border-start-start-radius" so it flips automatically.
-  autoFix(/border-top-left-radius/g, "border-start-start-radius", "Fixed top-left radius to logical start-start", 3);
-  autoFix(/border-top-right-radius/g, "border-start-end-radius", "Fixed top-right radius to logical start-end", 3);
-  autoFix(/border-bottom-right-radius/g, "border-end-end-radius", "Fixed bottom-right radius to logical end-end", 3);
-  autoFix(/border-bottom-left-radius/g, "border-end-start-radius", "Fixed bottom-left radius to logical end-start", 3);
-
-  // Shorthand Explosion (The Magic Fix for inputs & buttons)
-  // This catches "border-radius: 8px 0 0 8px;" and explodes it into 4 logical lines.
-  // We use a callback function as the replacement to capture the 4 values (tl, tr, br, bl).
-  autoFix(
-    /border-radius:\s*([^\s;]+)\s+([^\s;]+)\s+([^\s;]+)\s+([^\s;]+);/g,
-    (match, tl, tr, br, bl) => {
-      return `
-      border-start-start-radius: ${tl};
-      border-start-end-radius: ${tr};
-      border-end-end-radius: ${br};
-      border-end-start-radius: ${bl};
-      `;
-    },
-    "Converted physical border-radius shorthand to logical properties",
-    3
-  );
-
-  // --- POSITIONING FIXES (For Images) ---
-
-  // Fix "left: 10px;" -> "inset-inline-start: 10px;"
-  // The regex (^|\s|;) ensures we don't accidentally match "margin-left" again.
-  autoFix(
-    /(^|[\s;])left:\s*([^;]+);/g,
-    "$1inset-inline-start: $2;",
-    "Fixed absolute positioning 'left' to 'inset-inline-start'",
-    5
-  );
-
-  // Fix "right: 0;" -> "inset-inline-end: 0;"
-  autoFix(
-    /(^|[\s;])right:\s*([^;]+);/g,
-    "$1inset-inline-end: $2;",
-    "Fixed absolute positioning 'right' to 'inset-inline-end'",
-    5
-  );
-
-
-  // PIXEL UNIT CHECK (Smart Version) ---
-
-  // Create a temporary string for analysis
-  // We remove the definition line of media queries (e.g., "@media (max-width: 768px) {")
-  // So that '768px' doesn't get flagged.
-  // Regex explanation: Match "@media", then anything that is NOT a "{", then the "{"
-  const codeForPxCheck = fixedCSS.replace(/@media[^{]+\{/g, "");
-
-  // Find matches in the CLEANED string
-  const pxMatches = [...codeForPxCheck.matchAll(/(\d*\.?\d+)px/g)];
-
-  // Check values > 10
-  const hasLargePixels = pxMatches.some(match => {
-    const value = parseFloat(match[1]);
-    return value > 10;
-  });
-
-  if (hasLargePixels) {
-    score -= 5;
-    warnings.push({
-      type: "Responsiveness",
-      msg: text.warnPx,
-      blogID: 4
-    });
-  }
+  const result = await postcss([plugin]).process(cssString, { parser: safeParser, from: 'input.css' });
 
   // Prevent negative score
   score = Math.max(0, score);
 
-  return { score, warnings, fixedCSS };
+  return { score, warnings, fixedCSS: result.css };
 };
 
 export default analyzeCSS;

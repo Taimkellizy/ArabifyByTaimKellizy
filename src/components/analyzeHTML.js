@@ -11,7 +11,7 @@ const analyzeHTML = (htmlString, text) => {
     score -= 20;
     warnings.push({ type: text.errtypeStructure, msg: text.msgMissingHeader, blogID: 1 });
   }
-  
+
   if (!doc.querySelector("nav")) {
     score -= 20;
     warnings.push({ type: text.errtypeStructure, msg: text.msgMissingNav, blogID: 1 });
@@ -27,45 +27,45 @@ const analyzeHTML = (htmlString, text) => {
   // Check Charset
   if (!doc.querySelector("meta[charset]")) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaCharset, blogID: 7 });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaCharset, blogID: 6 });
   }
 
   // Check Viewport
   if (!doc.querySelector('meta[name="viewport"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaViewport, blogID: 7 });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaViewport, blogID: 6 });
   }
 
   // Check Description
   if (!doc.querySelector('meta[name="description"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaDescription, blogID: 7 });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaDescription, blogID: 6 });
   }
 
   // Check Keywords
   if (!doc.querySelector('meta[name="keywords"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaKeywords, blogID: 7 });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaKeywords, blogID: 6 });
   }
 
   // Check Author
   if (!doc.querySelector('meta[name="author"]')) {
     score -= 5;
-    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaAuthor, blogID: 7 });
+    warnings.push({ type: text.errtypeMeta, msg: text.msgMissingMetaAuthor, blogID: 6 });
   }
 
   // --- LANG ATTRIBUTE CHECK ---
-  
+
   // This checks the <html lang="..."> attribute specifically
   const htmlTag = doc.documentElement; // This gets the <html> tag
   if (!htmlTag.hasAttribute("lang")) {
     score -= 5;
-    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingLangAttribute, blogID: 6 });
+    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingLangAttribute, blogID: 5 });
   }
 
   if (!htmlTag.hasAttribute("dir")) {
     score -= 5;
-    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingDirAttribute, blogID: 6 });
+    warnings.push({ type: text.errtypeLanguage, msg: text.msgMissingDirAttribute, blogID: 5 });
   }
 
   // Check Images for Alt
@@ -74,9 +74,9 @@ const analyzeHTML = (htmlString, text) => {
     // Check if alt is missing OR empty (alt="") is valid, but missing is bad
     if (!img.hasAttribute("alt")) {
       score -= 5;
-      
+
       let finalMessage = text.msgMissingAlt(index + 1);
-      
+
       warnings.push({
         type: text.errtypeAlt,
         msg: finalMessage,
