@@ -1,8 +1,9 @@
-# 🌐 Arabify (عَرِّب) v1.0.0
+# 🌐 Arabify (عَرِّب) v0.2.0
 
 **Arabify** scans HTML & CSS files and scores how well a page is “Arabified”. It checks AR-SEO signals, RTL layout, accessibility (alt, labels, ARIA), and basic performance heuristics — then returns a 0–100 score, a categorized breakdown, copyable fixes, and a patched preview (Only for CSS). All processing runs client-side (no server, free, hackathon-ready).
 
-## 🎉 New Features in v1.0.0
+## 🎉 New Features in v0.2.0
+- **Robust Testing Suite**: Added comprehensive unit tests for CSS, HTML, and JSX analyzers to ensure reliability and regression protection.
 - **JSX/TSX Support**: Now supports analyzing React components (`.jsx`, `.tsx`, `.js`) directly!
 - **Enhanced RTL Analysis**:
   - Detects physical properties in JS style objects (e.g., `marginLeft`, `paddingRight`).
@@ -92,6 +93,13 @@ Make sure you have **Node.js** installed.
     ```
 
 The app will automatically open in your browser at `http://localhost:3000`.
+
+### 🧪 Running Tests
+To ensure the application logic is working correctly (especially the analyzers), run the test suite:
+```bash
+npm test
+```
+(Press `a` to run all tests if prompted).
 
 ## 📂 Project Structure
 

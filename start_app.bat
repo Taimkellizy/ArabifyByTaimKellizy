@@ -1,0 +1,3 @@
+@echo off
+echo Starting Arabify...
+cmd /c "npm start"

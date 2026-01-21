@@ -1,6 +1,6 @@
 {
   "name": "arabify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
@@ -22,7 +22,7 @@
     "react-bits": "^1.0.5",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.6",
+    "react-router-dom": "^6.30.3",
     "react-scripts": "^5.0.1",
     "react-syntax-highlighter": "^16.1.0",
     "three": "^0.181.2",
