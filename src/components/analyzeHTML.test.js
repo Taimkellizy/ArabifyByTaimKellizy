@@ -93,4 +93,16 @@ describe('analyzeHTML', () => {
             ])
         );
     });
+    test('skips structure checks if isReact is true', () => {
+        const html = '<!DOCTYPE html><html><body><div id="root"></div></body></html>';
+        const result = analyzeHTML(html, mockText, { isMainFile: true, isReact: true });
+        // Should NOT have structure warnings
+        expect(result.warnings).not.toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ msg: 'Missing Header' }),
+                expect.objectContaining({ msg: 'Missing Nav' }),
+                expect.objectContaining({ msg: 'Missing Footer' })
+            ])
+        );
+    });
 });

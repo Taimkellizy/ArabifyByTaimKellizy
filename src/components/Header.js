@@ -1,45 +1,46 @@
+import { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAddressBook, faPen, faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { faAddressBook, faPen } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
+import { LanguageContext } from '../contexts/LanguageContext';
+import LanguageToggle from './LanguageToggle';
 
-const Header = ({ text, toggleLanguage }) => {
-  return (
+const Header = () => {
+    const { text } = useContext(LanguageContext);
+    
+    return (
     <header>
-      <nav>
+        <nav>
         <ul>
-          {/* LOGO - Links to Home */}
-          <li className="logo-item">
+            {/* LOGO - Links to Home */}
+            <li className="logo-item">
             <Link to="/" className="logo">
-              <img src="./arabify-logo-4.svg" alt="logo" className='logo-img' />
+                <img src="./arabify-logo-4.svg" alt="logo" className='logo-img' />
             </Link>
-          </li>
+            </li>
 
-          {/* BLOG LINK */}
-          <li>
+            {/* BLOG LINK */}
+            <li>
             <Link to="/blog">
-              <FontAwesomeIcon icon={faPen} className='icons-end' /> {text.blog}
+                <FontAwesomeIcon icon={faPen} className='icons-end' /> {text.blog}
             </Link>
-          </li>
+            </li>
 
-          {/* CONTACT LINK (Anchor tag is fine for scrolling if on Home, 
-              but usually you might want a separate contact page later) */}
-          <li>
+            {/* CONTACT LINK */}
+            <li>
             <a href="https://www.linkedin.com/in/taimkellizy/" className="low_opacity_bg">
-              <FontAwesomeIcon icon={faAddressBook} className='icons-end' /> {text.contact}
+                <FontAwesomeIcon icon={faAddressBook} className='icons-end' /> {text.contact}
             </a>
-          </li>
+            </li>
 
-          {/* TOGGLE BUTTON */}
-          <li>
-            <button onClick={toggleLanguage} className="lang-btn">
-              <FontAwesomeIcon icon={faGlobe} className='icons-end' />
-              {text.toggleBtn}
-            </button>
-          </li>
+            {/* TOGGLE BUTTON */}
+            <li>
+                <LanguageToggle />
+            </li>
         </ul>
-      </nav>
+        </nav>
     </header>
-  );
+    );
 };
 
 export default Header;

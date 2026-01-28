@@ -13,7 +13,7 @@ export const content = {
     downloadFixed: "Download Fixed Code",
     analyzeBtn: "Analyze Code",
     score: "Score:",
-    copyrights: "© 2025 Arabify. All rights reserved.",
+    copyrights: "© 2025 Arabify. Open Source (MIT License).",
     upFile: "Upload File",
     fileUped: "File Uploaded (Change?)",
     analyzing: "Analyzing...",
@@ -25,8 +25,25 @@ export const content = {
     upload: "Upload",
     files: "Files",
 
+    // Wizard
+    wizardTitle: "Analysis Configuration",
+    modeSelect: "Select Analysis Mode",
+    modeScan: "Quick Scan (Report Only)",
+    modeFix: "Auto-Fix CSS & Scan",
+    modeMultiLang: "Multi-Language Setup & Checks",
+    configFiles: "Project Configuration",
+    mainJs: "Main React Entry File (e.g. App.js)",
+    mainHtml: "Main HTML File (e.g. index.html)",
+    startBtn: "Start Analysis",
+    projectType: "Project Type",
+    typeReact: "React.js",
+    typeVanilla: "Vanilla (HTML/CSS/JS)",
+    cancelBtn: "Cancel",
+
     // Error Types
     errtypeStructure: "HTML Structure",
+    errPreSemantic: "We couldn't find a",
+    errPostSemantic: "tag in the entire project.",
     errtypeAlt: "Accessibility",
     errtypeMeta: "SEO & Meta Tags",
     errtypeLanguage: "Language Configuration",
@@ -37,6 +54,7 @@ export const content = {
     msgMissingHeader: <>We couldn't find a <span className="en-code">&lt;header&gt;</span> tag. Consider replacing <span className="en-code">&lt;div className='header'&gt;</span> with <span className="en-code">&lt;header&gt;</span>.</>,
     msgMissingNav: <>We couldn't find a <span className="en-code">&lt;nav&gt;</span> tag. Consider replacing <span className="en-code">&lt;div className='nav'&gt;</span> with <span className="en-code">&lt;nav&gt;</span>.</>,
     msgMissingFooter: <>We couldn't find a <span className="en-code">&lt;footer&gt;</span> tag. Consider adding one for better structure.</>,
+    msgMissingMain: <>We couldn't find a <span className="en-code">&lt;main&gt;</span> tag. Consider wrapping your main content in <span className="en-code">&lt;main&gt;</span>.</>,
 
     // FUNCTION: Dynamic ID
     msgMissingAlt: (id) => <>Image <span className="en-code">#{id}</span> is missing an 'alt' attribute.</>,
@@ -56,6 +74,7 @@ export const content = {
     msgAvoidBorderRadiusShorthand: "Avoid 4-value borderRadius shorthand. It is direction-sensitive.",
     msgAvoidTextLeftRightClass: "Avoid 'text-left'/'text-right'. Use logical alignment.",
     msgAvoidPhysicalMarginPaddingClass: "Avoid physical margin/padding (ml-, mr-). Use logical properties (ms-, me-).",
+    msgMissingLangLogic: "Main App file seems to be missing Language Context or dynamic direction logic.",
 
     // --- CSS WARNINGS ---
     fixScroll: <>Added <span className="en-code">scroll-behavior: smooth</span> to html for better user experience.</>,
@@ -166,7 +185,7 @@ export const content = {
     downloadFixed: "تحميل الكود المصحح",
     analyzeBtn: "تحليل الكود",
     score: "النقاط:",
-    copyrights: "© 2025 عَرِّب. جميع الحقوق محفوظة.",
+    copyrights: "© 2025 عَرِّب. مفتوح المصدر (رخصة MIT).",
     upFile: "رفع ملف",
     fileUped: "تم رفع الملف (تغيير؟)",
     analyzing: "جاري التحليل...",
@@ -178,7 +197,24 @@ export const content = {
     upload: "رفع",
     files: "ملفات",
 
+    // Wizard
+    wizardTitle: "إعدادات التحليل",
+    modeSelect: "اختر وضع التحليل",
+    modeScan: "فحص سريع (تقرير فقط)",
+    modeFix: "إصلاح تلقائي للـ CSS وفحص",
+    modeMultiLang: "إعداد وتدقيق تعدد اللغات",
+    configFiles: "إعدادات المشروع",
+    mainJs: "ملف React الرئيسي (مثل App.js)",
+    mainHtml: "ملف HTML الرئيسي (مثل index.html)",
+    startBtn: "ابـدأ التحليل",
+    projectType: "نوع المشروع",
+    typeReact: "React.js",
+    typeVanilla: "إعتيادي (HTML/CSS/JS)",
+    cancelBtn: "إلغاء",
+
     errtypeStructure: "هيكلية الصفحة",
+    errPreSemantic: "لم نتمكن من العثور على وسم",
+    errPostSemantic: "في المشروع بالكامل.",
     errtypeAlt: "سهولة الوصول",
     errtypeMeta: "تحسين محركات البحث (SEO)",
     errtypeLanguage: "إعدادات اللغة",
@@ -189,6 +225,7 @@ export const content = {
     msgMissingHeader: <>لم نتمكن من العثور على وسم <span className="en-code">&lt;header&gt;</span>. فكر في استبدال <span className="en-code">&lt;div className='header'&gt;</span> بـ <span className="en-code">&lt;header&gt;</span>.</>,
     msgMissingNav: <>لم نتمكن من العثور على وسم <span className="en-code">&lt;nav&gt;</span>. فكر في استبدال <span className="en-code">&lt;div className='nav'&gt;</span> بـ <span className="en-code">&lt;nav&gt;</span>.</>,
     msgMissingFooter: <>لم نتمكن من العثور على وسم <span className="en-code">&lt;footer&gt;</span>. فكر في إضافة واحد لتحسين الهيكلية.</>,
+    msgMissingMain: <>لم نتمكن من العثور على وسم <span className="en-code">&lt;main&gt;</span>. فكر في تغليف المحتوى الرئيسي بـ <span className="en-code">&lt;main&gt;</span>.</>,
 
     // FUNCTION
     msgMissingAlt: (id) => <>الصورة رقم <span className="en-code">#{id}</span> تفتقد وسم <span className="en-code">alt</span>.</>,
@@ -208,6 +245,7 @@ export const content = {
     msgAvoidBorderRadiusShorthand: "تجنب اختصار borderRadius بـ 4 قيم. إنه حساس للاتجاه.",
     msgAvoidTextLeftRightClass: "تجنب 'text-left'/'text-right'. استخدم المحاذاة المنطقية.",
     msgAvoidPhysicalMarginPaddingClass: "تجنب هوامش/حواشي مادية (ml-, mr-). استخدم خصائص منطقية (ms-, me-).",
+    msgMissingLangLogic: "يبدو أن ملف التطبيق الرئيسي يفتقد سياق اللغة أو منطق الاتجاه الديناميكي.",
 
     // --- CSS WARNINGS ---
     fixScroll: <>تم إضافة <span className="en-code">scroll-behavior: smooth</span> لتحسين تجربة التمرير.</>,

@@ -59,8 +59,8 @@ const SplitText = ({
             display: 'inline-block', 
             whiteSpace: 'pre',
             // Arabic usually needs a bit less spacing if using this method, 
-            // but paddingLeft works for RTL direction.
-            paddingLeft: '0.3em', 
+            // but paddingInlineStart works for RTL direction.
+            paddingInlineStart: '0.3em', 
             willChange: 'transform, opacity',
             backfaceVisibility: 'hidden'
           }}
@@ -78,7 +78,7 @@ const SplitText = ({
             display: 'inline-block', 
             whiteSpace: 'nowrap',
             // ADD MARGIN EXCEPT FOR THE LAST WORD:
-            marginRight: i < words.length - 1 ? '0.3em' : '0' 
+            marginInlineEnd: i < words.length - 1 ? '0.3em' : '0' 
           }} 
         >
           {word.split("").map((char, j) => (

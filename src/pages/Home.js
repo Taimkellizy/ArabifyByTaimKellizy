@@ -1,17 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import SplitText from '../components/split_text';
 import CodeWindow from '../components/CodeWindow';
 import analyzeHTML from '../components/analyzeHTML';
 import analyzeCSS from '../components/analyzeCSS';
 import analyzeJSX from '../components/analyzeJSX';
+import ConfigWizard from '../components/ConfigWizard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faUpload, faCode, faFolderOpen, faFile, faChevronDown, faFileImage, faFileAlt } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faHtml5, faCss3, faReact } from '@fortawesome/free-brands-svg-icons';
 import Confetti from 'react-confetti';
 import { Link } from 'react-router-dom';
 import JSZip from 'jszip';
+import { LanguageContext } from '../contexts/LanguageContext';
+import { contextTemplate, toggleTemplate } from '../utils/reactGenerators';
 
-const Home = ({ text, lang }) => {
+const Home = () => {
+    const { text, lang } = useContext(LanguageContext);
   // State for uploaded files
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [results, setResults] = useState([]); // Array of { fileName, score, warnings, fixedCode, type }
@@ -19,6 +23,10 @@ const Home = ({ text, lang }) => {
   const [confettiKey, setConfettiKey] = useState(0);
   const [showUploadMenu, setShowUploadMenu] = useState(false);
   const uploadMenuRef = useRef(null);
+
+  // Wizard State
+  const [showWizard, setShowWizard] = useState(false);
+  const [analysisConfig, setAnalysisConfig] = useState(null);
 
   // Close upload menu when clicking outside
   useEffect(() => {
@@ -64,13 +72,31 @@ const Home = ({ text, lang }) => {
     Promise.all(readPromises).then(files => {
       setUploadedFiles(files);
       setResults([]); // Reset results
+      setAnalysisConfig(null); // Reset config on new upload
     });
   };
 
-  const handleAnalysis = async () => {
+  // Trigger Analysis (Shows Wizard First)
+  const initiateAnalysis = () => {
+    if (uploadedFiles.length === 0) return;
+    setShowWizard(true);
+  };
+
+  const handleWizardStart = (config) => {
+    setAnalysisConfig(config);
+    setShowWizard(false);
+    runAnalysis(config);
+  };
+
+  const runAnalysis = async (config) => {
     setIsAnalyzing(true);
     const newResults = [];
     let allPerfect = true;
+    
+    // Track global project stats
+    const projectStats = {
+      foundTags: new Set()
+    };
 
     for (const file of uploadedFiles) {
       // Only analyze supported types
@@ -79,18 +105,90 @@ const Home = ({ text, lang }) => {
       let result = { fileName: file.name, path: file.path, type: file.type, score: 0, warnings: [], fixedCode: null };
 
       if (file.type === 'html') {
-        const { score, warnings } = analyzeHTML(file.content, text);
-        result = { ...result, score, warnings };
+        const isMain = file.name === config.htmlFileName;
+        // For Vanilla: Check structure locally on EVERY HTML file.
+        // For React: Only check structure globally (aggregated later), so don't check locally here.
+        const checkStructureLocally = config.projectType === 'vanilla';
+
+        const { score, warnings, foundTags, fixedCode } = analyzeHTML(file.content, text, { 
+            isMainFile: isMain,
+            checkStructure: checkStructureLocally,
+            mode: config.mode,
+            isReact: config.projectType === 'react'
+        });
+        if (foundTags) foundTags.forEach(t => projectStats.foundTags.add(t));
+        result = { ...result, score, warnings, fixedCode };
       } else if (file.type === 'css') {
         const { score, warnings, fixedCSS } = await analyzeCSS(file.content, text);
-        result = { ...result, score, warnings, fixedCode: fixedCSS };
+        // Only attach fixedCode if mode is 'fix'
+        result = {
+          ...result,
+          score,
+          warnings,
+          fixedCode: config.mode === 'fix' ? fixedCSS : null
+        };
       } else if (file.type === 'jsx') {
-        const { score, warnings } = analyzeJSX(file.content, text);
-        result = { ...result, score, warnings };
+        const { score, warnings, foundTags, fixedCode } = analyzeJSX(file.content, text, {
+             mode: config.mode,
+             // Check exact name OR path ending (e.g. src/App.js)
+             isAppFile: (file.name === config.appFileName || file.path.endsWith(`/${config.appFileName}`))
+        });
+        if (foundTags) foundTags.forEach(t => projectStats.foundTags.add(t));
+        result = { ...result, score, warnings, fixedCode };
+
+        // Multi-Lang Logic Check
+        if (config.mode === 'multi-lang' && config.projectType !== 'vanilla' && file.name === config.appFileName) {
+          // Simple Heuristic Check for Context/Provider/Dir Logic
+          const content = file.content;
+          // Looking for common patterns like <LanguageContext.Provider>, <IntlProvider>, or logic handling direction
+          const hasLangLogic =
+            content.includes('Context') ||
+            content.includes('Provider') ||
+            (content.includes('dir') && content.includes('?')); // rudimentary check for conditional dir
+
+          if (!hasLangLogic) {
+            result.score = Math.max(0, result.score - 20);
+            result.warnings.push({
+              type: text.errtypeLanguage, // use existing key
+              msg: text.msgMissingLangLogic,
+              blogID: 5
+            });
+          }
+        }
       }
 
       if (result.score < 100) allPerfect = false;
       newResults.push(result);
+    }
+
+    // --- Post-Loop Global Checks (React Only) ---
+    if (config.projectType === 'react') {
+        const missingTags = [];
+        if (!projectStats.foundTags.has('header')) missingTags.push('<header>');
+        if (!projectStats.foundTags.has('footer')) missingTags.push('<footer>');
+        if (!projectStats.foundTags.has('main')) missingTags.push('<main>');
+
+        if (missingTags.length > 0) {
+            // Find the main file to attach warnings to, or the first file
+            const targetFileIndex = newResults.findIndex(r => r.fileName === config.appFileName);
+            // If main file not found in results (e.g. not uploaded), attach to first result
+            const finalTargetIndex = targetFileIndex !== -1 ? targetFileIndex : 0;
+            
+            if (newResults[finalTargetIndex]) {
+                const globalWarnings = missingTags.map(tag => ({
+                    type: text.errtypeStructure,
+                    msg: `${text.errPreSemantic} ${tag} ${text.errPostSemantic} (Global Check)`,
+                    blogID: 1
+                }));
+                
+                newResults[finalTargetIndex].warnings.push(...globalWarnings);
+                // Deduct 10 points for each missing global structure item
+                newResults[finalTargetIndex].score = Math.max(0, newResults[finalTargetIndex].score - (globalWarnings.length * 10));
+                
+                // Re-evaluate perfection if we added warnings
+                if (newResults[finalTargetIndex].score < 100) allPerfect = false;
+            }
+        }
     }
 
     setResults(newResults);
@@ -114,6 +212,27 @@ const Home = ({ text, lang }) => {
       // Use the relative path to preserve folder structure
       zip.file(file.path, contentToSave);
     });
+
+    // --- MULTI-LANG INJECTION (React Only) ---
+    if (analysisConfig && analysisConfig.mode === 'multi-lang' && analysisConfig.projectType === 'react') {
+        // Find the root folder (where App.js is located)
+        // Heuristic: Use the folder containing the App File as the "src" root
+        const appFile = uploadedFiles.find(f => f.name === analysisConfig.appFileName || f.path.endsWith(`/${analysisConfig.appFileName}`));
+        let srcPrefix = '';
+        if (appFile) {
+            // e.g. "my-project/src/App.js" -> "my-project/src/"
+            const parts = appFile.path.split('/');
+            parts.pop(); // remove filename
+            srcPrefix = parts.join('/') + (parts.length > 0 ? '/' : '');
+        }
+
+        // Add Context
+        zip.file(srcPrefix + 'contexts/LanguageContext.js', contextTemplate);
+        
+        // Add Toggle (Assuming components folder implies src/components)
+        // If srcPrefix ends in 'src/', we get 'src/components/LanguageToggle.js'
+        zip.file(srcPrefix + 'components/LanguageToggle.js', toggleTemplate);
+    }
 
     const content = await zip.generateAsync({ type: "blob" });
     const element = document.createElement("a");
@@ -152,6 +271,13 @@ const Home = ({ text, lang }) => {
 
   return (
     <div className="home-page">
+      {showWizard && (
+        <ConfigWizard
+          onStart={handleWizardStart}
+          onCancel={() => setShowWizard(false)}
+        />
+      )}
+
       <div>
         <section className='hero-section'>
           <SplitText
@@ -255,7 +381,7 @@ const Home = ({ text, lang }) => {
 
         {uploadedFiles.length > 0 && (
           <div className='analyse-btn'>
-            <button onClick={handleAnalysis} className="btn" disabled={isAnalyzing}>
+            <button onClick={initiateAnalysis} className="btn" disabled={isAnalyzing}>
               {isAnalyzing ? text.analyzing : text.analyzeBtn}
             </button>
 
@@ -276,7 +402,7 @@ const Home = ({ text, lang }) => {
                 height={window.innerHeight}
                 recycle={false}
                 numberOfPieces={500}
-                style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, pointerEvents: 'none' }}
+                style={{ position: 'fixed', top: 0, insetInlineStart: 0, zIndex: 9999, pointerEvents: 'none' }}
               />
             )}
 

@@ -1,20 +1,20 @@
 .code-window {
   background-color: #1e1e1e;
-  border-radius: 12px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 0.75rem; /* 12px */
+  box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.5); /* 20px 50px */
   width: 100%;
-  max-width: 800px;
+  max-width: 50rem; /* 800px */
   margin: 2rem auto;
   overflow: hidden;
   border: 1px solid #333;
-  direction: ltr;
-  text-align: left;
+  direction: ltr; /* Keeps code LTR even in RTL mode */
+  text-align: start;
   font-family: monospace !important;
 }
 
 .window-header {
   background-color: #252526;
-  padding: 10px 20px;
+  padding: 0.625rem 1.25rem; /* 10px 20px */
   display: flex;
   align-items: center;
   border-bottom: 1px solid #1e1e1e;
@@ -26,7 +26,7 @@
   font-family: 'Segoe UI', sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.03rem; /* 0.5px approx */
   z-index: 10;
 }
 
@@ -34,16 +34,15 @@
   background: transparent;
   border: 1px solid #444;
   color: #ccc;
-  border-radius: 4px;
-  padding: 4px 10px;
+  border-radius: 0.25rem; /* 4px */
+  padding: 0.25rem 0.625rem; /* 4px 10px */
   font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem; /* 6px */
   transition: all 0.2s ease;
-  margin-left: auto;
-  /* Pushes it to the right */
+  margin-inline-start: auto; /* Logical margin-left to push to end */
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -76,9 +75,9 @@
 .code-fade-overlay {
   position: absolute;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0; /* Logical left */
   width: 100%;
-  height: 80px;
+  height: 5rem; /* 80px */
   background: linear-gradient(to bottom, rgba(30, 30, 30, 0), #1e1e1e);
   pointer-events: none;
   z-index: 5;
@@ -90,14 +89,14 @@
   /* VS Code Blue */
   color: white;
   border: none;
-  padding: 8px;
+  padding: 0.5rem; /* 8px */
   font-family: 'Segoe UI', sans-serif;
   font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem; /* 8px */
   transition: background 0.2s;
 }
 

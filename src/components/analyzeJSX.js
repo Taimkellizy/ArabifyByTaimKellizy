@@ -1,8 +1,11 @@
 import { parse } from '@babel/parser';
 
-const analyzeJSX = (codeString, text) => {
+import { injectProvider, injectToggle } from '../utils/reactInjector';
+
+const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false }) => {
     let score = 100;
     let warnings = [];
+    let fixedCode = null;
 
     let ast;
     try {
@@ -36,10 +39,8 @@ const analyzeJSX = (codeString, text) => {
     };
 
     // State to track findings
-    let hasHeader = false;
-    let hasFooter = false;
-    let hasMain = false;
-    let hasBody = false; // In JSX, body is rare but possible in Next.js layouts
+    const foundTags = new Set();
+
 
     // Visitor
     const visitor = {
@@ -96,12 +97,9 @@ const analyzeJSX = (codeString, text) => {
 
         JSXOpeningElement: (node) => {
             const name = getJSXName(node.name);
+            foundTags.add(name.toLowerCase());
 
-            // Structure Checks
-            if (name === 'header') hasHeader = true;
-            if (name === 'footer') hasFooter = true;
-            if (name === 'main') hasMain = true;
-            if (name === 'body') hasBody = true;
+
 
             // Accessibility: img alt
             if (name === 'img') {
@@ -151,23 +149,44 @@ const analyzeJSX = (codeString, text) => {
 
     traverse(ast, visitor);
 
-    // Final Structure Check
-    // Only apply if we found a 'main' or 'body' wrapper, implying this is a layout file
-    if (hasMain || hasBody) {
-        if (!hasHeader) {
-            score -= 10;
+    // Safety
+    score = Math.max(0, score);
+
+    // Structure Checks
+    if (foundTags.has('main') || foundTags.has('body')) {
+        if (!foundTags.has('header')) {
+            score -= 5;
             warnings.push({ type: text.errtypeStructure, msg: text.msgMissingHeader, blogID: 1 });
         }
-        if (!hasFooter) {
-            score -= 10;
+        if (!foundTags.has('footer')) {
+            score -= 5;
             warnings.push({ type: text.errtypeStructure, msg: text.msgMissingFooter, blogID: 1 });
         }
     }
 
-    // Safety
-    score = Math.max(0, score);
+    // --- MULTI-LANG INJECTION ---
+    if (options.mode === 'multi-lang') {
+        let injected = false;
+        let modifiedCode = codeString; // Start with original
 
-    return { score, warnings };
+        // 1. Inject Provider if it's the App File
+        if (options.isAppFile) {
+            modifiedCode = injectProvider(modifiedCode);
+            injected = true;
+        }
+
+        // 2. Inject Toggle if it has Nav/Header
+        if (foundTags.has('nav') || foundTags.has('header')) {
+            modifiedCode = injectToggle(modifiedCode);
+            injected = true;
+        }
+
+        if (injected) {
+            fixedCode = modifiedCode;
+        }
+    }
+
+    return { score, warnings, foundTags, fixedCode }; // Return foundTags & fixedCode
 };
 
 // Helper to get name from JSXMemberExpression (e.g. Components.Header)

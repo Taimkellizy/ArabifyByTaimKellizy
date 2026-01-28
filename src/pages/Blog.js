@@ -1,10 +1,12 @@
 import CodeWindow from '../components/CodeWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faYoutube } from '@fortawesome/free-brands-svg-icons';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import { LanguageContext } from '../contexts/LanguageContext';
 
-const Blog = ({ text, lang }) => {
+const Blog = () => {
+  const { text, lang } = useContext(LanguageContext);
   const isAr = lang === 'ar';
 
   // --- NEW: Scroll to Hash Logic ---
