@@ -1,0 +1,16 @@
+{
+  "name": "@meridian/core",
+  "version": "1.0.0",
+  "description": "Core logic for Meridian Suite",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Taim Kellizy",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.29.0",
+    "postcss": "^8.5.6",
+    "postcss-safe-parser": "^7.0.1"
+  }
+}

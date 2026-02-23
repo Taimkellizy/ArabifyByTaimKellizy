@@ -103,6 +103,28 @@ const analyzeCSS = async (cssString, text, options = {}) => {
         }
       }
 
+      // 5. Margin/Padding Shorthand (4 values)
+      else if (decl.prop === 'padding' || decl.prop === 'margin') {
+        const parts = postcss.list.space(decl.value);
+        if (parts.length === 4) {
+          score -= 5;
+          if (options.isMainFile) {
+            const [top, right, bottom, left] = parts;
+            decl.replaceWith(
+              { prop: `${decl.prop}-block-start`, value: top },
+              { prop: `${decl.prop}-inline-end`, value: right },
+              { prop: `${decl.prop}-block-end`, value: bottom },
+              { prop: `${decl.prop}-inline-start`, value: left }
+            );
+          }
+          warnings.push({
+            type: "errtypeRTL",
+            code: `FIX_${decl.prop.toUpperCase()}_SHORTHAND`,
+            blogID: 3
+          });
+        }
+      }
+
 // Pixel check moved to analyzeA11Y.js
 
     }

@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "languages": [
+    "en",
+    "ar"
+  ],
+  "defaultLanguage": "en",
+  "translation": false,
+  "languageSwitcher": {
+    "position": "",
+    "customClass": "",
+    "showFlags": true
+  }
+}

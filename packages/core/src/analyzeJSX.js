@@ -1,5 +1,5 @@
 import { parse } from '@babel/parser';
-import { injectProvider, injectToggle } from '../utils/reactInjector.js';
+import { injectProvider, injectToggle } from './utils/reactInjector.js';
 import { 
     STRICT_PHYSICAL_PROPS, 
     AMBIGUOUS_PROPS, 
@@ -329,9 +329,20 @@ const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false
             injected = true;
         }
 
-        // 2. Inject Toggle if it has Nav/Header
-        if (foundTags.has('nav') || foundTags.has('header')) {
-            modifiedCode = injectToggle(modifiedCode);
+        // 2. Inject Toggle based on user configuration
+        const targetPos = options.config?.languageSwitcher?.position || 'nav';
+        let shouldInject = false;
+        
+        if (targetPos === 'custom selector') {
+            shouldInject = true;
+        } else if (foundTags.has(targetPos)) {
+            shouldInject = true;
+        } else if (foundTags.has('nav') || foundTags.has('header')) {
+            shouldInject = true;
+        }
+
+        if (shouldInject) {
+            modifiedCode = injectToggle(modifiedCode, targetPos);
             injected = true;
         }
     }

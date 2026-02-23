@@ -380,7 +380,7 @@ export default ${exportName}WithLang;`;
   return newCode;
 };
 
-export const injectToggle = (code) => {
+export const injectToggle = (code, targetPos = "nav") => {
   let ast;
   try {
     ast = parse(code, {
@@ -401,8 +401,8 @@ export const injectToggle = (code) => {
 
   let lastImportEnd = 0;
   let foundImport = false;
-  let targetNode = null; // Nav Element
-  let targetList = null; // UL or OL inside Nav
+  let targetNode = null; 
+  let targetList = null; 
   let alreadyInjected = false;
 
   traverse(ast, {
@@ -415,14 +415,14 @@ export const injectToggle = (code) => {
     },
     JSXElement: (node) => {
       const name = node.openingElement.name.name;
-      if (name === "nav") {
+      if (name === targetPos) {
         targetNode = node;
         // Look for ul/ol in children
         node.children.forEach((child) => {
           if (
             child.type === "JSXElement" &&
             (child.openingElement.name.name === "ul" ||
-              child.openingElement.name.name === "ol")
+             child.openingElement.name.name === "ol")
           ) {
             targetList = child;
           }
@@ -436,12 +436,12 @@ export const injectToggle = (code) => {
 
   if (alreadyInjected) return code;
 
-  // Prioritize List inside Nav, then Nav itself. If neither, fallback to Header.
+  // Prioritize List inside the targeted node, then the Node itself
   const insertionNode = targetList || targetNode;
 
-  // If still no insertion node, try to find a header
+  // Fallback to Header if the target wasn't found at all
   let headerNode = null;
-  if (!insertionNode) {
+  if (!insertionNode && targetPos !== "header") {
     traverse(ast, {
       JSXElement: (node) => {
         const name = node.openingElement.name.name;

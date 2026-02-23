@@ -1,4 +1,4 @@
-import { injectVanillaLogic } from '../utils/vanillaInjector';
+import { injectVanillaLogic } from './utils/vanillaInjector.js';
 
 /**
  * Analyzes HTML code for structure, accessibility, SEO, and required attributes.
