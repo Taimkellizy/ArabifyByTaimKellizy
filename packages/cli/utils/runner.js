@@ -4,6 +4,9 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
 import { analyzeCSS, analyzeJSX, contextTemplate, toggleTemplate } from '@meridian/core';
+import { installI18nDependencies } from './installer.js';
+import { generateI18nConfig } from '../templates/i18n-generator.js';
+import { injectI18nImport } from './ast-injector.js';
 
 // Helper to recursively find files
 function walkFiles(dir, fileList = []) {
@@ -65,7 +68,31 @@ export async function runModifications(cwd, config) {
     }
   }
 
-  // 2. Find targeting files. Let's scan specific subdirectories to avoid modifying core configs.
+  // 2. Initial Setup (i18next)
+  if (config.i18next) {
+    console.log(chalk.blue('\n📦 Setting up i18next...'));
+    try {
+      console.log(chalk.gray('  Installing dependencies (this may take a minute)...'));
+      await installI18nDependencies(cwd);
+      console.log(chalk.green('  ✓ Dependencies installed.'));
+
+      console.log(chalk.gray('  Generating i18n configurations...'));
+      await generateI18nConfig(cwd, config.languages);
+      console.log(chalk.green('  ✓ i18n.js configuration created.'));
+
+      console.log(chalk.gray('  Injecting i18n into entry point...'));
+      const injectionWarn = await injectI18nImport(cwd);
+      if (injectionWarn) {
+        console.log(chalk.yellow(`  ⚠️  ${injectionWarn}`));
+      } else {
+        console.log(chalk.green('  ✓ i18n imported successfully into entry point.'));
+      }
+    } catch (err) {
+      console.log(chalk.red(`  ❌ Error during i18next setup: ${err.message}`));
+    }
+  }
+
+  // 3. Find targeting files. Let's scan specific subdirectories to avoid modifying core configs.
   let targetFiles = [];
   const dirsToScan = ['src', 'app', 'pages', 'components'];
   let foundTarget = false;
@@ -164,17 +191,19 @@ export async function runModifications(cwd, config) {
             }
         }
         
-         const utilsDir = path.join(baseSrcDir, 'utils');
-         if (!fs.existsSync(utilsDir)) fs.mkdirSync(utilsDir, { recursive: true });
-         const contentPath = path.join(utilsDir, 'content.js');
-         if (!fs.existsSync(contentPath)) {
-            // Need a dummy dictionary so the app doesn't crash on boot before manual trans
-            const dummyDict = `export const content = {
-  en: { title: "Hello World", welcome: "Welcome" },
-  ar: { title: "مرحبا بالعالم", welcome: "أهلا بك" }
-};`;
-             fs.writeFileSync(contentPath, dummyDict, 'utf8');
-             console.log(chalk.green(`  Created: ${path.relative(cwd, contentPath)}`));
+         if (!config.i18next) {
+           const utilsDir = path.join(baseSrcDir, 'utils');
+           if (!fs.existsSync(utilsDir)) fs.mkdirSync(utilsDir, { recursive: true });
+           const contentPath = path.join(utilsDir, 'content.js');
+           if (!fs.existsSync(contentPath)) {
+              // Need a dummy dictionary so the app doesn't crash on boot before manual trans
+              const dummyDict = `export const content = {
+    en: { title: "Hello World", welcome: "Welcome" },
+    ar: { title: "مرحبا بالعالم", welcome: "أهلا بك" }
+  };`;
+               fs.writeFileSync(contentPath, dummyDict, 'utf8');
+               console.log(chalk.green(`  Created: ${path.relative(cwd, contentPath)}`));
+           }
          }
       }
   }
