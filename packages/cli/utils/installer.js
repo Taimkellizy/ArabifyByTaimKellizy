@@ -18,7 +18,7 @@ export async function installI18nDependencies(cwd) {
   }
 
   const args = pm === 'npm' ? ['install', '--save'] : ['add'];
-  args.push('i18next', 'react-i18next', 'i18next-browser-languagedetector');
+  args.push('i18next', 'react-i18next', 'i18next-browser-languagedetector', 'i18next-http-backend');
 
   try {
     await execa(pm, args, { cwd });

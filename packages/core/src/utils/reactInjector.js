@@ -46,7 +46,7 @@ const detectIndentation = (code) => {
   return "  "; // Default to 2 spaces
 };
 
-export const injectProvider = (code) => {
+export const injectProvider = (code, config = {}) => {
   let ast;
   try {
     ast = parse(code, {
@@ -158,8 +158,13 @@ export const injectProvider = (code) => {
 
   // Double check removed: AST traversal handles real code, ignoring comments.
 
+  // If using i18next, we don't care about `hasHook` (the `useContext` hook).
+  // We only care if the component is wrapped by a `LanguageProvider` and imported.
+  const isFullyInjected = config.i18next 
+      ? (hasContextImport && hasProviderWrapper) 
+      : (hasContextImport && hasHook && hasProviderWrapper);
 
-  if (hasContextImport && hasHook && hasProviderWrapper) return code; // Fully injected
+  if (isFullyInjected) return code;
   if (!exportDefaultNode) return code; // No export default found, cannot wrap
 
   // --- EXECUTE INJECTION ---
@@ -176,7 +181,7 @@ export const injectProvider = (code) => {
   if (!hasContextImport) {
       importsToAdd += "import { LanguageProvider, LanguageContext } from './contexts/LanguageContext';\n";
   }
-  if (!hasReactImport) {
+  if (!hasReactImport && !config.i18next) {
       // Check if react is imported at all?
       // Simplification: Just add `import { useContext } from 'react';`. 
       // It's valid to have duplicate imports from same module in JS/TS.
@@ -294,7 +299,10 @@ export const injectProvider = (code) => {
           const varName = collisionDetected ? 'arabifyContextvalue' : 'text';
           const destructuring = collisionDetected ? 'text: arabifyContextvalue' : 'text';
           
-          const hookCode = `\n  const { ${destructuring} } = useContext(LanguageContext);\n  if (!${varName}) return null;\n`;
+          let hookCode = "";
+          if (!config.i18next) {
+              hookCode = `\n  const { ${destructuring} } = useContext(LanguageContext);\n  if (!${varName}) return null;\n`;
+          }
           
           newCode = newCode.slice(0, bodyStart) + hookCode + newCode.slice(bodyStart);
           offset += hookCode.length;
@@ -319,8 +327,14 @@ export const injectProvider = (code) => {
           const destructuring = collisionDetected ? 'text: arabifyContextvalue' : 'text';
 
           const originalBody = newCode.slice(bodyStart, bodyEnd);
-          const hookCode = `{\n  const { ${destructuring} } = useContext(LanguageContext);\n  if (!${varName}) return null;\n  return `;
-          const closeBlock = ";\n}";
+          
+          let hookCode = "{\n  return ";
+          let closeBlock = "\n}";
+          
+          if (!config.i18next) {
+              hookCode = `{\n  const { ${destructuring} } = useContext(LanguageContext);\n  if (!${varName}) return null;\n  return `;
+              closeBlock = ";\n}";
+          }
           
           newCode = newCode.slice(0, bodyStart) + hookCode + originalBody + closeBlock + newCode.slice(bodyEnd);
           offset += (hookCode.length + closeBlock.length);

@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, contextTemplate, toggleTemplate } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, contextTemplate, i18nContextTemplate, toggleTemplate } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
@@ -125,6 +125,7 @@ export async function runModifications(cwd, config) {
 
   let fixedCssCount = 0;
   let fixedJsxCount = 0;
+  let allExtractedStrings = {};
 
   // 3. Process files
   for (const fullPath of targetFiles) {
@@ -145,9 +146,24 @@ export async function runModifications(cwd, config) {
          const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', 'main.tsx', 'main.jsx', 'index.js', 'index.jsx'].some(name => relativePath.endsWith(name));
          const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config });
          
-         // In phase 6 we'll connect the exact inject variables here if analyzeJSX changes
-         if (result.fixedCode && result.fixedCode !== content) {
-            fs.writeFileSync(fullPath, result.fixedCode, 'utf8');
+         let finalCode = result.fixedCode || content;
+         let isModified = finalCode !== content;
+
+         if (config.i18next || config.translation) {
+             const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath });
+             if (extraction.modifiedCode !== finalCode) {
+                 finalCode = extraction.modifiedCode;
+                 isModified = true;
+             }
+             if (extraction.extractedStrings && extraction.extractedStrings.size > 0) {
+                 extraction.extractedStrings.forEach((val, key) => {
+                     allExtractedStrings[key] = val;
+                 });
+             }
+         }
+         
+         if (isModified) {
+            fs.writeFileSync(fullPath, finalCode, 'utf8');
             fixedJsxCount++;
             console.log(chalk.green(`  Fixed JSX: ${relativePath}`));
          }
@@ -156,6 +172,25 @@ export async function runModifications(cwd, config) {
       // console.log(chalk.red(`❌ Failed to parse: ${relativePath} - ${err.message}`));
       // We will suppress heavy error logs during scanning unless requested
     }
+  }
+
+  // Write Translations JSON
+  if (Object.keys(allExtractedStrings).length > 0) {
+      const defaultLanguage = config.defaultLanguage || 'en';
+      const localesFolder = path.join(cwd, 'public', 'locales', defaultLanguage);
+      if (!fs.existsSync(localesFolder)) {
+          fs.mkdirSync(localesFolder, { recursive: true });
+      }
+      
+      const sortedKeys = Object.keys(allExtractedStrings).sort();
+      const sortedStrings = {};
+      sortedKeys.forEach(key => {
+          sortedStrings[key] = allExtractedStrings[key];
+      });
+
+      const translationPath = path.join(localesFolder, 'translation.json');
+      fs.writeFileSync(translationPath, JSON.stringify(sortedStrings, null, 2), 'utf8');
+      console.log(chalk.green(`  Created: ${path.relative(cwd, translationPath)}`));
   }
 
   // 4. Create Support Files (Context & Toggle) if they don't exist
@@ -175,7 +210,8 @@ export async function runModifications(cwd, config) {
         
         const contextPath = path.join(contextDir, 'LanguageContext.jsx');
         if (!fs.existsSync(contextPath)) {
-            fs.writeFileSync(contextPath, contextTemplate, 'utf8');
+            const templateToUse = config.i18next ? i18nContextTemplate : contextTemplate;
+            fs.writeFileSync(contextPath, templateToUse, 'utf8');
             console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
         }
 

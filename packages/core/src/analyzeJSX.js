@@ -325,7 +325,7 @@ const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false
     if (['multi-lang', 'fix-lang', 'fix-all'].includes(options.mode)) {
         // 1. Inject Provider if it's the App File
         if (options.isAppFile) {
-            modifiedCode = injectProvider(modifiedCode);
+            modifiedCode = injectProvider(modifiedCode, options.config);
             injected = true;
         }
 
