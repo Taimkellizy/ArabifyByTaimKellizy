@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "languages": [
+    "en",
+    "ar"
+  ],
+  "defaultLanguage": "en",
+  "i18next": true,
+  "extractText": true,
+  "translation": {
+    "provider": "other",
+    "fallback": "manual"
+  },
+  "languageSwitcher": {
+    "position": "footer",
+    "customClass": "kissmyass",
+    "showFlags": true
+  },
+  "linters": false
+}
