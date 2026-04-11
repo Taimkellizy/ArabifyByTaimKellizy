@@ -17,6 +17,7 @@
     "chalk": "^4.1.2",
     "chalk-animation": "^2.0.3",
     "commander": "^8.3.0",
+    "dotenv": "^17.4.1",
     "execa": "^9.6.1",
     "figlet": "^1.10.0",
     "inquirer": "^13.3.0",

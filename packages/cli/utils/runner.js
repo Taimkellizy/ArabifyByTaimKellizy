@@ -7,6 +7,7 @@ import { analyzeCSS, analyzeJSX, extractAndTransformJSX, contextTemplate, i18nCo
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
+import { runTranslations } from './translator-runner.js';
 
 // Helper to recursively find files
 function walkFiles(dir, fileList = []) {
@@ -248,4 +249,9 @@ export async function runModifications(cwd, config) {
   console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
   console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files\n`));
   console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
+
+  // 5. Automatic Translation Step
+  if (config.translation) {
+    await runTranslations(cwd, config);
+  }
 }
