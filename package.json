@@ -2,10 +2,16 @@
   "name": "meridian-monorepo",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@11.6.3",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.30.0",
+    "turbo": "^2.9.6"
   }
 }

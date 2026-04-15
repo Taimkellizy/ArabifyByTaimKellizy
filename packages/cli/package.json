@@ -8,12 +8,15 @@
     "meridian": "bin/meridian.js"
   },
   "scripts": {
+    "build": "echo \"Building @meridian/cli...\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Taim Kellizy",
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.29.0",
+    "@meridian/core": "*",
+    "@meridian/translator": "*",
     "chalk": "^4.1.2",
     "chalk-animation": "^2.0.3",
     "commander": "^8.3.0",

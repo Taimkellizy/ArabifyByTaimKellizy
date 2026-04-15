@@ -1,10 +1,44 @@
 # Meridian
 
-![Meridian Hero Banner Placeholder](assets/Meridian_Full_Logo_GitHub_banner_no_bg_white.png)
+<div align="center">
+  <img src="assets/Meridian_Full_Logo_GitHub_banner_no_bg_white.png" alt="Meridian Hero Banner Placeholder" width="80%" />
 
-> **Note:** A full, comprehensive documentation website is currently in development and will be available prior to the official release at [meridian.dev](https://meridian.dev). This README serves as a technical overview and development guide.
+  <br />
+
+  <a href="https://github.com/Taimkellizy/meridian-suite">
+    <img src="https://img.shields.io/badge/meridian-v1.0.0-blue.svg?style=flat-square" alt="Meridian Version" />
+  </a>
+  <a href="https://meridian-suite.vercel.app/">
+    <img src="https://img.shields.io/badge/vercel-deployed-black?style=flat-square&logo=vercel" alt="Vercel" />
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT" />
+  </a>
+
+  <br />
+  <br />
+
+  <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="NodeJS" />
+  <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" alt="Turborepo" />
+  <img src="https://img.shields.io/badge/Babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=black" alt="Babel" />
+  <img src="https://img.shields.io/badge/PostCSS-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white" alt="PostCSS" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+</div>
+
+> **Note:** A full, comprehensive documentation website is currently in development and will be available prior to the official release at [meridian-suite.vercel.app](https://meridian-suite.vercel.app/). This README serves as a technical overview and development guide.
 
 Meridian is a comprehensive internationalization automation tool that transforms any React application into a global-ready product with a single command. Unlike traditional i18n libraries that require manual setup and configuration, Meridian handles the entire migration process: CSS modernization, string extraction, translation, i18next setup, and ongoing prevention through linter integration.
+
+## Table of Contents
+
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Architecture](#architecture)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [Contributing, Testing, and Deployment](#contributing-testing-and-deployment)
 
 ## Key Features
 
@@ -17,7 +51,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 ## Tech Stack
 
 - **Language**: JavaScript / Node.js
-- **Architecture**: Monorepo (using `npm workspaces`)
+- **Architecture**: Monorepo (using `Turborepo` & `npm workspaces`)
 - **Parsers**: PostCSS (CSS architecture), Babel (JSX AST processing)
 - **Translators**: Third-party APIs (Google, DeepL, LibreTranslate)
 - **Target Integrations**: `i18next`, `react-i18next`
@@ -32,8 +66,8 @@ Meridian is a comprehensive internationalization automation tool that transforms
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/meridian.git
-cd meridian
+git clone https://github.com/Taimkellizy/meridian-suite.git
+cd meridian-suite
 ```
 
 ### 2. Install Dependencies
@@ -77,7 +111,10 @@ Meridian is built using a modern Monorepo structure to decouple CLI logic from l
 ### Directory Structure
 
 ```text
-meridian/
+meridian-suite/
+├── apps/
+│   ├── docs/                   # Documentation website
+│   └── examples/               # Sandboxed React repos to test Meridian against
 ├── packages/
 │   ├── cli/                    # Main CLI application (`meridian`)
 │   │   ├── commands/           # Specific terminal commands (init, extract, etc.)
@@ -90,8 +127,8 @@ meridian/
 │   ├── eslint-plugin/          # (Coming Soon) ESLint Plugin for real-time prevention
 │   ├── stylelint-plugin/       # (Coming Soon) Stylelint Plugin avoiding future broken CSS layouts
 │   └── translator/             # API connectors connecting to Google/DeepL/Libre
-├── examples/                   # Sandboxed React repos to test Meridian against
-└── package.json                # Root package with workspace configurations
+├── package.json                # Root package with workspace configurations
+└── turbo.json                  # Turborepo orchestrated pipelines
 ```
 
 ### Request Lifecycle (The `init` Flow)
@@ -115,8 +152,6 @@ meridian/
 
 - Places dynamic components (like the `<LanguageSwitcher />`) within `<nav />` lists smartly.
 - Recognizes application indent spacing and adapts to it.
-
-![Language Switcher in Action](assets/language-switcher-demo.png)
 
 ## Environment Variables
 
@@ -143,6 +178,9 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 
 | Command                              | Description                                         |
 | ------------------------------------ | --------------------------------------------------- |
+| `npm run build`                      | Turborepo cached build cycle across all workspaces  |
+| `npm run lint`                       | Turborepo orchestrated linting                      |
+| `npm run dev`                        | Start continuous Turborepo local dev workflow       |
 | `npm run test`                       | Runs all tests recursively in workspaces            |
 | `meridian init`                      | Runs the entire automation suite interactively      |
 | `meridian fix-css <path>`            | Scans and corrects CSS logically in isolation       |
@@ -150,48 +188,8 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 | `meridian translate --languages ...` | Takes generated translations and calls API Services |
 | `meridian add-button --position ...` | Injects the frontend structural language toggle     |
 
-## Testing
+## Contributing, Testing, and Deployment
 
-Meridian takes AST mutation seriously. Each package has its own extensive test suite. To test the entire workspace context:
+Want to contribute to Meridian? We'd love your help!
 
-```bash
-# Run all tests across workspaces
-npm test
-```
-
-### Writing Tests
-
-Tests are localized inside each respective workspace component's `__tests__` directory, simulating AST manipulation results.
-
-Example structure:
-
-```text
-packages/core/__tests__/
-  cssFixer.test.js
-  babelExtractor.test.js
-```
-
-## Deployment (Publishing)
-
-Meridian is deployed as standard npm packages (`@meridian/cli`, `@meridian/core`, etc.).
-
-1. **Versioning**: Use [Lerna](https://lerna.js.org/) or npm version to bump workspace packages synchronously.
-2. **Publish**:
-
-```bash
-npm publish --workspaces --access public
-```
-
-## Troubleshooting
-
-### String Extraction Misses Variables
-
-**Error:** Some strings appear ignored or incorrectly wrapped.
-**Solution:** Ensure you aren't passing highly complex functional evaluations inside strings. Extract to a variable first, or review JSX syntax.
-
-### Auto-Translation Rate Limit
-
-**Error:** API responses with status 429 Too Many Requests.
-**Solution:** The translation utility handles batch delays automatically. However, if using the Google Translate or DeepL free tiers, refer to the dashboard limitations. Wait a few hours before executing `meridian translate --update`.
-
-![Troubleshooting Pipeline Errors](assets/troubleshooting-errors.png)
+Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct, the local development setup, how to run tests, and instructions for publishing via Changesets. If you're experiencing development or usage errors, the guide also includes a dedicated **Troubleshooting** section.
