@@ -12,6 +12,7 @@ import { createSpinner } from 'nanospinner';
 import { saveConfig } from '../utils/config.js';
 import { runModifications } from '../utils/runner.js';
 import { runTranslations } from '../utils/translator-runner.js';
+import { getToggleTemplate } from '@meridian/core';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -117,19 +118,52 @@ program
         type: 'checkbox',
         name: 'switcherPosition',
         message: 'Where to inject the language switcher? (Select strictly ONE using space, then press enter)',
-        choices: ['nav', 'header', 'footer', 'ul', 'li', 'a', 'custom selector', 'skip'],
-        validate(answer) {
+        choices: ['nav', 'header', 'footer', 'div', 'section', 'li', 'span', 'main', 'aside', 'custom', 'floating element (fixed position)', 'skip'],
+        when: (answers) => answers.wantsSwitcher,
+        validate: (answer) => {
           if (answer.length !== 1) {
-            return 'You must select exactly one position.';
+            return 'You must select exactly one option.';
           }
           return true;
-        },
-        when: (answers) => answers.wantsSwitcher
+        }
+      },
+      {
+        type: 'input',
+        name: 'customTag',
+        message: 'Enter your custom HTML tag (without brackets, e.g. article, figure):',
+        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] === 'custom'
+      },
+      {
+        type: 'confirm',
+        name: 'targetById',
+        message: 'Do you want to target the specific injection element by its HTML ID? (e.g. inject specifically into "nav#main-nav")',
+        default: false,
+        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
+      },
+      {
+        type: 'input',
+        name: 'targetId',
+        message: 'Enter the exact HTML ID of the target element (without the #):',
+        when: (answers) => answers.targetById
+      },
+      {
+        type: 'checkbox',
+        name: 'insertMode',
+        message: 'How should the button be inserted into the target element? (Select strictly ONE using space, then press enter)',
+        choices: ['Append', 'Prepend'],
+        default: ['Append'],
+        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)',
+        validate: (answer) => {
+          if (answer.length !== 1) {
+            return 'You must select exactly one option.';
+          }
+          return true;
+        }
       },
       {
         type: 'confirm',
         name: 'wantsCustomClass',
-        message: 'Do you want to add a custom CSS class to the button?',
+        message: 'Do you want to add a custom CSS class to style the button component itself?',
         default: false,
         when: (answers) => answers.wantsSwitcher
       },
@@ -186,8 +220,13 @@ program
         fallback: 'manual',
         ...(endpointUrl && { endpointUrl })
       } : false,
-      languageSwitcher: answers.wantsSwitcher ? {
-        position: answers.switcherPosition[0],
+      languageSwitcher: answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' ? {
+        position: {
+          tag: answers.switcherPosition[0] === 'floating element (fixed position)' ? undefined : (answers.switcherPosition[0] === 'custom' ? answers.customTag : answers.switcherPosition[0]),
+          floating: answers.switcherPosition[0] === 'floating element (fixed position)',
+          id: answers.targetById ? answers.targetId : undefined,
+          insertMode: answers.insertMode && answers.insertMode[0] ? answers.insertMode[0].toLowerCase() : 'append'
+        },
         customClass: answers.wantsCustomClass ? answers.switcherClass : '',
         showFlags: true
       } : false,
@@ -223,9 +262,9 @@ program
   });
 
 program
-  .command('translate')
+  .command('translate [languages...]')
   .description('Sync and translate new strings found in your en/translation.json file')
-  .action(async () => {
+  .action(async (cliLanguages) => {
     const configPath = path.join(process.cwd(), '.meridianrc.json');
     if (!fs.existsSync(configPath)) {
       console.log(chalk.red('❌ Error: .meridianrc.json not found. Run meridian init first.'));
@@ -239,8 +278,63 @@ program
         return;
       }
       
+      if (cliLanguages && cliLanguages.length > 0) {
+        const newLangs = cliLanguages.filter(lang => !config.languages.includes(lang) && lang !== config.defaultLanguage);
+        if (newLangs.length > 0) {
+          config.languages.push(...newLangs);
+          fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+          console.log(chalk.green(`✓ Added new target language(s) to configuration: ${newLangs.join(', ')}`));
+          
+          if (config.i18next) {
+              const i18nPath = path.join(process.cwd(), 'src', 'i18n.js');
+              if (fs.existsSync(i18nPath)) {
+                  let i18nContent = fs.readFileSync(i18nPath, 'utf8');
+                  const supportedLngsRegex = /supportedLngs:\s*\[.*?\]/;
+                  if (supportedLngsRegex.test(i18nContent)) {
+                      i18nContent = i18nContent.replace(supportedLngsRegex, `supportedLngs: ${JSON.stringify(config.languages)}`);
+                      fs.writeFileSync(i18nPath, i18nContent, 'utf8');
+                      console.log(chalk.green(`✓ Updated supportedLngs inside src/i18n.js to include new languages.`));
+                  }
+              }
+          }
+          
+          if (config.languageSwitcher) {
+              const { updateToggle } = await inquirer.prompt([{
+                  type: 'confirm',
+                  name: 'updateToggle',
+                  message: 'Do you want to regenerate your LanguageToggle component to include the new languages? (Warning: This will overwrite customizations)',
+                  default: true
+              }]);
+              
+              if (updateToggle) {
+                  let foundPath = null;
+                  const searchPaths = [
+                      'src/components/LanguageToggle.jsx', 
+                      'app/components/LanguageToggle.jsx', 
+                      'components/LanguageToggle.jsx',
+                      'src/LanguageToggle.jsx'
+                  ];
+                  for (const sp of searchPaths) {
+                      const full = path.join(process.cwd(), sp);
+                      if (fs.existsSync(full)) {
+                          foundPath = full;
+                          break;
+                      }
+                  }
+                  
+                  if (foundPath) {
+                      fs.writeFileSync(foundPath, getToggleTemplate(config.languages), 'utf8');
+                      console.log(chalk.green(`✓ Regenerated Language Toggle at ${path.relative(process.cwd(), foundPath)}`));
+                  } else {
+                      console.log(chalk.yellow(`⚠️ LanguageToggle.jsx not found in standard paths. You may need to update the options list manually.`));
+                  }
+              }
+          }
+        }
+      }
+
       const spinner = createSpinner('Starting translation pipeline...').start();
-      await runTranslations(process.cwd(), config, spinner);
+      await runTranslations(process.cwd(), config, spinner, cliLanguages);
       spinner.success({ text: 'Translation pipeline finished!' });
     } catch (err) {
       console.log(chalk.red(`❌ Error running translations: ${err.message}`));

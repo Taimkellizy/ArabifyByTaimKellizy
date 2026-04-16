@@ -46,7 +46,7 @@ export const injectProvider = (code, config = {}) => {
     return output.code;
 };
 
-export const injectToggle = (code, targetPos = "nav") => {
+export const injectToggle = (code, targetConfig = { tag: "nav" }) => {
     let ast;
     try {
         ast = getAST(code);
@@ -56,7 +56,7 @@ export const injectToggle = (code, targetPos = "nav") => {
     }
 
     const wasAlreadyImported = injectToggleImports(ast);
-    const successfullyInjected = injectToggleNode(ast, targetPos);
+    const successfullyInjected = injectToggleNode(ast, targetConfig);
 
     if (!successfullyInjected && !wasAlreadyImported) return code;
 

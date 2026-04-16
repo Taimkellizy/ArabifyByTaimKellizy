@@ -10,7 +10,7 @@ import {
   MockTranslationAdapter 
 } from '@meridian/core';
 
-export async function runTranslations(cwd, config, spinner = null) {
+export async function runTranslations(cwd, config, spinner = null, explicitLangs = []) {
   if (!config || !config.translation || !config.translation.provider || config.translation.provider === 'manual') {
     return;
   }
@@ -63,7 +63,11 @@ export async function runTranslations(cwd, config, spinner = null) {
     return;
   }
 
-  const targetLanguages = config.languages.filter(lang => lang !== defaultLang);
+  let targetLanguages = config.languages.filter(lang => lang !== defaultLang);
+  
+  if (explicitLangs && explicitLangs.length > 0) {
+    targetLanguages = explicitLangs.filter(lang => lang !== defaultLang);
+  }
   
   if (targetLanguages.length === 0) {
     if (spinner) spinner.info({ text: 'No target languages specified.' });

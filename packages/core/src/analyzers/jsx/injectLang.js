@@ -15,19 +15,26 @@ export const handleInjections = (codeString, foundTags, options) => {
     }
 
     // 2. Inject Toggle based on user configuration
-    const targetPos = options.config?.languageSwitcher?.position || 'nav';
+    let targetConfig = options.config?.languageSwitcher?.position || { tag: 'nav' };
+    
+    if (typeof targetConfig === 'string') {
+        if (targetConfig === 'custom selector') targetConfig = { tag: 'nav' };
+        else targetConfig = { tag: targetConfig };
+    }
+
     let shouldInject = false;
     
-    if (targetPos === 'custom selector') {
+    if (targetConfig.floating) {
         shouldInject = true;
-    } else if (foundTags.has(targetPos)) {
+    } else if (targetConfig.tag && (foundTags.has(targetConfig.tag) || targetConfig.tag === 'custom selector')) {
         shouldInject = true;
     } else if (foundTags.has('nav') || foundTags.has('header')) {
         shouldInject = true;
+        targetConfig.tag = foundTags.has('nav') ? 'nav' : 'header';
     }
 
     if (shouldInject) {
-        modifiedCode = injectToggle(modifiedCode, targetPos);
+        modifiedCode = injectToggle(modifiedCode, targetConfig);
         injected = true;
     }
 

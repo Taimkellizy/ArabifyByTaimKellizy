@@ -45,7 +45,8 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **One-Command Setup**: `meridian init` handles the entire i18n process for you.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`).
 - **Semantic String Extraction**: Uses Babel to scan JSX and automatically extract hardcoded strings to dynamic translation structures.
-- **Auto-Translation Engine**: Deep integration with Google Translate, DeepL, and LibreTranslate APIs for instant, context-aware translations.
+- **Auto-Translation Engine**: Deep integration with Google Translate, DeepL, and LibreTranslate APIs. Adds new languages on the fly via CLI and dynamically scales UI components.
+- **Intelligent Component Injection**: Target specific DOM elements by HTML tag (`nav`, `header`, `custom`) or HTML ID (`#main-nav`), with granular append/prepend controls.
 - **Prevention via Linters (Coming Soon)**: Custom ESLint and Stylelint plugins to prevent future localization bugs will be available post-release.
 
 ## Tech Stack
@@ -150,7 +151,9 @@ meridian-suite/
 
 **Intelligent React Injector**
 
-- Places dynamic components (like the `<LanguageSwitcher />`) within `<nav />` lists smartly.
+- Features granular DOM injection controls: Target components explicitly by HTML Tag (e.g. `nav`, `aside`, `custom`), or target exact elements by HTML ID.
+- Supports both `Append` and `Prepend` injection modes for flawless structural alignment.
+- Dynamically generates the UI footprint: Renders simple buttons for 2 languages, but securely auto-scales to native `<select>` dropdown menus when 3 or more languages are requested.
 - Recognizes application indent spacing and adapts to it.
 
 ## Environment Variables
@@ -165,6 +168,16 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
   "translation": {
     "provider": "google",
     "apiKey": "${MERIDIAN_GOOGLE_API_KEY}"
+  },
+  "languageSwitcher": {
+    "position": {
+      "tag": "nav",
+      "floating": false,
+      "id": "main-navigation",
+      "insertMode": "append"
+    },
+    "customClass": "my-translator-btn",
+    "showFlags": true
   },
   "linters": {
     "eslint": true,
@@ -185,7 +198,7 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 | `meridian init`                      | Runs the entire automation suite interactively      |
 | `meridian fix-css <path>`            | Scans and corrects CSS logically in isolation       |
 | `meridian extract <path>`            | Extracts strings from JSX into translation objects  |
-| `meridian translate --languages ...` | Takes generated translations and calls API Services |
+| `meridian translate [languages...]`  | Translates files, updates `i18n.js` config, and regenerates UI pickers dynamically |
 | `meridian add-button --position ...` | Injects the frontend structural language toggle     |
 
 ## Contributing, Testing, and Deployment

@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, extractAndTransformJSX, contextTemplate, i18nContextTemplate, toggleTemplate } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, getContextTemplate, getI18nContextTemplate, getToggleTemplate } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
@@ -211,7 +211,7 @@ export async function runModifications(cwd, config) {
         
         const contextPath = path.join(contextDir, 'LanguageContext.jsx');
         if (!fs.existsSync(contextPath)) {
-            const templateToUse = config.i18next ? i18nContextTemplate : contextTemplate;
+            const templateToUse = config.i18next ? getI18nContextTemplate(config.languages, config.defaultLanguage) : getContextTemplate(config.languages, config.defaultLanguage);
             fs.writeFileSync(contextPath, templateToUse, 'utf8');
             console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
         }
@@ -223,7 +223,8 @@ export async function runModifications(cwd, config) {
             
             const togglePath = path.join(compDir, 'LanguageToggle.jsx');
             if (!fs.existsSync(togglePath)) {
-                 fs.writeFileSync(togglePath, toggleTemplate, 'utf8');
+                 const generatedToggleTemplate = getToggleTemplate(config.languages);
+                 fs.writeFileSync(togglePath, generatedToggleTemplate, 'utf8');
                  console.log(chalk.green(`  Created: ${path.relative(cwd, togglePath)}`));
             }
         }
@@ -234,9 +235,13 @@ export async function runModifications(cwd, config) {
            const contentPath = path.join(utilsDir, 'content.js');
            if (!fs.existsSync(contentPath)) {
               // Need a dummy dictionary so the app doesn't crash on boot before manual trans
+              const dummyEntries = config.languages.map(lang => {
+                  if (lang === (config.defaultLanguage || 'en')) return `    ${lang}: { title: "Hello World", welcome: "Welcome" }`;
+                  return `    ${lang}: { title: "Title placeholder", welcome: "Welcome placeholder" }`;
+              }).join(',\\n');
+              
               const dummyDict = `export const content = {
-    en: { title: "Hello World", welcome: "Welcome" },
-    ar: { title: "مرحبا بالعالم", welcome: "أهلا بك" }
+${dummyEntries}
   };`;
                fs.writeFileSync(contentPath, dummyDict, 'utf8');
                console.log(chalk.green(`  Created: ${path.relative(cwd, contentPath)}`));

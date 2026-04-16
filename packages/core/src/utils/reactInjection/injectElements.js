@@ -35,46 +35,103 @@ export const wrapExportWithProvider = (ast, exportDefaultPath, exportName) => {
     }
 };
 
-export const injectToggleNode = (ast, targetPos) => {
-    let targetListPath = null;
-    let targetNodePath = null;
-    let headerNodePath = null;
+export const injectToggleNode = (ast, targetConfig) => {
+    let exactMatchPath = null;
+    let fallbackPath = null;
     let alreadyInjected = false;
+
+    // Normalize config
+    const config = typeof targetConfig === 'string' 
+        ? { tag: targetConfig, insertMode: "append" } 
+        : { tag: "nav", insertMode: "append", ...targetConfig };
 
     traverse(ast, {
         JSXElement(path) {
-            const name = path.node.openingElement.name.name;
-            if (name === targetPos) {
-                targetNodePath = path;
-                path.traverse({
-                    JSXElement(childPath) {
-                        const childName = childPath.node.openingElement.name.name;
-                        if (childName === 'ul' || childName === 'ol') {
-                            targetListPath = childPath;
-                            childPath.stop(); 
-                        }
-                    }
-                });
+            const name = path.node.openingElement.name && path.node.openingElement.name.name;
+            if (!name) return;
+            
+            if (name === "LanguageToggle") {
+                alreadyInjected = true;
             }
-            if (name === "LanguageToggle") alreadyInjected = true;
-            if (name === "header") headerNodePath = path;
+
+            if (name === config.tag && !exactMatchPath) {
+                let matchesSelector = true;
+                if (config.id) {
+                    const hasTargetId = path.node.openingElement.attributes.some(attr => {
+                        return t.isJSXAttribute(attr) &&
+                               attr.name.name === 'id' &&
+                               t.isStringLiteral(attr.value) &&
+                               attr.value.value === config.id;
+                    });
+                    if (!hasTargetId) matchesSelector = false;
+                }
+                
+                if (matchesSelector) {
+                    exactMatchPath = path;
+                }
+            }
+
+            if (!exactMatchPath && (name === "nav" || name === "header" || name === "footer")) {
+                if (!fallbackPath) fallbackPath = path; 
+            }
         }
     });
 
     if (alreadyInjected) return true;
 
-    const target = targetListPath || targetNodePath || headerNodePath;
-    if (!target) return false;
+    let targetPath = exactMatchPath || fallbackPath;
+    
+    // For fixed/floating layout, append to root element instead of specific tag
+    if (config.floating) {
+        traverse(ast, {
+            ReturnStatement(path) {
+                if (t.isJSXElement(path.node.argument) || t.isJSXFragment(path.node.argument)) {
+                    targetPath = path.get('argument');
+                    path.stop();
+                }
+            }
+        });
+    }
+
+    if (!targetPath || !targetPath.node) return false;
 
     const toggleJSX = t.jsxElement(
         t.jsxOpeningElement(t.jsxIdentifier('LanguageToggle'), [], true),
         null, [], true
     );
 
+    // List wrapping logic
+    let targetListPath = null;
+    const targetName = targetPath.node.openingElement && targetPath.node.openingElement.name.name;
+    if (targetName && ['ul', 'ol'].includes(targetName)) {
+        targetListPath = targetPath;
+    } else if (!config.floating) {
+        targetPath.traverse({
+            JSXElement(childPath) {
+                const childName = childPath.node.openingElement.name.name;
+                if (childName === 'ul' || childName === 'ol') {
+                    targetListPath = childPath;
+                    childPath.stop(); 
+                }
+            }
+        });
+    }
+
+    const insertionPath = targetListPath || targetPath;
+
     const nodeToInsert = targetListPath 
         ? t.jsxElement(t.jsxOpeningElement(t.jsxIdentifier('li'), []), t.jsxClosingElement(t.jsxIdentifier('li')), [toggleJSX])
         : toggleJSX;
 
-    target.node.children.push(nodeToInsert);
+    if (!insertionPath.node.children) {
+        insertionPath.node.children = [];
+    }
+
+    if (config.insertMode === 'prepend') {
+        insertionPath.node.children.unshift(nodeToInsert);
+    } else {
+        insertionPath.node.children.push(nodeToInsert);
+    }
+
     return true;
 };
