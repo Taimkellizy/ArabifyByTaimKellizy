@@ -1,7 +1,7 @@
 # Meridian
 
 <div align="center">
-  <img src="assets/Meridian_Full_Logo_GitHub_banner_no_bg_white.png" alt="Meridian Hero Banner Placeholder" width="80%" />
+  <img src="assets/Meridian Full Logo GitHub banner.png" alt="Meridian Hero Banner Placeholder" width="80%" />
 
   <br />
 
@@ -56,6 +56,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **Parsers**: PostCSS (CSS architecture), Babel (JSX AST processing)
 - **Translators**: Third-party APIs (Google, DeepL, LibreTranslate)
 - **Target Integrations**: `i18next`, `react-i18next`
+- **Landing Page & Docs**: React, Tailwind CSS, GSAP (ScrollTrigger & Core for high-performance animations)
 
 ## Prerequisites
 
@@ -114,7 +115,7 @@ Meridian is built using a modern Monorepo structure to decouple CLI logic from l
 ```text
 meridian-suite/
 ├── apps/
-│   ├── docs/                   # Documentation website
+│   ├── web/                    # Interactive marketing landing page & Documentation (React + GSAP)
 │   └── examples/               # Sandboxed React repos to test Meridian against
 ├── packages/
 │   ├── cli/                    # Main CLI application (`meridian`)
@@ -189,17 +190,17 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 
 ## Available Scripts
 
-| Command                              | Description                                         |
-| ------------------------------------ | --------------------------------------------------- |
-| `npm run build`                      | Turborepo cached build cycle across all workspaces  |
-| `npm run lint`                       | Turborepo orchestrated linting                      |
-| `npm run dev`                        | Start continuous Turborepo local dev workflow       |
-| `npm run test`                       | Runs all tests recursively in workspaces            |
-| `meridian init`                      | Runs the entire automation suite interactively      |
-| `meridian fix-css <path>`            | Scans and corrects CSS logically in isolation       |
-| `meridian extract <path>`            | Extracts strings from JSX into translation objects  |
+| Command                              | Description                                                                        |
+| ------------------------------------ | ---------------------------------------------------------------------------------- |
+| `npm run build`                      | Turborepo cached build cycle across all workspaces                                 |
+| `npm run lint`                       | Turborepo orchestrated linting                                                     |
+| `npm run dev`                        | Start continuous Turborepo local dev workflow                                      |
+| `npm run test`                       | Runs all tests recursively in workspaces                                           |
+| `meridian init`                      | Runs the entire automation suite interactively                                     |
+| `meridian fix-css <path>`            | Scans and corrects CSS logically in isolation                                      |
+| `meridian extract <path>`            | Extracts strings from JSX into translation objects                                 |
 | `meridian translate [languages...]`  | Translates files, updates `i18n.js` config, and regenerates UI pickers dynamically |
-| `meridian add-button --position ...` | Injects the frontend structural language toggle     |
+| `meridian add-button --position ...` | Injects the frontend structural language toggle                                    |
 
 ## Contributing, Testing, and Deployment
 
