@@ -10,7 +10,7 @@ export const handleInjections = (codeString, foundTags, options) => {
 
     // 1. Inject Provider if it's the App File
     if (options.isAppFile) {
-        modifiedCode = injectProvider(modifiedCode, options.config);
+        modifiedCode = injectProvider(modifiedCode, options.config, options.fileName);
         injected = true;
     }
 
@@ -34,7 +34,7 @@ export const handleInjections = (codeString, foundTags, options) => {
     }
 
     if (shouldInject) {
-        modifiedCode = injectToggle(modifiedCode, targetConfig);
+        modifiedCode = injectToggle(modifiedCode, targetConfig, options.fileName);
         injected = true;
     }
 

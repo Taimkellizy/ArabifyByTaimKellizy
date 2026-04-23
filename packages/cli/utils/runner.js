@@ -145,7 +145,7 @@ export async function runModifications(cwd, config) {
       } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
          
          const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', 'main.tsx', 'main.jsx', 'index.js', 'index.jsx'].some(name => relativePath.endsWith(name));
-         const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config });
+         const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath });
          
          let finalCode = result.fixedCode || content;
          let isModified = finalCode !== content;

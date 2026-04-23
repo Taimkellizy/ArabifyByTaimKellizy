@@ -14,7 +14,7 @@ const getAST = (code) => {
     });
 };
 
-export const injectProvider = (code, config = {}) => {
+export const injectProvider = (code, config = {}, fileName = '') => {
     let ast;
     try {
         ast = getAST(code);
@@ -32,7 +32,7 @@ export const injectProvider = (code, config = {}) => {
     if (isFullyInjected) return code;
     if (!scope.exportDefaultNodePath) return code;
 
-    injectProviderImports(ast, scope.hasContextImport, scope.hasReactImport, config.i18next);
+    injectProviderImports(ast, scope.hasContextImport, scope.hasReactImport, config.i18next, fileName);
 
     if (!scope.hasHook && scope.componentFunctionPath) {
         injectContextHook(scope.componentFunctionPath, scope.collisionDetected, scope.textDeclarationToRemovePath, config.i18next);
@@ -46,7 +46,7 @@ export const injectProvider = (code, config = {}) => {
     return output.code;
 };
 
-export const injectToggle = (code, targetConfig = { tag: "nav" }) => {
+export const injectToggle = (code, targetConfig = { tag: "nav" }, fileName = '') => {
     let ast;
     try {
         ast = getAST(code);
@@ -55,7 +55,7 @@ export const injectToggle = (code, targetConfig = { tag: "nav" }) => {
         return code;
     }
 
-    const wasAlreadyImported = injectToggleImports(ast);
+    const wasAlreadyImported = injectToggleImports(ast, fileName);
     const successfullyInjected = injectToggleNode(ast, targetConfig);
 
     if (!successfullyInjected && !wasAlreadyImported) return code;

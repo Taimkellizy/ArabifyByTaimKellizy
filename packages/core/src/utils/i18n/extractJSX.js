@@ -37,6 +37,7 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
         let i = 0;
         const newChildren = [];
+        let modified = false;
         while (i < path.node.children.length) {
             const child = path.node.children[i];
 
@@ -80,6 +81,12 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                     }
                 }
 
+                if (j === i) {
+                    newChildren.push(child);
+                    i++;
+                    continue;
+                }
+
                 const normalizedText = textStr.trim().replace(/\s+/g, ' ');
                 if (hasText && normalizedText.length > 0) {
                     if (!injectHook(path, ctx)) {
@@ -87,6 +94,7 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                             newChildren.push(path.node.children[k]);
                         }
                     } else {
+                        modified = true;
                         const key = generateKey(normalizedText);
                         extractedMap.set(key, normalizedText);
 
@@ -95,20 +103,19 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                             params.push(t.objectExpression(variables));
                         }
 
-                        const hasLeadingSpace = /^\s/.test(textStr);
-                        const hasTrailingSpace = /\s$/.test(textStr);
+                        const leadingMatch = textStr.match(/^\s+/);
+                        const trailingMatch = textStr.match(/\s+$/);
+
+                        if (leadingMatch) {
+                            newChildren.push(t.jsxText(leadingMatch[0]));
+                        }
 
                         let expression = t.callExpression(t.identifier('t'), params);
-
-                        if (hasLeadingSpace) {
-                            expression = t.binaryExpression('+', t.stringLiteral(' '), expression);
-                        }
-
-                        if (hasTrailingSpace) {
-                            expression = t.binaryExpression('+', expression, t.stringLiteral(' '));
-                        }
-
                         newChildren.push(t.jsxExpressionContainer(expression));
+
+                        if (trailingMatch && trailingMatch[0] !== textStr) {
+                            newChildren.push(t.jsxText(trailingMatch[0]));
+                        }
                     }
                 } else {
                     for (let k = i; k < j; k++) {
@@ -123,6 +130,8 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
             }
         }
 
-        path.node.children = newChildren;
+        if (modified) {
+            path.node.children = newChildren;
+        }
     }
 });

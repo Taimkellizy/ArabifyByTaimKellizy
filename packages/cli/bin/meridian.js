@@ -41,145 +41,318 @@ program
     console.log(chalk.cyan(figlet.textSync('MERIDIAN', { font: 'isometric3', horizontalLayout: 'fitted' })));
     console.log(chalk.bold.blue('Welcome to the Meridian Suite CLI!\n'));
     
-    let answers = await inquirer.prompt([
+    /**
+     * @typedef {Object} ModeAnswer
+     * @property {string[]} mode
+     */
+
+    /** @type {ModeAnswer} */
+    const { mode } = await inquirer.prompt([
       {
         type: 'checkbox',
-        name: 'languages',
-        message: 'Which languages do you want to support?',
-        choices: ['en', 'ar', 'es', 'fr', 'de', 'zh'],
-        default: ['en', 'ar']
-      },
-      {
-        type: 'confirm',
-        name: 'installI18next',
-        message: 'Do you want to install and initialize i18next?',
-        default: true
-      },
-      {
-        type: 'confirm',
-        name: 'extractText',
-        message: 'Do you want to extract text to JSON automatically?',
-        default: true,
-        when: (answers) => answers.installI18next
-      },
-      {
-        type: 'confirm',
-        name: 'useApi',
-        message: 'Do you want to use an API to translate the extracted text?',
-        default: true,
-        when: (answers) => answers.extractText
-      },
-      {
-        type: 'checkbox',
-        name: 'translationMethod',
-        message: 'Which API provider should we use? (Select strictly ONE using space, then press enter)',
-        choices: ['Google API', 'DeepL', 'LibreTranslate', 'Mock (Local Testing)'],
+        name: 'mode',
+        message: 'How do you want to set up Meridian? (Select strictly ONE using space, then press enter)',
+        choices: [
+          { name: 'Quick Start (recommended defaults)', value: 'Quick Start' },
+          { name: 'Advanced (configure everything manually)', value: 'Advanced' }
+        ],
         validate(answer) {
           if (answer.length !== 1) {
-            return 'You must select exactly one API provider.';
-          }
-          return true;
-        },
-        when: (answers) => answers.useApi
-      },
-      {
-        type: 'password',
-        name: 'apiKey',
-        message: 'Enter your API Key:',
-        when: (answers) => answers.useApi && answers.translationMethod && (answers.translationMethod[0] === 'Google API' || answers.translationMethod[0] === 'DeepL')
-      },
-      {
-        type: 'input',
-        name: 'libreUrl',
-        message: 'Enter your LibreTranslate endpoint URL:',
-        default: 'https://translate.terraprint.co/translate',
-        when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
-      },
-      {
-        type: 'confirm',
-        name: 'hasLibreKey',
-        message: 'Do you have an API key for this LibreTranslate instance?',
-        default: false,
-        when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
-      },
-      {
-        type: 'password',
-        name: 'libreApiKey',
-        message: 'Enter your LibreTranslate API/Access Key:',
-        when: (answers) => answers.hasLibreKey
-      },
-      {
-        type: 'confirm',
-        name: 'wantsSwitcher',
-        message: 'Do you want to add a language switcher button component?',
-        default: true
-      },
-      {
-        type: 'checkbox',
-        name: 'switcherPosition',
-        message: 'Where to inject the language switcher? (Select strictly ONE using space, then press enter)',
-        choices: ['nav', 'header', 'footer', 'div', 'section', 'li', 'span', 'main', 'aside', 'custom', 'floating element (fixed position)', 'skip'],
-        when: (answers) => answers.wantsSwitcher,
-        validate: (answer) => {
-          if (answer.length !== 1) {
             return 'You must select exactly one option.';
           }
           return true;
         }
-      },
-      {
-        type: 'input',
-        name: 'customTag',
-        message: 'Enter your custom HTML tag (without brackets, e.g. article, figure):',
-        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] === 'custom'
-      },
-      {
-        type: 'confirm',
-        name: 'targetById',
-        message: 'Do you want to target the specific injection element by its HTML ID? (e.g. inject specifically into "nav#main-nav")',
-        default: false,
-        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
-      },
-      {
-        type: 'input',
-        name: 'targetId',
-        message: 'Enter the exact HTML ID of the target element (without the #):',
-        when: (answers) => answers.targetById
-      },
-      {
-        type: 'checkbox',
-        name: 'insertMode',
-        message: 'How should the button be inserted into the target element? (Select strictly ONE using space, then press enter)',
-        choices: ['Append', 'Prepend'],
-        default: ['Append'],
-        when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)',
-        validate: (answer) => {
-          if (answer.length !== 1) {
-            return 'You must select exactly one option.';
-          }
-          return true;
-        }
-      },
-      {
-        type: 'confirm',
-        name: 'wantsCustomClass',
-        message: 'Do you want to add a custom CSS class to style the button component itself?',
-        default: false,
-        when: (answers) => answers.wantsSwitcher
-      },
-      {
-        type: 'input',
-        name: 'switcherClass',
-        message: 'Enter your custom CSS class name(s):',
-        when: (answers) => answers.wantsCustomClass
-      },
-      {
-        type: 'confirm',
-        name: 'installLinters',
-        message: 'Do you want to install ESLint/Stylelint plugins?',
-        default: true
       }
     ]);
+
+    /** @type {Object} */
+    let answers;
+
+    if (mode[0] === 'Quick Start') {
+      /** @type {Object} */
+      const qsAnswers = await inquirer.prompt([
+        {
+          type: 'checkbox',
+          name: 'languages',
+          message: 'Which languages do you want to support?',
+          choices: ['en', 'ar', 'es', 'fr', 'de', 'zh'],
+          default: ['en', 'ar']
+        },
+        {
+          type: 'confirm',
+          name: 'useApi',
+          message: 'Do you want to auto-translate extracted strings using an API?',
+          default: true
+        },
+        {
+          type: 'checkbox',
+          name: 'translationMethod',
+          message: 'Which translation provider do you want to use? (Select strictly ONE using space, then press enter)',
+          choices: ['Google API', 'DeepL', 'LibreTranslate', 'Mock (Local Testing)'],
+          validate(answer) {
+            if (answer.length !== 1) {
+              return 'You must select exactly one API provider.';
+            }
+            return true;
+          },
+          when: (answers) => answers.useApi
+        },
+        {
+          type: 'password',
+          name: 'apiKey',
+          message: 'Enter your API key:',
+          when: (answers) => answers.useApi && answers.translationMethod && (answers.translationMethod[0] === 'Google API' || answers.translationMethod[0] === 'DeepL')
+        },
+        {
+          type: 'input',
+          name: 'libreUrl',
+          message: 'Enter your LibreTranslate endpoint URL:',
+          default: 'https://translate.terraprint.co/translate',
+          when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
+        },
+        {
+          type: 'confirm',
+          name: 'hasLibreKey',
+          message: 'Do you have an API key for this LibreTranslate instance?',
+          default: false,
+          when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
+        },
+        {
+          type: 'password',
+          name: 'libreApiKey',
+          message: 'Enter your LibreTranslate API/Access Key:',
+          when: (answers) => answers.hasLibreKey
+        },
+        {
+          type: 'checkbox',
+          name: 'switcherPosition',
+          message: 'Where to inject the language switcher? (Select strictly ONE using space, then press enter)',
+          choices: ['nav', 'header', 'footer', 'div', 'section', 'li', 'span', 'main', 'aside', 'custom', 'floating element (fixed position)', 'skip'],
+          validate: (answer) => {
+            if (answer.length !== 1) {
+              return 'You must select exactly one option.';
+            }
+            return true;
+          }
+        },
+        {
+          type: 'input',
+          name: 'customTag',
+          message: 'Enter your custom HTML tag (without brackets, e.g. article, figure):',
+          when: (answers) => answers.switcherPosition && answers.switcherPosition[0] === 'custom'
+        },
+        {
+          type: 'confirm',
+          name: 'targetById',
+          message: 'Target the injection element by its HTML ID? (e.g. "nav#main-nav")',
+          default: false,
+          when: (answers) => answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
+        },
+        {
+          type: 'input',
+          name: 'targetId',
+          message: 'Enter the exact HTML ID of the target element (without the #):',
+          when: (answers) => answers.targetById
+        }
+      ]);
+
+      answers = {
+        languages: qsAnswers.languages,
+        installI18next: true,
+        extractText: true,
+        useApi: qsAnswers.useApi,
+        translationMethod: qsAnswers.translationMethod ? qsAnswers.translationMethod : undefined,
+        apiKey: qsAnswers.apiKey,
+        libreUrl: qsAnswers.libreUrl,
+        hasLibreKey: qsAnswers.hasLibreKey || false,
+        libreApiKey: qsAnswers.libreApiKey,
+        wantsSwitcher: true,
+        switcherPosition: qsAnswers.switcherPosition,
+        customTag: qsAnswers.customTag,
+        insertMode: ['append'],
+        targetById: qsAnswers.targetById || false,
+        targetId: qsAnswers.targetId,
+        targetByFile: false,
+        wantsCustomClass: false,
+        installLinters: false
+      };
+
+      const summaryLines = [
+        'Quick Start Configuration Summary',
+        '---------------------------------',
+        `Languages: ${qsAnswers.languages.join(', ')}`,
+        `Auto-translate: ${qsAnswers.useApi}`,
+        ...(qsAnswers.useApi && qsAnswers.translationMethod ? [`API Provider: ${qsAnswers.translationMethod[0]}`] : []),
+        `Install i18next: true`,
+        `Extract Text: true`,
+        `Add Switcher: ${qsAnswers.switcherPosition[0] !== 'skip'}`,
+        ...(qsAnswers.switcherPosition[0] !== 'skip' ? [`Switcher Position: ${qsAnswers.switcherPosition[0] === 'custom' ? qsAnswers.customTag : qsAnswers.switcherPosition[0]}`] : []),
+        `Insert Mode: append`,
+        `Target By ID: ${qsAnswers.targetById ? qsAnswers.targetId : 'false'}`,
+        `Target By File: false`,
+        `Custom Class: false`,
+        `Install Linters: false`
+      ];
+
+      /**
+       * Prints a bordered summary box for the applied settings.
+       * @param {string[]} lines - Text lines to display in the box.
+       */
+      const printSummaryBox = (lines) => {
+        const width = Math.max(...lines.map(l => l.length)) + 4;
+        console.log('┌' + '─'.repeat(width - 2) + '┐');
+        lines.forEach(line => {
+          console.log('│ ' + line.padEnd(width - 4) + ' │');
+        });
+        console.log('└' + '─'.repeat(width - 2) + '┘');
+      };
+      
+      console.log('');
+      printSummaryBox(summaryLines);
+      console.log('');
+      console.log('Run `meridian sync` any time to extract and translate new strings.\n');
+
+    } else {
+      answers = await inquirer.prompt([
+        {
+          type: 'checkbox',
+          name: 'languages',
+          message: 'Which languages do you want to support?',
+          choices: ['en', 'ar', 'es', 'fr', 'de', 'zh'],
+          default: ['en', 'ar']
+        },
+        {
+          type: 'confirm',
+          name: 'installI18next',
+          message: 'Do you want to install and initialize i18next?',
+          default: true
+        },
+        {
+          type: 'confirm',
+          name: 'extractText',
+          message: 'Do you want to extract text to JSON automatically?',
+          default: true,
+          when: (answers) => answers.installI18next
+        },
+        {
+          type: 'confirm',
+          name: 'useApi',
+          message: 'Do you want to use an API to translate the extracted text?',
+          default: true,
+          when: (answers) => answers.extractText
+        },
+        {
+          type: 'checkbox',
+          name: 'translationMethod',
+          message: 'Which API provider should we use? (Select strictly ONE using space, then press enter)',
+          choices: ['Google API', 'DeepL', 'LibreTranslate', 'Mock (Local Testing)'],
+          validate(answer) {
+            if (answer.length !== 1) {
+              return 'You must select exactly one API provider.';
+            }
+            return true;
+          },
+          when: (answers) => answers.useApi
+        },
+        {
+          type: 'password',
+          name: 'apiKey',
+          message: 'Enter your API Key:',
+          when: (answers) => answers.useApi && answers.translationMethod && (answers.translationMethod[0] === 'Google API' || answers.translationMethod[0] === 'DeepL')
+        },
+        {
+          type: 'input',
+          name: 'libreUrl',
+          message: 'Enter your LibreTranslate endpoint URL:',
+          default: 'https://translate.terraprint.co/translate',
+          when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
+        },
+        {
+          type: 'confirm',
+          name: 'hasLibreKey',
+          message: 'Do you have an API key for this LibreTranslate instance?',
+          default: false,
+          when: (answers) => answers.useApi && answers.translationMethod && answers.translationMethod[0] === 'LibreTranslate'
+        },
+        {
+          type: 'password',
+          name: 'libreApiKey',
+          message: 'Enter your LibreTranslate API/Access Key:',
+          when: (answers) => answers.hasLibreKey
+        },
+        {
+          type: 'confirm',
+          name: 'wantsSwitcher',
+          message: 'Do you want to add a language switcher button component?',
+          default: true
+        },
+        {
+          type: 'checkbox',
+          name: 'switcherPosition',
+          message: 'Where to inject the language switcher? (Select strictly ONE using space, then press enter)',
+          choices: ['nav', 'header', 'footer', 'div', 'section', 'li', 'span', 'main', 'aside', 'custom', 'floating element (fixed position)', 'skip'],
+          when: (answers) => answers.wantsSwitcher,
+          validate: (answer) => {
+            if (answer.length !== 1) {
+              return 'You must select exactly one option.';
+            }
+            return true;
+          }
+        },
+        {
+          type: 'input',
+          name: 'customTag',
+          message: 'Enter your custom HTML tag (without brackets, e.g. article, figure):',
+          when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] === 'custom'
+        },
+        {
+          type: 'confirm',
+          name: 'targetById',
+          message: 'Target the injection element by its HTML ID? (e.g. "nav#main-nav")',
+          default: false,
+          when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
+        },
+        {
+          type: 'input',
+          name: 'targetId',
+          message: 'Enter the exact HTML ID of the target element (without the #):',
+          when: (answers) => answers.targetById
+        },
+        {
+          type: 'checkbox',
+          name: 'insertMode',
+          message: 'How should the button be inserted into the target element? (Select strictly ONE using space, then press enter)',
+          choices: ['Append', 'Prepend'],
+          default: ['Append'],
+          when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)',
+          validate: (answer) => {
+            if (answer.length !== 1) {
+              return 'You must select exactly one option.';
+            }
+            return true;
+          }
+        },
+        {
+          type: 'confirm',
+          name: 'wantsCustomClass',
+          message: 'Do you want to add a custom CSS class to style the button component itself?',
+          default: false,
+          when: (answers) => answers.wantsSwitcher
+        },
+        {
+          type: 'input',
+          name: 'switcherClass',
+          message: 'Enter your custom CSS class name(s):',
+          when: (answers) => answers.wantsCustomClass
+        },
+        {
+          type: 'confirm',
+          name: 'installLinters',
+          message: 'Do you want to install ESLint/Stylelint plugins?',
+          default: true
+        }
+      ]);
+    }
 
     const spinner = createSpinner('Initializing Meridian...').start();
     
