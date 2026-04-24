@@ -42,7 +42,7 @@ export const injectProvider = (code, config = {}, fileName = '') => {
         wrapExportWithProvider(ast, scope.exportDefaultNodePath, scope.exportName);
     }
 
-    const output = generate(ast, { retainLines: false, sourceMaps: false }, code);
+    const output = generate(ast, { retainLines: true, compact: false, sourceMaps: false }, code);
     return output.code;
 };
 
@@ -52,14 +52,14 @@ export const injectToggle = (code, targetConfig = { tag: "nav" }, fileName = '')
         ast = getAST(code);
     } catch (e) {
         console.error("Parse Error in injectToggle:", e);
-        return code;
+        return { code, injected: false };
     }
 
     const wasAlreadyImported = injectToggleImports(ast, fileName);
     const successfullyInjected = injectToggleNode(ast, targetConfig);
 
-    if (!successfullyInjected && !wasAlreadyImported) return code;
+    if (!successfullyInjected && !wasAlreadyImported) return { code, injected: false };
 
-    const output = generate(ast, { retainLines: false, sourceMaps: false }, code);
-    return output.code;
+    const output = generate(ast, { retainLines: true, compact: false, sourceMaps: false }, code);
+    return { code: output.code, injected: successfullyInjected };
 };

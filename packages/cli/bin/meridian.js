@@ -12,6 +12,7 @@ import { createSpinner } from 'nanospinner';
 import { saveConfig } from '../utils/config.js';
 import { runModifications } from '../utils/runner.js';
 import { runTranslations } from '../utils/translator-runner.js';
+import { runSync } from '../utils/sync-runner.js';
 import { getToggleTemplate } from '@meridian/core';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -142,17 +143,46 @@ program
           when: (answers) => answers.switcherPosition && answers.switcherPosition[0] === 'custom'
         },
         {
-          type: 'confirm',
-          name: 'targetById',
-          message: 'Target the injection element by its HTML ID? (e.g. "nav#main-nav")',
-          default: false,
-          when: (answers) => answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
+          type: 'checkbox',
+          name: 'targetingMethod',
+          message: 'How do you want to pinpoint the injection target? (Select strictly ONE using space, then press enter)',
+          choices: [
+            'By HTML ID (e.g. nav#main-nav)',
+            'By file path (e.g. src/components/Navbar.jsx)',
+            'No specific target (first matching tag)'
+          ],
+          when: (answers) => answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)',
+          validate: (answer) => {
+            if (answer.length !== 1) {
+              return 'You must select exactly one option.';
+            }
+            return true;
+          }
         },
         {
           type: 'input',
           name: 'targetId',
           message: 'Enter the exact HTML ID of the target element (without the #):',
-          when: (answers) => answers.targetById
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By HTML ID')
+        },
+        {
+          type: 'input',
+          name: 'targetFilePath',
+          message: 'Enter the relative file path from your project root:\n(e.g. src/components/Navbar.jsx)',
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By file path')
+        },
+        {
+          type: 'confirm',
+          name: 'targetFileById',
+          message: 'Do you also want to narrow it down by HTML ID within that file?',
+          default: false,
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By file path')
+        },
+        {
+          type: 'input',
+          name: 'targetId',
+          message: 'Enter the HTML ID (without the #):',
+          when: (answers) => answers.targetFileById
         }
       ]);
 
@@ -170,9 +200,10 @@ program
         switcherPosition: qsAnswers.switcherPosition,
         customTag: qsAnswers.customTag,
         insertMode: ['append'],
-        targetById: qsAnswers.targetById || false,
+        targetingMethod: qsAnswers.targetingMethod,
+        targetFilePath: qsAnswers.targetFilePath,
+        targetFileById: qsAnswers.targetFileById,
         targetId: qsAnswers.targetId,
-        targetByFile: false,
         wantsCustomClass: false,
         installLinters: false
       };
@@ -188,8 +219,9 @@ program
         `Add Switcher: ${qsAnswers.switcherPosition[0] !== 'skip'}`,
         ...(qsAnswers.switcherPosition[0] !== 'skip' ? [`Switcher Position: ${qsAnswers.switcherPosition[0] === 'custom' ? qsAnswers.customTag : qsAnswers.switcherPosition[0]}`] : []),
         `Insert Mode: append`,
-        `Target By ID: ${qsAnswers.targetById ? qsAnswers.targetId : 'false'}`,
-        `Target By File: false`,
+        `Target Method: ${qsAnswers.targetingMethod ? qsAnswers.targetingMethod[0] : 'None'}`,
+        ...(qsAnswers.targetFilePath ? [`Target File: ${qsAnswers.targetFilePath}`] : []),
+        ...(qsAnswers.targetId ? [`Target ID: ${qsAnswers.targetId}`] : []),
         `Custom Class: false`,
         `Install Linters: false`
       ];
@@ -306,17 +338,46 @@ program
           when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] === 'custom'
         },
         {
-          type: 'confirm',
-          name: 'targetById',
-          message: 'Target the injection element by its HTML ID? (e.g. "nav#main-nav")',
-          default: false,
-          when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)'
+          type: 'checkbox',
+          name: 'targetingMethod',
+          message: 'How do you want to pinpoint the injection target? (Select strictly ONE using space, then press enter)',
+          choices: [
+            'By HTML ID (e.g. nav#main-nav)',
+            'By file path (e.g. src/components/Navbar.jsx)',
+            'No specific target (first matching tag)'
+          ],
+          when: (answers) => answers.wantsSwitcher && answers.switcherPosition && answers.switcherPosition[0] !== 'skip' && answers.switcherPosition[0] !== 'floating element (fixed position)',
+          validate: (answer) => {
+            if (answer.length !== 1) {
+              return 'You must select exactly one option.';
+            }
+            return true;
+          }
         },
         {
           type: 'input',
           name: 'targetId',
           message: 'Enter the exact HTML ID of the target element (without the #):',
-          when: (answers) => answers.targetById
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By HTML ID')
+        },
+        {
+          type: 'input',
+          name: 'targetFilePath',
+          message: 'Enter the relative file path from your project root:\n(e.g. src/components/Navbar.jsx)',
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By file path')
+        },
+        {
+          type: 'confirm',
+          name: 'targetFileById',
+          message: 'Do you also want to narrow it down by HTML ID within that file?',
+          default: false,
+          when: (answers) => answers.targetingMethod && answers.targetingMethod[0].startsWith('By file path')
+        },
+        {
+          type: 'input',
+          name: 'targetId',
+          message: 'Enter the HTML ID (without the #):',
+          when: (answers) => answers.targetFileById
         },
         {
           type: 'checkbox',
@@ -382,6 +443,21 @@ program
       }
     }
 
+    /**
+     * Resolves the targeting parameters based on user answers.
+     * @param {Object} ans - The prompt answers.
+     * @returns {Object} The resolved id and filePath.
+     */
+    function resolveTargeting(ans) {
+      const method = ans.targetingMethod ? ans.targetingMethod[0] : null;
+      if (method && method.startsWith('By HTML ID')) {
+        return { id: ans.targetId, filePath: undefined };
+      } else if (method && method.startsWith('By file path')) {
+        return { filePath: ans.targetFilePath, id: ans.targetFileById ? ans.targetId : undefined };
+      }
+      return { id: undefined, filePath: undefined };
+    }
+
     const configData = {
       version: '1.0',
       languages: answers.languages,
@@ -397,7 +473,7 @@ program
         position: {
           tag: answers.switcherPosition[0] === 'floating element (fixed position)' ? undefined : (answers.switcherPosition[0] === 'custom' ? answers.customTag : answers.switcherPosition[0]),
           floating: answers.switcherPosition[0] === 'floating element (fixed position)',
-          id: answers.targetById ? answers.targetId : undefined,
+          ...resolveTargeting(answers),
           insertMode: answers.insertMode && answers.insertMode[0] ? answers.insertMode[0].toLowerCase() : 'append'
         },
         customClass: answers.wantsCustomClass ? answers.switcherClass : '',
@@ -432,6 +508,26 @@ program
     
     // Execute Modifications
     await runModifications(process.cwd(), configData);
+  });
+
+program
+  .command('sync [languages...]')
+  .description('Sync newly added or changed strings from data files to the translation pipeline')
+  .option('-f, --force', 'Force writing changes even if array reordering warning is triggered')
+  .action(async (cliLanguages, options) => {
+    const configPath = path.join(process.cwd(), '.meridianrc.json');
+    if (!fs.existsSync(configPath)) {
+      console.log(chalk.red('❌ Error: .meridianrc.json not found. Run `meridian init` first.'));
+      process.exit(1);
+    }
+
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const spinner = createSpinner('Syncing data files...').start();
+      await runSync(process.cwd(), config, spinner, cliLanguages, options.force);
+    } catch (err) {
+      console.log(chalk.red(`\n❌ Error running sync: ${err.message}`));
+    }
   });
 
 program

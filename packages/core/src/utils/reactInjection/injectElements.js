@@ -54,8 +54,8 @@ export const injectToggleNode = (ast, targetConfig) => {
                 alreadyInjected = true;
             }
 
-            if (name === config.tag && !exactMatchPath) {
-                let matchesSelector = true;
+            if (!exactMatchPath) {
+                let matched = false;
                 if (config.id) {
                     const hasTargetId = path.node.openingElement.attributes.some(attr => {
                         return t.isJSXAttribute(attr) &&
@@ -63,10 +63,14 @@ export const injectToggleNode = (ast, targetConfig) => {
                                t.isStringLiteral(attr.value) &&
                                attr.value.value === config.id;
                     });
-                    if (!hasTargetId) matchesSelector = false;
+                    if (hasTargetId) {
+                        matched = true;
+                    }
+                } else if (name === config.tag) {
+                    matched = true;
                 }
                 
-                if (matchesSelector) {
+                if (matched) {
                     exactMatchPath = path;
                 }
             }
@@ -127,10 +131,38 @@ export const injectToggleNode = (ast, targetConfig) => {
         insertionPath.node.children = [];
     }
 
+    const children = insertionPath.node.children;
+    let endSpace = t.jsxText('\n');
+    let itemSpace = t.jsxText('\n  ');
+
+    if (children.length > 0) {
+        const last = children[children.length - 1];
+        if (t.isJSXText(last) && last.value.trim() === '') {
+            endSpace = children.pop(); 
+            
+            if (children.length > 0) {
+                const prev = children[children.length - 2];
+                if (prev && t.isJSXText(prev) && prev.value.trim() === '') {
+                    itemSpace = t.jsxText(prev.value);
+                } else {
+                    itemSpace = t.jsxText(endSpace.value + '  ');
+                }
+            } else {
+                itemSpace = t.jsxText(endSpace.value + '  ');
+            }
+        }
+    }
+
     if (config.insertMode === 'prepend') {
-        insertionPath.node.children.unshift(nodeToInsert);
+        if (children.length === 0) {
+             children.push(itemSpace, nodeToInsert, endSpace);
+        } else {
+             children.unshift(itemSpace, nodeToInsert);
+        }
     } else {
-        insertionPath.node.children.push(nodeToInsert);
+        children.push(itemSpace);
+        children.push(nodeToInsert);
+        children.push(endSpace);
     }
 
     return true;

@@ -24,18 +24,31 @@ export const handleInjections = (codeString, foundTags, options) => {
 
     let shouldInject = false;
     
-    if (targetConfig.floating) {
-        shouldInject = true;
-    } else if (targetConfig.tag && (foundTags.has(targetConfig.tag) || targetConfig.tag === 'custom selector')) {
-        shouldInject = true;
-    } else if (foundTags.has('nav') || foundTags.has('header')) {
-        shouldInject = true;
-        targetConfig.tag = foundTags.has('nav') ? 'nav' : 'header';
+    // Check if the current file matches the requested filePath
+    if (targetConfig.filePath) {
+        const normalizedTarget = targetConfig.filePath.replace(/\\/g, '/');
+        const normalizedFile = (options.fileName || '').replace(/\\/g, '/');
+        
+        if (normalizedFile.endsWith(normalizedTarget)) {
+            shouldInject = true;
+        } else {
+            return { modifiedCode, injected }; // Fast exit, don't inject in other files
+        }
+    } else {
+        if (targetConfig.floating) {
+            shouldInject = true;
+        } else if (targetConfig.tag && (foundTags.has(targetConfig.tag) || targetConfig.tag === 'custom selector')) {
+            shouldInject = true;
+        } else if (foundTags.has('nav') || foundTags.has('header')) {
+            shouldInject = true;
+            targetConfig.tag = foundTags.has('nav') ? 'nav' : 'header';
+        }
     }
 
     if (shouldInject) {
-        modifiedCode = injectToggle(modifiedCode, targetConfig, options.fileName);
-        injected = true;
+        const toggleResult = injectToggle(modifiedCode, targetConfig, options.fileName);
+        modifiedCode = toggleResult.code;
+        injected = toggleResult.injected;
     }
 
     return { modifiedCode, injected };

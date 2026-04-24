@@ -33,10 +33,12 @@ function walkFiles(dir, fileList = []) {
 export async function runModifications(cwd, config) {
   console.log(chalk.blue('\n🔍 Scanning project files for RTL issues...'));
 
+  let isGitRepo = false;
   // 1. Git Safety Check
   try {
     // Check if git is initialized
     execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore', cwd });
+    isGitRepo = true;
     
     // Check for uncommitted changes
     const status = execSync('git status --porcelain', { cwd }).toString();
@@ -127,6 +129,7 @@ export async function runModifications(cwd, config) {
   let fixedCssCount = 0;
   let fixedJsxCount = 0;
   let allExtractedStrings = {};
+  let wasSwitcherInjected = false;
 
   // 3. Process files
   for (const fullPath of targetFiles) {
@@ -146,6 +149,7 @@ export async function runModifications(cwd, config) {
          
          const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', 'main.tsx', 'main.jsx', 'index.js', 'index.jsx'].some(name => relativePath.endsWith(name));
          const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath });
+         if (result.injected) wasSwitcherInjected = true;
          
          let finalCode = result.fixedCode || content;
          let isModified = finalCode !== content;
@@ -253,7 +257,15 @@ ${dummyEntries}
   console.log(chalk.green(`\n✅ Modification complete:`));
   console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
   console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files\n`));
-  console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
+  
+  if (isGitRepo) {
+      console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
+  }
+
+  if (config.languageSwitcher && config.languageSwitcher.position && config.languageSwitcher.position.tag !== 'skip' && !wasSwitcherInjected) {
+      console.log(chalk.yellow(`⚠️  Warning: Could not automatically inject the Language Switcher.`));
+      console.log(chalk.yellow(`   Please check your file path or HTML ID targeting options, or manually add <LanguageToggle />\n`));
+  }
 
   // 5. Automatic Translation Step
   if (config.translation) {

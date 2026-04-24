@@ -94,7 +94,7 @@ const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false
         fixedCode = injectionResult.modifiedCode;
     }
 
-    return { score, warnings, foundTags, fixedCode };
+    return { score, warnings, foundTags, fixedCode, injected: injectionResult.injected };
 };
 
 export default analyzeJSX;

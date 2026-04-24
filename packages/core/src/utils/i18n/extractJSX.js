@@ -1,8 +1,75 @@
 import * as t from '@babel/types';
+import chalk from 'chalk';
 import { generateKey } from './hashKey.js';
 import { injectHook } from './injectTranslation.js';
 
+export const NEVER_WRAP_PROPS = [
+    'className', 'key', 'id', 'href', 'src', 'onClick', 'style',
+    'type', 'name', 'tabIndex', 'to', 'as', 'htmlFor'
+];
+
+export const ALWAYS_WRAP_PROPS = [
+    'aria-label', 'placeholder', 'alt', 'title', 'children'
+];
+
+export function shouldWrapMemberExpression(propName, objectName, fieldName, registry) {
+    if (NEVER_WRAP_PROPS.includes(propName)) return false;
+    if (propName.startsWith('data-') || (propName.startsWith('aria-') && propName !== 'aria-label')) return false;
+
+    if (ALWAYS_WRAP_PROPS.includes(propName)) return true;
+
+    if (!registry) return false;
+
+    let boundFile = null;
+    for (const file of Object.keys(registry)) {
+        const entry = registry[file];
+        if (
+            (entry.translatable && entry.translatable.includes(fieldName)) ||
+            (entry.skip && entry.skip.includes(fieldName)) ||
+            (entry.identifier && entry.identifier.includes(fieldName))
+        ) {
+            boundFile = file;
+            break;
+        }
+    }
+
+    if (!boundFile) {
+        console.log(chalk.yellow(`⚠ Skipped uncertain expression: ${objectName}.${fieldName} — object not traced to a scanned data file. Add it to .meridianrc.json > dataFiles if it contains display text.`));
+        return false;
+    }
+
+    const fileEntry = registry[boundFile];
+    if (!fileEntry.translatable || !fileEntry.translatable.includes(fieldName)) {
+        return false;
+    }
+
+    return true;
+}
+
 export const buildExtractVisitor = (extractedMap, ctx) => ({
+    JSXExpressionContainer(path) {
+        const expr = path.node.expression;
+        if (!t.isMemberExpression(expr)) return;
+        if (!t.isIdentifier(expr.object) || !t.isIdentifier(expr.property)) return;
+
+        const objectName = expr.object.name;
+        const fieldName = expr.property.name;
+
+        let propName = 'children';
+        if (path.parentPath.isJSXAttribute()) {
+            propName = path.parentPath.node.name.name;
+        } else if (!path.parentPath.isJSXElement() && !path.parentPath.isJSXFragment()) {
+            return;
+        }
+
+        if (shouldWrapMemberExpression(propName, objectName, fieldName, ctx.registry)) {
+            if (!injectHook(path, ctx)) return;
+            path.get('expression').replaceWith(
+                t.callExpression(t.identifier('t'), [expr])
+            );
+            path.skip();
+        }
+    },
     JSXElement(path) {
         const opening = path.node.openingElement;
         

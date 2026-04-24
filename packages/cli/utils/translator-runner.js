@@ -10,7 +10,7 @@ import {
   MockTranslationAdapter 
 } from '@meridian/core';
 
-export async function runTranslations(cwd, config, spinner = null, explicitLangs = []) {
+export async function runTranslations(cwd, config, spinner = null, explicitLangs = [], deltaKeys = null) {
   if (!config || !config.translation || !config.translation.provider || config.translation.provider === 'manual') {
     return;
   }
@@ -74,13 +74,51 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
     return;
   }
 
+  let translationPayload = sourceJSON;
+  if (deltaKeys && Array.isArray(deltaKeys)) {
+    translationPayload = {};
+    for (const key of deltaKeys) {
+      const parts = key.split('.');
+      let currentSrc = sourceJSON;
+      let currentDest = translationPayload;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (i === parts.length - 1) {
+          if (currentSrc && currentSrc[part] !== undefined) {
+            currentDest[part] = currentSrc[part];
+          }
+        } else {
+          currentSrc = currentSrc ? currentSrc[part] : undefined;
+          if (currentSrc !== undefined) {
+            currentDest[part] = currentDest[part] || {};
+            currentDest = currentDest[part];
+          } else {
+            break;
+          }
+        }
+      }
+    }
+  }
+
   console.log(chalk.cyan(`\n🌍 Starting Translation Process via ${providerName.toUpperCase()} API...`));
+
+  const mergeDeep = (target, source) => {
+    for (const key in source) {
+      if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+        if (!target[key]) target[key] = {};
+        mergeDeep(target[key], source[key]);
+      } else {
+        target[key] = source[key];
+      }
+    }
+    return target;
+  };
 
   for (const lang of targetLanguages) {
     console.log(chalk.gray(`  Translating into ${lang}...`));
     
     try {
-      const translatedObj = await translator.translateObject(sourceJSON, lang, defaultLang);
+      const translatedObj = await translator.translateObject(translationPayload, lang, defaultLang);
       
       const targetDir = path.join(cwd, 'public', 'locales', lang);
       if (!fs.existsSync(targetDir)) {
@@ -88,7 +126,17 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
       }
       
       const targetPath = path.join(targetDir, 'translation.json');
-      fs.writeFileSync(targetPath, JSON.stringify(translatedObj, null, 2), 'utf8');
+      let existingTarget = {};
+      if (deltaKeys && fs.existsSync(targetPath)) {
+        try {
+          existingTarget = JSON.parse(fs.readFileSync(targetPath, 'utf8'));
+        } catch (e) {
+          // ignore
+        }
+      }
+      
+      const finalObj = deltaKeys ? mergeDeep(existingTarget, translatedObj) : translatedObj;
+      fs.writeFileSync(targetPath, JSON.stringify(finalObj, null, 2), 'utf8');
       
       console.log(chalk.green(`  ✓ Generated: ${path.relative(cwd, targetPath)}`));
     } catch (err) {
