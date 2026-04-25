@@ -8,6 +8,7 @@ import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
 import { runTranslations } from './translator-runner.js';
+import { scanDataFiles, promoteDataFileKeys } from './scanDataFiles.js';
 
 // Helper to recursively find files
 function walkFiles(dir, fileList = []) {
@@ -131,6 +132,58 @@ export async function runModifications(cwd, config) {
   let allExtractedStrings = {};
   let wasSwitcherInjected = false;
 
+  /**
+   * Phase 3 – Data File Scanner.
+   * Discovers JS/JSON data files under src/ and classifies their string leaves.
+   * Failures are non-fatal: a warning is printed and the registry stays empty.
+   * @type {Object}
+   */
+  let dataRegistry = {};
+  let dataFilesScanned = 0;
+  console.log(chalk.blue('\n📂 Scanning data files...'));
+  try {
+    dataRegistry = await scanDataFiles(cwd);
+    dataFilesScanned = Object.keys(dataRegistry).length;
+    if (dataFilesScanned > 0) {
+      console.log(chalk.green(`  ✓ Found ${dataFilesScanned} data file(s).`));
+    } else {
+      console.log(chalk.gray('  No data files found (src/data, src/content, src/constants).'));
+    }
+  } catch (err) {
+    console.log(chalk.yellow(`  ⚠️  Data file scan failed and will be skipped: ${err.message}`));
+  }
+
+  /**
+   * Phase 4 – Key Promotion.
+   * For each file found by the scanner, promote translatable strings into the
+   * shared translations object using the _data.<baseName>.<dotPath> key scheme.
+   * Promotion is idempotent — existing keys are never overwritten.
+   * @type {number}
+   */
+  let dataKeysPromoted = 0;
+  if (dataFilesScanned > 0 && (config.i18next || config.translation)) {
+    console.log(chalk.blue('\n🔑 Promoting data file keys...'));
+    try {
+      for (const [relPath, fileRegistry] of Object.entries(dataRegistry)) {
+        const absoluteFilePath = path.join(cwd, relPath);
+        const promoted = await promoteDataFileKeys(
+          absoluteFilePath,
+          cwd,
+          fileRegistry,
+          allExtractedStrings
+        );
+        dataKeysPromoted += promoted;
+      }
+      if (dataKeysPromoted > 0) {
+        console.log(chalk.green(`  ✓ Promoted ${dataKeysPromoted} new data key(s).`));
+      } else {
+        console.log(chalk.gray('  All data keys already present — nothing to promote.'));
+      }
+    } catch (err) {
+      console.log(chalk.yellow(`  ⚠️  Key promotion failed and will be skipped: ${err.message}`));
+    }
+  }
+
   // 3. Process files
   for (const fullPath of targetFiles) {
     const content = fs.readFileSync(fullPath, 'utf8');
@@ -148,14 +201,20 @@ export async function runModifications(cwd, config) {
       } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
          
          const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', 'main.tsx', 'main.jsx', 'index.js', 'index.jsx'].some(name => relativePath.endsWith(name));
-         const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath });
+         /**
+          * Phase 5 – Babel JSX Extractor.
+          * The scanner registry is forwarded so that shouldWrapMemberExpression()
+          * can correctly gate member-expression wrapping by consulting the
+          * data-file registry.
+          */
+         const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath, dataRegistry });
          if (result.injected) wasSwitcherInjected = true;
          
          let finalCode = result.fixedCode || content;
          let isModified = finalCode !== content;
 
          if (config.i18next || config.translation) {
-             const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath });
+             const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath, registry: dataRegistry });
              if (extraction.modifiedCode !== finalCode) {
                  finalCode = extraction.modifiedCode;
                  isModified = true;
@@ -256,7 +315,9 @@ ${dummyEntries}
 
   console.log(chalk.green(`\n✅ Modification complete:`));
   console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
-  console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files\n`));
+  console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files`));
+  console.log(chalk.green(`   - Data files scanned: ${dataFilesScanned}`));
+  console.log(chalk.green(`   - Data keys promoted: ${dataKeysPromoted}\n`));
   
   if (isGitRepo) {
       console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));

@@ -42,7 +42,7 @@ export const injectProvider = (code, config = {}, fileName = '') => {
         wrapExportWithProvider(ast, scope.exportDefaultNodePath, scope.exportName);
     }
 
-    const output = generate(ast, { retainLines: true, compact: false, sourceMaps: false }, code);
+    const output = generate(ast, { compact: false, concise: false, jsescOption: { minimal: true } }, code);
     return output.code;
 };
 
@@ -60,6 +60,6 @@ export const injectToggle = (code, targetConfig = { tag: "nav" }, fileName = '')
 
     if (!successfullyInjected && !wasAlreadyImported) return { code, injected: false };
 
-    const output = generate(ast, { retainLines: true, compact: false, sourceMaps: false }, code);
+    const output = generate(ast, { compact: false, concise: false, jsescOption: { minimal: true } }, code);
     return { code: output.code, injected: successfullyInjected };
 };

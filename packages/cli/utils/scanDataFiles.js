@@ -7,20 +7,32 @@ import chalk from 'chalk';
 /**
  * Classifies a string value based on heuristic rules.
  * @param {string} value - The string to classify.
- * @returns {string} - The classification: 'skip', 'translatable', or 'identifier'.
+ * @returns {'skip'|'translatable'|'identifier'} The classification.
  */
 function classifyString(value) {
   if (value === '' || value.trim() === '') return 'skip';
   if (!isNaN(Number(value))) return 'skip';
   if (value === 'true' || value === 'false') return 'skip';
-  
+
+  // Skip URLs
+  if (/^https?:\/\//i.test(value)) return 'skip';
+  // Skip email addresses
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'skip';
+  // Skip phone numbers (digits, spaces, +, -, parentheses only)
+  if (/^[\d\s()\-+.]+$/.test(value) && value.replace(/\D/g, '').length >= 4) return 'skip';
+  // Skip CSS / icon class strings: multiple words but every word contains only
+  // lowercase letters, digits, or hyphens (e.g. "fa fa-wordpress", "btn btn-lg")
+  if (/^\s*[a-z][a-z0-9-]*(?:\s+[a-z][a-z0-9-]+)+\s*$/.test(value)) return 'identifier';
+  // Skip file-path-like strings
+  if (/(\/|\\|\.[a-z]{2,4}$)/i.test(value) && !value.includes(' ')) return 'skip';
+
   if (value.includes(' ')) return 'translatable';
-  
+
   const isAllLowercase = value.toLowerCase() === value;
   if (value.includes('-') || value.includes('_') || isAllLowercase) {
     return 'identifier';
   }
-  
+
   return 'identifier';
 }
 
@@ -243,4 +255,154 @@ export async function scanDataFiles(projectRoot) {
   }
   
   return globalRegistry;
+}
+
+/**
+ * Walks a plain JS/JSON value tree and collects every string leaf mapped to
+ * its dot-notation path.  Only keys whose last segment is in `translatableKeys`
+ * are included.
+ * @param {any} node - Current value in the tree.
+ * @param {string[]} pathParts - Accumulated path segments.
+ * @param {string[]} translatableKeys - Keys recognised as translatable.
+ * @param {Object} result - Accumulator: { dotPath → rawString }.
+ */
+function walkValueTree(node, pathParts, translatableKeys, result) {
+  if (typeof node === 'string') {
+    const leafKey = pathParts[pathParts.length - 1];
+    if (leafKey !== undefined && translatableKeys.includes(String(leafKey))) {
+      result[pathParts.join('.')] = node;
+    }
+  } else if (Array.isArray(node)) {
+    node.forEach((item, idx) =>
+      walkValueTree(item, [...pathParts, idx], translatableKeys, result)
+    );
+  } else if (node && typeof node === 'object') {
+    Object.entries(node).forEach(([key, value]) =>
+      walkValueTree(value, [...pathParts, key], translatableKeys, result)
+    );
+  }
+}
+
+/**
+ * Promotes translatable strings from a single scanned data file into the
+ * provided `translations` object as **flat top-level keys**.
+ *
+ * Key scheme: the English string value is its own key, identical to how i18next
+ * `t()` calls work when the JSX extractor wraps dynamic member expressions such
+ * as `t(d.name)` — the runtime value of `d.name` is the key.  Writing flat
+ * keys here means:
+ *   - `t("Lorem ipsum dolor")` → finds the key → returns the translation ✓
+ *   - No path-based nesting needed in runtime locale files
+ *
+ * The `_data.*` nested structure is intentionally left to `runSync` only,
+ * which uses it for offline change tracking and is never consumed by `t()`.
+ *
+ * Duplicate values across entries are deduplicated naturally by using the
+ * string itself as the object key.  Existing keys are never overwritten so
+ * this function is safe to call repeatedly.
+ *
+ * @param {string}   filePath     - Absolute path to the data file.
+ * @param {string}   projectRoot  - Absolute path to the project root.
+ * @param {Object}   fileRegistry - Registry entry produced by {@link scanDataFiles};
+ *                                   must contain a `translatable` string array.
+ * @param {Object}   translations - Mutable en/translation.json object that will
+ *                                   receive the new flat keys.
+ * @returns {Promise<number>} Number of keys newly added (0 when all already present).
+ */
+export async function promoteDataFileKeys(filePath, projectRoot, fileRegistry, translations) {
+  const translatableKeys = fileRegistry.translatable || [];
+  if (translatableKeys.length === 0) return 0;
+
+  /**
+   * All unique translatable string values found in the data file.
+   * @type {Set<string>}
+   */
+  const uniqueValues = new Set();
+
+  if (filePath.endsWith('.json')) {
+    // --- JSON data file ---
+    try {
+      const raw = await fs.readFile(filePath, 'utf8');
+      const data = JSON.parse(raw);
+      collectValues(data, translatableKeys, uniqueValues);
+    } catch (err) {
+      console.warn(chalk.yellow(`  ⚠️  Could not read JSON for promotion: ${filePath} — ${err.message}`));
+      return 0;
+    }
+  } else if (filePath.endsWith('.js')) {
+    // --- JS data file (Babel AST extraction) ---
+    try {
+      const code = await fs.readFile(filePath, 'utf8');
+      const ast = babel.parse(code, {
+        filename: filePath,
+        sourceType: 'module',
+        parserOpts: { plugins: ['jsx', 'typescript'] },
+      });
+
+      babel.traverse(ast, {
+        StringLiteral(p) {
+          const objProp = p.findParent(par => par.isObjectProperty());
+          if (!objProp) return;
+          const keyNode = objProp.node.key;
+          const keyName = keyNode.type === 'Identifier' ? keyNode.name : keyNode.value;
+          if (translatableKeys.includes(keyName)) {
+            uniqueValues.add(p.node.value);
+          }
+        },
+        TemplateLiteral(p) {
+          if (p.node.expressions.length > 0) return;
+          const objProp = p.findParent(par => par.isObjectProperty());
+          if (!objProp) return;
+          const keyNode = objProp.node.key;
+          const keyName = keyNode.type === 'Identifier' ? keyNode.name : keyNode.value;
+          if (translatableKeys.includes(keyName)) {
+            uniqueValues.add(p.node.quasis[0].value.raw);
+          }
+        },
+      });
+    } catch (err) {
+      console.warn(chalk.yellow(`  ⚠️  Could not parse JS for promotion: ${filePath} — ${err.message}`));
+      return 0;
+    }
+  }
+
+  if (uniqueValues.size === 0) return 0;
+
+  let promotedCount = 0;
+
+  for (const value of uniqueValues) {
+    // Final guard: re-classify with the stricter classifier before writing
+    if (classifyString(value) !== 'translatable') continue;
+    // Flat key: the English string is both the key and the default value.
+    // i18next returns the key when no translation exists, so this is safe.
+    if (translations[value] === undefined) {
+      translations[value] = value;
+      promotedCount++;
+    }
+  }
+
+  return promotedCount;
+}
+
+/**
+ * Recursively collects string leaf values whose parent key is in
+ * `translatableKeys` into a flat Set.
+ * Used internally by {@link promoteDataFileKeys} for JSON files.
+ *
+ * @param {any}      node            - Current tree node.
+ * @param {string[]} translatableKeys - Allowed field names.
+ * @param {Set<string>} out          - Accumulator.
+ */
+function collectValues(node, translatableKeys, out) {
+  if (Array.isArray(node)) {
+    node.forEach(item => collectValues(item, translatableKeys, out));
+  } else if (node && typeof node === 'object') {
+    for (const [key, value] of Object.entries(node)) {
+      if (typeof value === 'string' && translatableKeys.includes(key)) {
+        out.add(value);
+      } else {
+        collectValues(value, translatableKeys, out);
+      }
+    }
+  }
 }

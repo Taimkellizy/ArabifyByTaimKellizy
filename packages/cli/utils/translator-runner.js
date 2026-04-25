@@ -78,6 +78,13 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
   if (deltaKeys && Array.isArray(deltaKeys)) {
     translationPayload = {};
     for (const key of deltaKeys) {
+      // Try the key as a literal top-level lookup first.
+      // This is the common case for flat sentence-keys that contain dots.
+      if (sourceJSON[key] !== undefined) {
+        translationPayload[key] = sourceJSON[key];
+        continue;
+      }
+      // Fallback: dot-notation traversal for genuinely nested structures.
       const parts = key.split('.');
       let currentSrc = sourceJSON;
       let currentDest = translationPayload;

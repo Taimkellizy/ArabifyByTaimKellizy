@@ -25,12 +25,18 @@ class TranslatorService {
   async translateObject(jsonObj, targetLang, sourceLang = undefined) {
     if (!jsonObj || typeof jsonObj !== 'object') return jsonObj;
 
+    // Internal separator for flatten/unflatten that cannot appear in i18n
+    // keys.  '.' is NOT safe because flat translation keys are full English
+    // sentences that routinely contain periods (e.g. "Lorem ipsum dolor. Duis
+    // sed…").  A null-byte is impossible in JSON keys.
+    const SEP = '\0';
+
     // 1. Flatten the object to a 1D key-value map
     const flattenObj = (obj, prefix = '') => {
       const flat = {};
       for (const k in obj) {
         if (Object.prototype.hasOwnProperty.call(obj, k)) {
-          const pre = prefix.length ? prefix + '.' : '';
+          const pre = prefix.length ? prefix + SEP : '';
           if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
             Object.assign(flat, flattenObj(obj[k], pre + k));
           } else if (typeof obj[k] === 'string') {
@@ -81,7 +87,7 @@ class TranslatorService {
       for (const flatKey in flatObj) {
         if (!Object.prototype.hasOwnProperty.call(flatObj, flatKey)) continue;
         
-        const parts = flatKey.split('.');
+        const parts = flatKey.split(SEP);
         let current = result;
         
         for (let j = 0; j < parts.length; j++) {

@@ -32,7 +32,8 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
     const extractedStrings = new Map();
     const ctx = {
         needsImport: false,
-        injectedNodeSet: new Set()
+        injectedNodeSet: new Set(),
+        registry: options.registry || null
     };
 
     const visitor = buildExtractVisitor(extractedStrings, ctx);
@@ -43,8 +44,9 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
     }
 
     const output = generate(ast, {
-        retainLines: true,
-        concise: false
+        compact: false,
+        concise: false,
+        jsescOption: { minimal: true }
     }, codeString);
     
     return { modifiedCode: output.code, extractedStrings };

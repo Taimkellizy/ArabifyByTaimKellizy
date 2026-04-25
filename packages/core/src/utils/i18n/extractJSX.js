@@ -49,25 +49,94 @@ export function shouldWrapMemberExpression(propName, objectName, fieldName, regi
 export const buildExtractVisitor = (extractedMap, ctx) => ({
     JSXExpressionContainer(path) {
         const expr = path.node.expression;
-        if (!t.isMemberExpression(expr)) return;
-        if (!t.isIdentifier(expr.object) || !t.isIdentifier(expr.property)) return;
 
-        const objectName = expr.object.name;
-        const fieldName = expr.property.name;
+        /**
+         * Extracts the terminal field name and a human-readable object name
+         * from a member expression of arbitrary depth.
+         *
+         *   props.data.title  → { objectName: 'data', fieldName: 'title', node: <MemberExpression> }
+         *   d.name            → { objectName: 'd',    fieldName: 'name',  node: <MemberExpression> }
+         *
+         * Returns null when the expression is not a member expression or
+         * uses computed access (e.g. obj[var]).
+         */
+        const extractMemberInfo = (node) => {
+            if (!t.isMemberExpression(node) || node.computed) return null;
+            if (!t.isIdentifier(node.property)) return null;
 
-        let propName = 'children';
-        if (path.parentPath.isJSXAttribute()) {
-            propName = path.parentPath.node.name.name;
-        } else if (!path.parentPath.isJSXElement() && !path.parentPath.isJSXFragment()) {
+            const fieldName = node.property.name;
+
+            // Walk upward to find the nearest identifier that names the object
+            let objectName = null;
+            let cursor = node.object;
+            while (t.isMemberExpression(cursor) && !cursor.computed) {
+                if (t.isIdentifier(cursor.property)) {
+                    objectName = cursor.property.name; // e.g. "data" from props.data
+                }
+                cursor = cursor.object;
+            }
+            if (t.isIdentifier(cursor)) {
+                // Single-depth: d.name → objectName is "d"
+                objectName = objectName || cursor.name;
+            }
+            if (!objectName) return null;
+
+            return { objectName, fieldName, node };
+        };
+
+        // ── Case 1: member expression at any depth {obj.field} or {props.data.field}
+        if (t.isMemberExpression(expr)) {
+            const info = extractMemberInfo(expr);
+            if (!info) return;
+
+            let propName = 'children';
+            if (path.parentPath.isJSXAttribute()) {
+                propName = path.parentPath.node.name.name;
+            } else if (!path.parentPath.isJSXElement() && !path.parentPath.isJSXFragment()) {
+                return;
+            }
+
+            if (shouldWrapMemberExpression(propName, info.objectName, info.fieldName, ctx.registry)) {
+                if (!injectHook(path, ctx)) return;
+                path.get('expression').replaceWith(
+                    t.callExpression(t.identifier('t'), [expr])
+                );
+                path.skip();
+            }
             return;
         }
 
-        if (shouldWrapMemberExpression(propName, objectName, fieldName, ctx.registry)) {
-            if (!injectHook(path, ctx)) return;
-            path.get('expression').replaceWith(
-                t.callExpression(t.identifier('t'), [expr])
-            );
-            path.skip();
+        // ── Case 2: ternary conditional {cond ? obj.field : fallback} ─────
+        if (t.isConditionalExpression(expr)) {
+            const info = extractMemberInfo(expr.consequent);
+            if (info) {
+                const propName = path.parentPath.isJSXAttribute()
+                    ? path.parentPath.node.name.name
+                    : 'children';
+
+                if (shouldWrapMemberExpression(propName, info.objectName, info.fieldName, ctx.registry)) {
+                    if (!injectHook(path, ctx)) return;
+                    expr.consequent = t.callExpression(t.identifier('t'), [info.node]);
+                }
+            }
+            return;
+        }
+
+        // ── Case 3: plain identifier child {d} inside a .map() ───────────
+        if (t.isIdentifier(expr) && path.parentPath.isJSXElement()) {
+            const varName = expr.name;
+            if (ctx.registry) {
+                for (const entry of Object.values(ctx.registry)) {
+                    if (entry.translatable && entry.translatable.includes(varName)) {
+                        if (!injectHook(path, ctx)) return;
+                        path.get('expression').replaceWith(
+                            t.callExpression(t.identifier('t'), [expr])
+                        );
+                        path.skip();
+                        return;
+                    }
+                }
+            }
         }
     },
     JSXElement(path) {
@@ -156,6 +225,55 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                 const normalizedText = textStr.trim().replace(/\s+/g, ' ');
                 if (hasText && normalizedText.length > 0) {
+                    // Before creating an interpolation template, check if any
+                    // variable is a translatable member expression.  If ALL
+                    // variables qualify, emit them as individual t(expr)
+                    // children with surrounding punctuation as plain text.
+                    // This prevents broken patterns like t("\"{{text}}\"", { text: d.text }).
+                    if (variables.length > 0 && ctx.registry) {
+                        let allTranslatable = true;
+                        for (const varProp of variables) {
+                            const varExpr = varProp.value;
+                            let isTranslatable = false;
+
+                            if (t.isMemberExpression(varExpr) && !varExpr.computed && t.isIdentifier(varExpr.property)) {
+                                const fieldName = varExpr.property.name;
+                                for (const entry of Object.values(ctx.registry)) {
+                                    if (entry.translatable && entry.translatable.includes(fieldName)) {
+                                        isTranslatable = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isTranslatable) {
+                                allTranslatable = false;
+                                break;
+                            }
+                        }
+
+                        if (allTranslatable) {
+                            if (injectHook(path, ctx)) {
+                                modified = true;
+                                // Emit each original child, wrapping the translatable
+                                // expression containers with t() and leaving text as-is.
+                                for (let k = i; k < j; k++) {
+                                    const c = path.node.children[k];
+                                    if (t.isJSXExpressionContainer(c) && !t.isJSXEmptyExpression(c.expression)) {
+                                        newChildren.push(
+                                            t.jsxExpressionContainer(
+                                                t.callExpression(t.identifier('t'), [c.expression])
+                                            )
+                                        );
+                                    } else {
+                                        newChildren.push(c);
+                                    }
+                                }
+                                i = j;
+                                continue;
+                            }
+                        }
+                    }
+
                     if (!injectHook(path, ctx)) {
                         for (let k = i; k < j; k++) {
                             newChildren.push(path.node.children[k]);
@@ -182,6 +300,59 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                         if (trailingMatch && trailingMatch[0] !== textStr) {
                             newChildren.push(t.jsxText(trailingMatch[0]));
+                        }
+                    }
+                } else if (!hasText && variables.length === 1) {
+                    // The run is a single expression child with no surrounding
+                    // literal text — e.g. {d.text} or {d}.
+                    // If the expression is a member-expression or identifier that
+                    // qualifies for wrapping, emit t(expr) directly so the
+                    // runtime value acts as its own key (matching the flat keys
+                    // written by promoteDataFileKeys).
+                    const onlyExprContainer = path.node.children.slice(i, j).find(
+                        c => t.isJSXExpressionContainer(c) && !t.isJSXEmptyExpression(c.expression)
+                    );
+                    if (onlyExprContainer) {
+                        const innerExpr = onlyExprContainer.expression;
+                        let shouldWrap = false;
+
+                        if (t.isMemberExpression(innerExpr) && !innerExpr.computed && t.isIdentifier(innerExpr.property)) {
+                            const fieldName = innerExpr.property.name;
+                            // Walk chain to find object name
+                            let objName = null;
+                            let cur = innerExpr.object;
+                            while (t.isMemberExpression(cur) && !cur.computed) {
+                                if (t.isIdentifier(cur.property)) objName = cur.property.name;
+                                cur = cur.object;
+                            }
+                            if (t.isIdentifier(cur)) objName = objName || cur.name;
+                            if (objName) {
+                                shouldWrap = shouldWrapMemberExpression('children', objName, fieldName, ctx.registry);
+                            }
+                        } else if (t.isIdentifier(innerExpr) && ctx.registry) {
+                            for (const entry of Object.values(ctx.registry)) {
+                                if (entry.translatable && entry.translatable.includes(innerExpr.name)) {
+                                    shouldWrap = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (shouldWrap && injectHook(path, ctx)) {
+                            modified = true;
+                            newChildren.push(
+                                t.jsxExpressionContainer(
+                                    t.callExpression(t.identifier('t'), [innerExpr])
+                                )
+                            );
+                        } else {
+                            for (let k = i; k < j; k++) {
+                                newChildren.push(path.node.children[k]);
+                            }
+                        }
+                    } else {
+                        for (let k = i; k < j; k++) {
+                            newChildren.push(path.node.children[k]);
                         }
                     }
                 } else {
