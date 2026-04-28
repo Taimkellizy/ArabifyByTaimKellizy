@@ -1,36 +1,37 @@
-# Graph Report - .  (2026-04-28)
+# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-04-28)
 
 ## Corpus Check
-- Corpus is ~41,939 words - fits in a single context window. You may not need a graph.
+- 69 files · ~58,842 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 247 nodes · 247 edges · 50 communities detected
-- Extraction: 77% EXTRACTED · 23% INFERRED · 0% AMBIGUOUS · INFERRED: 58 edges (avg confidence: 0.79)
+- 176 nodes · 170 edges · 38 communities detected
+- Extraction: 75% EXTRACTED · 25% INFERRED · 0% AMBIGUOUS · INFERRED: 43 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Core Analysis Pipeline|Core Analysis Pipeline]]
-- [[_COMMUNITY_React Injection System|React Injection System]]
-- [[_COMMUNITY_Translation Service|Translation Service]]
-- [[_COMMUNITY_Website UI Components|Website UI Components]]
-- [[_COMMUNITY_CLI Modification Pipeline|CLI Modification Pipeline]]
-- [[_COMMUNITY_HTML Analysis|HTML Analysis]]
-- [[_COMMUNITY_JSX Analysis|JSX Analysis]]
-- [[_COMMUNITY_Data File Scanner|Data File Scanner]]
-- [[_COMMUNITY_i18n Extraction|i18n Extraction]]
-- [[_COMMUNITY_Masonry Gallery|Masonry Gallery]]
-- [[_COMMUNITY_CLI Core|CLI Core]]
-- [[_COMMUNITY_Translation Providers|Translation Providers]]
-- [[_COMMUNITY_i18n Utilities|i18n Utilities]]
-- [[_COMMUNITY_Hero Section|Hero Section]]
-- [[_COMMUNITY_CLI Entry Point|CLI Entry Point]]
-- [[_COMMUNITY_RTL Detection|RTL Detection]]
-- [[_COMMUNITY_Google Provider|Google Provider]]
-- [[_COMMUNITY_Libre Provider|Libre Provider]]
-- [[_COMMUNITY_Mock Adapter|Mock Adapter]]
-- [[_COMMUNITY_React Injectors|React Injectors]]
-- [[_COMMUNITY_Config Manager|Config Manager]]
-- [[_COMMUNITY_DeepL Provider|DeepL Provider]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
 - [[_COMMUNITY_Community 22|Community 22]]
 - [[_COMMUNITY_Community 23|Community 23]]
 - [[_COMMUNITY_Community 24|Community 24]]
@@ -47,42 +48,30 @@
 - [[_COMMUNITY_Community 35|Community 35]]
 - [[_COMMUNITY_Community 36|Community 36]]
 - [[_COMMUNITY_Community 37|Community 37]]
-- [[_COMMUNITY_Community 38|Community 38]]
-- [[_COMMUNITY_Community 39|Community 39]]
-- [[_COMMUNITY_Community 40|Community 40]]
-- [[_COMMUNITY_Community 41|Community 41]]
-- [[_COMMUNITY_Community 42|Community 42]]
-- [[_COMMUNITY_Community 43|Community 43]]
-- [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
-- [[_COMMUNITY_Community 47|Community 47]]
-- [[_COMMUNITY_Community 48|Community 48]]
-- [[_COMMUNITY_Community 49|Community 49]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `runModifications()` - 14 edges
 2. `analyzeJSX()` - 9 edges
-3. `analyzeHTML - HTML Analyzer` - 9 edges
-4. `Main App Component` - 8 edges
-5. `Masonry Gallery Component` - 8 edges
-6. `analyzeHTML()` - 7 edges
-7. `handleInjections()` - 7 edges
-8. `injectProvider()` - 7 edges
-9. `GSAP ScrollTrigger Animation` - 7 edges
-10. `analyzeJSX - JSX/React Analyzer` - 7 edges
+3. `analyzeHTML()` - 7 edges
+4. `handleInjections()` - 7 edges
+5. `injectProvider()` - 7 edges
+6. `scanDataFiles()` - 6 edges
+7. `runSync()` - 5 edges
+8. `applyPenalty()` - 5 edges
+9. `injectToggle()` - 5 edges
+10. `promoteDataFileKeys()` - 4 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `runModifications()` --calls--> `generateI18nConfig()`  [INFERRED]
-  meridian-suite\packages\cli\utils\runner.js → meridian-suite\packages\cli\templates\i18n-generator.js
-- `runModifications()` --calls--> `injectI18nImport()`  [INFERRED]
-  meridian-suite\packages\cli\utils\runner.js → meridian-suite\packages\cli\utils\ast-injector.js
-- `runModifications()` --calls--> `installI18nDependencies()`  [INFERRED]
-  meridian-suite\packages\cli\utils\runner.js → meridian-suite\packages\cli\utils\installer.js
+- `generateI18nConfig()` --calls--> `runModifications()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\templates\i18n-generator.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js
+- `injectI18nImport()` --calls--> `runModifications()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\ast-injector.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js
+- `installI18nDependencies()` --calls--> `runModifications()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\installer.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js
 - `runModifications()` --calls--> `scanDataFiles()`  [INFERRED]
-  meridian-suite\packages\cli\utils\runner.js → meridian-suite\packages\cli\utils\scanDataFiles.js
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\scanDataFiles.js
 - `runModifications()` --calls--> `promoteDataFileKeys()`  [INFERRED]
-  meridian-suite\packages\cli\utils\runner.js → meridian-suite\packages\cli\utils\scanDataFiles.js
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\scanDataFiles.js
 
 ## Hyperedges (group relationships)
 - **Meridian Website UI Composition** — app, hero, solution, masonry_gallery, workflow_filmstrip, comparison, code_example, cta_section, topnav [EXTRACTED 1.00]
@@ -97,96 +86,96 @@
 
 ## Communities
 
-### Community 0 - "Core Analysis Pipeline"
-Cohesion: 0.14
-Nodes (21): analyzeCSS - CSS RTL Analyzer, analyzeHTML - HTML Analyzer, analyzeJSX - JSX/React Analyzer, constants - RTL Property Mappings, coreIndex - Core Package Exports, cssDetectRTL - CSS RTL Detection, cssFixStyles - CSS Style Fixer, cssScoring - CSS Penalty Scoring (+13 more)
-
-### Community 1 - "React Injection System"
+### Community 0 - "Community 0"
 Cohesion: 0.14
 Nodes (12): analyzeProviderScope(), injectToggleNode(), wrapExportWithProvider(), injectContextHook(), getRelativeImport(), injectProviderImports(), injectToggleImports(), handleInjections() (+4 more)
 
-### Community 2 - "Translation Service"
-Cohesion: 0.13
-Nodes (7): TranslatorService, extractStringsFromJs(), runSync(), walkJson(), runTest(), TranslationProvider, runTranslations()
-
-### Community 3 - "Website UI Components"
-Cohesion: 0.17
-Nodes (17): Main App Component, AST Extraction Visual, Code Example Section, Comparison Section, CTA Section Component, GSAP ScrollTrigger Animation, Hero Section, Language Matrix Visual (+9 more)
-
-### Community 4 - "CLI Modification Pipeline"
+### Community 1 - "Community 1"
 Cohesion: 0.16
 Nodes (9): analyzeCSS(), injectI18nImport(), generateI18nConfig(), installI18nDependencies(), getContextTemplate(), getI18nContextTemplate(), getToggleTemplate(), runModifications() (+1 more)
 
-### Community 5 - "HTML Analysis"
-Cohesion: 0.14
-Nodes (6): analyzeHTML(), detectA11y(), detectMeta(), detectStructure(), parseHTML(), applyPenalty()
-
-### Community 6 - "JSX Analysis"
+### Community 2 - "Community 2"
 Cohesion: 0.14
 Nodes (6): analyzeJSX(), detectA11yVisitor(), detectRTLVisitor(), fixStylesVisitor(), parseCode(), traverseAST()
 
-### Community 7 - "Data File Scanner"
+### Community 3 - "Community 3"
+Cohesion: 0.14
+Nodes (6): analyzeHTML(), detectA11y(), detectMeta(), detectStructure(), parseHTML(), applyPenalty()
+
+### Community 4 - "Community 4"
 Cohesion: 0.29
 Nodes (9): classifyString(), collectValues(), findDataFiles(), getAllFiles(), parseJsFile(), parseJsonFile(), promoteDataFileKeys(), scanDataFiles() (+1 more)
 
-### Community 8 - "i18n Extraction"
+### Community 5 - "Community 5"
+Cohesion: 0.2
+Nodes (3): TranslatorService, runTest(), TranslationProvider
+
+### Community 6 - "Community 6"
 Cohesion: 0.24
 Nodes (6): buildExtractVisitor(), extractAndTransformJSX(), getReactComponentAncestor(), injectHook(), injectImportStatements(), isReactComponent()
 
-### Community 9 - "Masonry Gallery"
+### Community 7 - "Community 7"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 10 - "CLI Core"
-Cohesion: 0.33
-Nodes (7): AST Injector, Configuration Manager, Dependency Installer, I18n Config Generator, Meridian CLI, Modification Runner, Terminal Demo Component
+### Community 8 - "Community 8"
+Cohesion: 0.38
+Nodes (4): extractStringsFromJs(), runSync(), walkJson(), runTranslations()
 
-### Community 11 - "Translation Providers"
-Cohesion: 0.33
-Nodes (6): DeepLProvider, GoogleProvider, LibreProvider, MockTranslationAdapter, TranslationProvider (Abstract Base), TranslatorService
-
-### Community 12 - "i18n Utilities"
-Cohesion: 0.4
-Nodes (6): extractJSX (JSX String Extraction), hashKey (Translation Key Generation), i18nExtractTransform (Pipeline), injectTranslation (Hook Injection), parseCode (Babel Parser Wrapper), traverseAST (Babel Traverse Wrapper)
-
-### Community 13 - "Hero Section"
+### Community 9 - "Community 9"
 Cohesion: 0.5
 Nodes (2): Hero(), useMousePosition()
 
-### Community 14 - "CLI Entry Point"
+### Community 10 - "Community 10"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 15 - "RTL Detection"
+### Community 11 - "Community 11"
 Cohesion: 0.5
 Nodes (2): detectRTLAndFix(), applyFixes()
 
-### Community 16 - "Google Provider"
+### Community 12 - "Community 12"
 Cohesion: 0.5
 Nodes (1): GoogleProvider
 
-### Community 17 - "Libre Provider"
+### Community 13 - "Community 13"
 Cohesion: 0.5
 Nodes (1): LibreProvider
 
-### Community 18 - "Mock Adapter"
+### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (1): MockTranslationAdapter
 
-### Community 19 - "React Injectors"
-Cohesion: 0.5
-Nodes (4): detectScope (React Scope Analysis), reactGenerators (React i18n Template Generation), reactInjector (React Provider/Toggle Injection), vanillaInjector (HTML Language Toggle)
-
-### Community 20 - "Config Manager"
+### Community 15 - "Community 15"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 21 - "DeepL Provider"
+### Community 16 - "Community 16"
 Cohesion: 0.67
 Nodes (1): DeepLProvider
 
-### Community 22 - "Community 22"
+### Community 17 - "Community 17"
 Cohesion: 0.67
+Nodes (0): 
+
+### Community 18 - "Community 18"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 19 - "Community 19"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 20 - "Community 20"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 21 - "Community 21"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 22 - "Community 22"
+Cohesion: 1.0
 Nodes (0): 
 
 ### Community 23 - "Community 23"
@@ -243,132 +232,68 @@ Nodes (0):
 
 ### Community 36 - "Community 36"
 Cohesion: 1.0
-Nodes (2): Meridian AST Injection Method, Traditional Boilerplate i18n
+Nodes (0): 
 
 ### Community 37 - "Community 37"
 Cohesion: 1.0
-Nodes (2): detokenizeString Utility, tokenizeString Utility
-
-### Community 38 - "Community 38"
-Cohesion: 1.0
-Nodes (2): scoreCalculator (Weighted Score Calculation), scoring (JSX Code Quality Penalties)
-
-### Community 39 - "Community 39"
-Cohesion: 1.0
 Nodes (0): 
-
-### Community 40 - "Community 40"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 41 - "Community 41"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 42 - "Community 42"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 43 - "Community 43"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 44 - "Community 44"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 45 - "Community 45"
-Cohesion: 1.0
-Nodes (0): 
-
-### Community 46 - "Community 46"
-Cohesion: 1.0
-Nodes (1): Gallery Component
-
-### Community 47 - "Community 47"
-Cohesion: 1.0
-Nodes (1): Image Component
-
-### Community 48 - "Community 48"
-Cohesion: 1.0
-Nodes (1): Navigation Component
-
-### Community 49 - "Community 49"
-Cohesion: 1.0
-Nodes (1): fileScanner (File System Scanner)
 
 ## Knowledge Gaps
-- **36 isolated node(s):** `Gallery Component`, `Image Component`, `Navigation Component`, `Top Navigation Component`, `Use Mouse Position Hook` (+31 more)
-  These have ≤1 connection - possible missing edges or undocumented components.
-- **Thin community `Community 23`** (2 nodes): `Gallery()`, `gallery.jsx`
+- **Thin community `Community 18`** (2 nodes): `gallery.jsx`, `Gallery()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `navigation.jsx`, `Navigation()`
+- **Thin community `Community 19`** (2 nodes): `navigation.jsx`, `Navigation()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (2 nodes): `App()`, `App.jsx`
+- **Thin community `Community 20`** (2 nodes): `App()`, `App.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (2 nodes): `CodeExample()`, `CodeExample.jsx`
+- **Thin community `Community 21`** (2 nodes): `CodeExample.jsx`, `CodeExample()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (2 nodes): `Comparison()`, `Comparison.jsx`
+- **Thin community `Community 22`** (2 nodes): `Comparison.jsx`, `Comparison()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `CtaSection()`, `CtaSection.jsx`
+- **Thin community `Community 23`** (2 nodes): `CtaSection.jsx`, `CtaSection()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `Solution.jsx`, `Solution()`
+- **Thin community `Community 24`** (2 nodes): `Solution.jsx`, `Solution()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `TerminalDemo.jsx`, `TerminalDemo()`
+- **Thin community `Community 25`** (2 nodes): `TerminalDemo.jsx`, `TerminalDemo()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (2 nodes): `TopNav.jsx`, `TopNav()`
+- **Thin community `Community 26`** (2 nodes): `TopNav.jsx`, `TopNav()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (2 nodes): `WorkflowFilmstrip.jsx`, `WorkflowFilmstrip()`
+- **Thin community `Community 27`** (2 nodes): `WorkflowFilmstrip.jsx`, `WorkflowFilmstrip()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `scanFiles()`, `fileScanner.js`
+- **Thin community `Community 28`** (2 nodes): `fileScanner.js`, `scanFiles()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `scoreCalculator.js`, `calculateProjectScore()`
+- **Thin community `Community 29`** (2 nodes): `scoreCalculator.js`, `calculateProjectScore()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `generateKey()`, `hashKey.js`
+- **Thin community `Community 30`** (2 nodes): `hashKey.js`, `generateKey()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `Meridian AST Injection Method`, `Traditional Boilerplate i18n`
+- **Thin community `Community 31`** (1 nodes): `eslint.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `detokenizeString Utility`, `tokenizeString Utility`
+- **Thin community `Community 32`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `scoreCalculator (Weighted Score Calculation)`, `scoring (JSX Code Quality Penalties)`
+- **Thin community `Community 33`** (1 nodes): `main.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `eslint.config.js`
+- **Thin community `Community 34`** (1 nodes): `index.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `vite.config.js`
+- **Thin community `Community 35`** (1 nodes): `constants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `main.jsx`
+- **Thin community `Community 36`** (1 nodes): `injection.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `index.js`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `constants.js`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `injection.test.js`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (1 nodes): `scoreCalculator.test.js`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (1 nodes): `Gallery Component`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 47`** (1 nodes): `Image Component`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 48`** (1 nodes): `Navigation Component`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 49`** (1 nodes): `fileScanner (File System Scanner)`
+- **Thin community `Community 37`** (1 nodes): `scoreCalculator.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `runModifications()` connect `CLI Modification Pipeline` to `i18n Extraction`, `Translation Service`, `JSX Analysis`, `Data File Scanner`?**
-  _High betweenness centrality (0.118) - this node is a cross-community bridge._
-- **Why does `analyzeJSX()` connect `JSX Analysis` to `React Injection System`, `CLI Modification Pipeline`, `HTML Analysis`?**
-  _High betweenness centrality (0.102) - this node is a cross-community bridge._
-- **Why does `handleInjections()` connect `React Injection System` to `HTML Analysis`, `JSX Analysis`?**
-  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+- **Why does `runModifications()` connect `Community 1` to `Community 8`, `Community 2`, `Community 4`, `Community 6`?**
+  _High betweenness centrality (0.234) - this node is a cross-community bridge._
+- **Why does `analyzeJSX()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`?**
+  _High betweenness centrality (0.203) - this node is a cross-community bridge._
+- **Why does `handleInjections()` connect `Community 0` to `Community 2`, `Community 3`?**
+  _High betweenness centrality (0.129) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `runModifications()` (e.g. with `installI18nDependencies()` and `generateI18nConfig()`) actually correct?**
   _`runModifications()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 8 inferred relationships involving `analyzeJSX()` (e.g. with `runModifications()` and `parseCode()`) actually correct?**
   _`analyzeJSX()` has 8 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 3 inferred relationships involving `analyzeHTML - HTML Analyzer` (e.g. with `cssScoring - CSS Penalty Scoring` and `analyzeCSS - CSS RTL Analyzer`) actually correct?**
-  _`analyzeHTML - HTML Analyzer` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Gallery Component`, `Image Component`, `Navigation Component` to the rest of the system?**
-  _36 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Are the 6 inferred relationships involving `analyzeHTML()` (e.g. with `parseHTML()` and `applyPenalty()`) actually correct?**
+  _`analyzeHTML()` has 6 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 5 inferred relationships involving `handleInjections()` (e.g. with `analyzeHTML()` and `analyzeJSX()`) actually correct?**
+  _`handleInjections()` has 5 INFERRED edges - model-reasoned connections that need verification._
