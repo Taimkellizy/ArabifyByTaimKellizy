@@ -202,6 +202,24 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 | `meridian translate [languages...]`  | Translates files, updates `i18n.js` config, and regenerates UI pickers dynamically |
 | `meridian add-button --position ...` | Injects the frontend structural language toggle                                    |
 
+## Knowledge Graph
+
+This project includes a [graphify](https://github.com/safishamsi/graphify) knowledge graph for understanding codebase architecture and tracking dependencies. After cloning:
+
+```bash
+# Build/update the knowledge graph
+/graphify .
+
+# Query the graph (after /graphify runs)
+/graphify query "<question>"
+/graphify path "ConceptA" "ConceptB"
+```
+
+Outputs are in `graphify-out/`:
+- `graph.html` - interactive visualization
+- `graph.json` - raw graph data
+- `GRAPH_REPORT.md` - audit report
+
 ## Contributing, Testing, and Deployment
 
 Want to contribute to Meridian? We'd love your help!
