@@ -1,7 +1,10 @@
 import * as t from '@babel/types';
+import generatorModule from '@babel/generator';
 import chalk from 'chalk';
 import { generateKey } from './hashKey.js';
 import { injectHook } from './injectTranslation.js';
+
+const generate = generatorModule.default?.generate || generatorModule.generate;
 
 export const NEVER_WRAP_PROPS = [
     'className', 'key', 'id', 'href', 'src', 'onClick', 'style',
@@ -46,37 +49,30 @@ export function shouldWrapMemberExpression(propName, objectName, fieldName, regi
     return true;
 }
 
+const generateCode = (node) => {
+    const result = generate(node);
+    return result.code;
+};
+
 export const buildExtractVisitor = (extractedMap, ctx) => ({
     JSXExpressionContainer(path) {
         const expr = path.node.expression;
 
-        /**
-         * Extracts the terminal field name and a human-readable object name
-         * from a member expression of arbitrary depth.
-         *
-         *   props.data.title  → { objectName: 'data', fieldName: 'title', node: <MemberExpression> }
-         *   d.name            → { objectName: 'd',    fieldName: 'name',  node: <MemberExpression> }
-         *
-         * Returns null when the expression is not a member expression or
-         * uses computed access (e.g. obj[var]).
-         */
         const extractMemberInfo = (node) => {
             if (!t.isMemberExpression(node) || node.computed) return null;
             if (!t.isIdentifier(node.property)) return null;
 
             const fieldName = node.property.name;
 
-            // Walk upward to find the nearest identifier that names the object
             let objectName = null;
             let cursor = node.object;
             while (t.isMemberExpression(cursor) && !cursor.computed) {
                 if (t.isIdentifier(cursor.property)) {
-                    objectName = cursor.property.name; // e.g. "data" from props.data
+                    objectName = cursor.property.name;
                 }
                 cursor = cursor.object;
             }
             if (t.isIdentifier(cursor)) {
-                // Single-depth: d.name → objectName is "d"
                 objectName = objectName || cursor.name;
             }
             if (!objectName) return null;
@@ -84,7 +80,6 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
             return { objectName, fieldName, node };
         };
 
-        // ── Case 1: member expression at any depth {obj.field} or {props.data.field}
         if (t.isMemberExpression(expr)) {
             const info = extractMemberInfo(expr);
             if (!info) return;
@@ -98,15 +93,17 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
             if (shouldWrapMemberExpression(propName, info.objectName, info.fieldName, ctx.registry)) {
                 if (!injectHook(path, ctx)) return;
-                path.get('expression').replaceWith(
-                    t.callExpression(t.identifier('t'), [expr])
-                );
+                const newExpr = t.callExpression(t.identifier('t'), [expr]);
+                ctx.edits.push({
+                    start: expr.start,
+                    end: expr.end,
+                    replacement: generateCode(newExpr)
+                });
                 path.skip();
             }
             return;
         }
 
-        // ── Case 2: ternary conditional {cond ? obj.field : fallback} ─────
         if (t.isConditionalExpression(expr)) {
             const info = extractMemberInfo(expr.consequent);
             if (info) {
@@ -116,22 +113,47 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                 if (shouldWrapMemberExpression(propName, info.objectName, info.fieldName, ctx.registry)) {
                     if (!injectHook(path, ctx)) return;
-                    expr.consequent = t.callExpression(t.identifier('t'), [info.node]);
+                    const newConsequent = t.callExpression(t.identifier('t'), [info.node]);
+                    ctx.edits.push({
+                        start: expr.consequent.start,
+                        end: expr.consequent.end,
+                        replacement: generateCode(newConsequent)
+                    });
+                }
+            }
+            
+            // Also handle the alternate (fallback) if it's a string literal
+            if (t.isStringLiteral(expr.alternate)) {
+                const strValue = expr.alternate.value;
+                if (strValue && strValue.trim()) {
+                    if (!injectHook(path, ctx)) return;
+                    
+                    const key = strValue;
+                    extractedMap.set(key, strValue);
+                    
+                    const newAlternate = t.callExpression(t.identifier('t'), [t.stringLiteral(key)]);
+                    ctx.edits.push({
+                        start: expr.alternate.start,
+                        end: expr.alternate.end,
+                        replacement: generateCode(newAlternate)
+                    });
                 }
             }
             return;
         }
 
-        // ── Case 3: plain identifier child {d} inside a .map() ───────────
         if (t.isIdentifier(expr) && path.parentPath.isJSXElement()) {
             const varName = expr.name;
             if (ctx.registry) {
                 for (const entry of Object.values(ctx.registry)) {
                     if (entry.translatable && entry.translatable.includes(varName)) {
                         if (!injectHook(path, ctx)) return;
-                        path.get('expression').replaceWith(
-                            t.callExpression(t.identifier('t'), [expr])
-                        );
+                        const newExpr = t.callExpression(t.identifier('t'), [expr]);
+                        ctx.edits.push({
+                            start: expr.start,
+                            end: expr.end,
+                            replacement: generateCode(newExpr)
+                        });
                         path.skip();
                         return;
                     }
@@ -152,7 +174,6 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
             }
         }
 
-        // Extract textual Attributes (placeholder, alt, title)
         opening.attributes.forEach((attr) => {
             if (t.isJSXAttribute(attr) && t.isJSXIdentifier(attr.name)) {
                 if (['placeholder', 'alt', 'title'].includes(attr.name.name)) {
@@ -163,17 +184,23 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                         const key = generateKey(strValue);
                         extractedMap.set(key, strValue);
 
-                        attr.value = t.jsxExpressionContainer(
+                        const newValue = t.jsxExpressionContainer(
                             t.callExpression(t.identifier('t'), [t.stringLiteral(key)])
                         );
+                        ctx.edits.push({
+                            start: attr.value.start,
+                            end: attr.value.end,
+                            replacement: generateCode(newValue)
+                        });
                     }
                 }
             }
         });
 
         let i = 0;
-        const newChildren = [];
+        const childEditRanges = [];
         let modified = false;
+        
         while (i < path.node.children.length) {
             const child = path.node.children[i];
 
@@ -218,18 +245,12 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                 }
 
                 if (j === i) {
-                    newChildren.push(child);
                     i++;
                     continue;
                 }
 
                 const normalizedText = textStr.trim().replace(/\s+/g, ' ');
                 if (hasText && normalizedText.length > 0) {
-                    // Before creating an interpolation template, check if any
-                    // variable is a translatable member expression.  If ALL
-                    // variables qualify, emit them as individual t(expr)
-                    // children with surrounding punctuation as plain text.
-                    // This prevents broken patterns like t("\"{{text}}\"", { text: d.text }).
                     if (variables.length > 0 && ctx.registry) {
                         let allTranslatable = true;
                         for (const varProp of variables) {
@@ -254,18 +275,16 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                         if (allTranslatable) {
                             if (injectHook(path, ctx)) {
                                 modified = true;
-                                // Emit each original child, wrapping the translatable
-                                // expression containers with t() and leaving text as-is.
                                 for (let k = i; k < j; k++) {
                                     const c = path.node.children[k];
                                     if (t.isJSXExpressionContainer(c) && !t.isJSXEmptyExpression(c.expression)) {
-                                        newChildren.push(
-                                            t.jsxExpressionContainer(
-                                                t.callExpression(t.identifier('t'), [c.expression])
-                                            )
-                                        );
-                                    } else {
-                                        newChildren.push(c);
+                                        const innerExpr = c.expression;
+                                        const newExpr = t.callExpression(t.identifier('t'), [innerExpr]);
+                                        childEditRanges.push({
+                                            start: innerExpr.start,
+                                            end: innerExpr.end,
+                                            replacement: generateCode(newExpr)
+                                        });
                                     }
                                 }
                                 i = j;
@@ -276,7 +295,11 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                     if (!injectHook(path, ctx)) {
                         for (let k = i; k < j; k++) {
-                            newChildren.push(path.node.children[k]);
+                            childEditRanges.push({
+                                start: path.node.children[k].start,
+                                end: path.node.children[k].end,
+                                replacement: null
+                            });
                         }
                     } else {
                         modified = true;
@@ -291,24 +314,28 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
                         const leadingMatch = textStr.match(/^\s+/);
                         const trailingMatch = textStr.match(/\s+$/);
 
+                        let editStart = i;
+                        let editEnd = j;
+                        let replacement = '';
+                        
                         if (leadingMatch) {
-                            newChildren.push(t.jsxText(leadingMatch[0]));
+                            replacement += leadingMatch[0];
                         }
 
-                        let expression = t.callExpression(t.identifier('t'), params);
-                        newChildren.push(t.jsxExpressionContainer(expression));
+                        const expression = t.callExpression(t.identifier('t'), params);
+                        replacement += generateCode(t.jsxExpressionContainer(expression));
 
                         if (trailingMatch && trailingMatch[0] !== textStr) {
-                            newChildren.push(t.jsxText(trailingMatch[0]));
+                            replacement += trailingMatch[0];
                         }
+
+                        childEditRanges.push({
+                            start: path.node.children[i].start,
+                            end: path.node.children[j - 1].end,
+                            replacement: replacement
+                        });
                     }
                 } else if (!hasText && variables.length === 1) {
-                    // The run is a single expression child with no surrounding
-                    // literal text — e.g. {d.text} or {d}.
-                    // If the expression is a member-expression or identifier that
-                    // qualifies for wrapping, emit t(expr) directly so the
-                    // runtime value acts as its own key (matching the flat keys
-                    // written by promoteDataFileKeys).
                     const onlyExprContainer = path.node.children.slice(i, j).find(
                         c => t.isJSXExpressionContainer(c) && !t.isJSXEmptyExpression(c.expression)
                     );
@@ -318,7 +345,6 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                         if (t.isMemberExpression(innerExpr) && !innerExpr.computed && t.isIdentifier(innerExpr.property)) {
                             const fieldName = innerExpr.property.name;
-                            // Walk chain to find object name
                             let objName = null;
                             let cur = innerExpr.object;
                             while (t.isMemberExpression(cur) && !cur.computed) {
@@ -340,36 +366,52 @@ export const buildExtractVisitor = (extractedMap, ctx) => ({
 
                         if (shouldWrap && injectHook(path, ctx)) {
                             modified = true;
-                            newChildren.push(
-                                t.jsxExpressionContainer(
-                                    t.callExpression(t.identifier('t'), [innerExpr])
-                                )
-                            );
+                            const newExpr = t.callExpression(t.identifier('t'), [innerExpr]);
+                            childEditRanges.push({
+                                start: innerExpr.start,
+                                end: innerExpr.end,
+                                replacement: generateCode(newExpr)
+                            });
                         } else {
                             for (let k = i; k < j; k++) {
-                                newChildren.push(path.node.children[k]);
+                                childEditRanges.push({
+                                    start: path.node.children[k].start,
+                                    end: path.node.children[k].end,
+                                    replacement: null
+                                });
                             }
                         }
                     } else {
                         for (let k = i; k < j; k++) {
-                            newChildren.push(path.node.children[k]);
+                            childEditRanges.push({
+                                start: path.node.children[k].start,
+                                end: path.node.children[k].end,
+                                replacement: null
+                            });
                         }
                     }
                 } else {
                     for (let k = i; k < j; k++) {
-                        newChildren.push(path.node.children[k]);
+                        childEditRanges.push({
+                            start: path.node.children[k].start,
+                            end: path.node.children[k].end,
+                            replacement: null
+                        });
                     }
                 }
                 i = j;
 
             } else {
-                newChildren.push(child);
                 i++;
             }
         }
 
         if (modified) {
-            path.node.children = newChildren;
+            for (const range of childEditRanges) {
+                if (range.replacement !== null) {
+                    ctx.edits.push(range);
+                }
+            }
         }
     }
 });

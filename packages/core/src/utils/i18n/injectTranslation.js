@@ -1,4 +1,5 @@
 import * as t from '@babel/types';
+import generatorModule from '@babel/generator';
 
 export const isReactComponent = (funcPath) => {
     if (t.isFunctionDeclaration(funcPath.node) && funcPath.node.id) {
@@ -32,8 +33,55 @@ export const injectHook = (path, ctx) => {
 
     if (!ctx.injectedNodeSet.has(parentFunc.node) && !parentFunc.scope.hasBinding('t')) {
         ctx.injectedNodeSet.add(parentFunc.node);
-        
-        const tDecl = t.variableDeclaration('const', [
+        ctx.needsHook = true;
+        ctx.hookPosition = parentFunc.node.start;
+        ctx.hookScope = parentFunc;
+    }
+    return true;
+};
+
+export const injectImportStatements = (source, ast) => {
+    let lastImportEnd = -1;
+    let hasImport = false;
+    
+    ast.program.body.forEach(node => {
+        if (t.isImportDeclaration(node)) {
+            lastImportEnd = node.end;
+            if (node.source.value === 'react-i18next') {
+                hasImport = true;
+            }
+        }
+    });
+
+    if (lastImportEnd === -1) {
+        const importDecl = `import { useTranslation } from "react-i18next";\n`;
+        return { replacement: importDecl + source, importEdit: { start: 0, end: 0, replacement: importDecl } };
+    }
+
+    if (!hasImport) {
+        const insertCode = '\nimport { useTranslation } from "react-i18next";';
+        return {
+            replacement: source.slice(0, lastImportEnd) + insertCode + source.slice(lastImportEnd),
+            importEdit: { start: lastImportEnd, end: lastImportEnd, replacement: insertCode }
+        };
+    }
+
+    return { replacement: source, importEdit: null };
+};
+
+export const processHookEdits = (source, edits, ctx) => {
+    if (!ctx.needsHook) {
+        return { replacement: source, hookEdit: null };
+    }
+
+    const funcNode = ctx.hookScope.node;
+    const HOOK_CODE = '\nconst { t } = useTranslation();';
+
+    if (t.isArrowFunctionExpression(funcNode) && funcNode.body && !t.isBlockStatement(funcNode.body)) {
+        const arrowFn = funcNode;
+        const returnExpr = arrowFn.body;
+        const returnStmt = t.returnStatement(returnExpr);
+        const hookDecl = t.variableDeclaration('const', [
             t.variableDeclarator(
                 t.objectPattern([
                     t.objectProperty(t.identifier('t'), t.identifier('t'), false, true)
@@ -41,42 +89,39 @@ export const injectHook = (path, ctx) => {
                 t.callExpression(t.identifier('useTranslation'), [])
             )
         ]);
+        const blockBody = t.blockStatement([hookDecl, returnStmt]);
+        arrowFn.body = blockBody;
+        
+        const generated = generatorModule.default(arrowFn);
+        const code = generated.code;
+        
+        const edit = {
+            start: arrowFn.start,
+            end: arrowFn.end,
+            replacement: code
+        };
+        
+        const resultSource = source.slice(0, edit.start) + edit.replacement + source.slice(edit.end);
+        return { replacement: resultSource, hookEdit: edit };
+    }
 
-        const bodyPath = parentFunc.get('body');
-        if (bodyPath.isBlockStatement()) {
-            bodyPath.unshiftContainer('body', tDecl);
-        } else {
-            const returnStmt = t.returnStatement(bodyPath.node);
-            const block = t.blockStatement([tDecl, returnStmt]);
-            bodyPath.replaceWith(block);
+    let indent = '  ';
+    if (t.isBlockStatement(funcNode.body) && funcNode.body.body.length > 0) {
+        const firstStmt = funcNode.body.body[0];
+        const stmtSource = source.slice(firstStmt.start, firstStmt.end);
+        const indentMatch = stmtSource.match(/^(\s*)/);
+        if (indentMatch) {
+            indent = indentMatch[1];
         }
     }
-    return true;
-};
 
-export const injectImportStatements = (ast) => {
-    let hasImport = false;
-    let hasUseTranslation = false;
-    
-    ast.program.body.forEach(node => {
-        if (t.isImportDeclaration(node) && node.source.value === 'react-i18next') {
-            hasImport = true;
-            node.specifiers.forEach(s => {
-                if (t.isImportSpecifier(s) && s.imported.name === 'useTranslation') {
-                    hasUseTranslation = true;
-                }
-            });
-            if (!hasUseTranslation) {
-                node.specifiers.push(t.importSpecifier(t.identifier('useTranslation'), t.identifier('useTranslation')));
-            }
-        }
-    });
+    const bodyStart = funcNode.body.start;
+    const edit = {
+        start: bodyStart,
+        end: bodyStart,
+        replacement: HOOK_CODE + (indent.startsWith('\n') ? '' : '\n' + indent.slice(0, -1))
+    };
 
-    if (!hasImport) {
-        const importDecl = t.importDeclaration(
-            [t.importSpecifier(t.identifier('useTranslation'), t.identifier('useTranslation'))],
-            t.stringLiteral('react-i18next')
-        );
-        ast.program.body.unshift(importDecl);
-    }
+    const resultSource = source.slice(0, edit.start) + edit.replacement + source.slice(edit.end);
+    return { replacement: resultSource, hookEdit: edit };
 };
