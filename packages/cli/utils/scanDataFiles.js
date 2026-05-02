@@ -20,13 +20,27 @@ function classifyString(value) {
   if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'skip';
   // Skip phone numbers (digits, spaces, +, -, parentheses only)
   if (/^[\d\s()\-+.]+$/.test(value) && value.replace(/\D/g, '').length >= 4) return 'skip';
-  // Skip CSS / icon class strings: multiple words but every word contains only
-  // lowercase letters, digits, or hyphens (e.g. "fa fa-wordpress", "btn btn-lg")
-  if (/^\s*[a-z][a-z0-9-]*(?:\s+[a-z][a-z0-9-]+)+\s*$/.test(value)) return 'identifier';
+  // Skip CSS / icon class strings. Keep ordinary lowercase prose like
+  // "for one user" translatable; class lists usually include hyphens/digits.
+  if (/^\s*[a-z][a-z0-9-]*(?:\s+[a-z][a-z0-9-]+)+\s*$/.test(value)) {
+    const tokens = value.trim().split(/\s+/);
+    if (tokens.some(token => /[-\d]/.test(token))) return 'identifier';
+  }
   // Skip file-path-like strings
   if (/(\/|\\|\.[a-z]{2,4}$)/i.test(value) && !value.includes(' ')) return 'skip';
 
+  // Multi-word strings are translatable
   if (value.includes(' ')) return 'translatable';
+
+  // Currency-like display values (e.g. "$0", "$15", "€20")
+  if (/^[$€£¥]\s?\d+(?:\.\d+)?$/.test(value)) return 'translatable';
+
+  // Single-word Title Case (e.g. "Free", "Pro", "Enterprise", "Basic")
+  // These are display labels in JSON config, not code identifiers.
+  if (/^[A-Z][a-z]+$/.test(value)) return 'translatable';
+
+  // ALL-CAPS acronyms (e.g. "USD", "RTL", "API") → identifier
+  if (/^[A-Z]+$/.test(value)) return 'identifier';
 
   const isAllLowercase = value.toLowerCase() === value;
   if (value.includes('-') || value.includes('_') || isAllLowercase) {
@@ -72,7 +86,13 @@ function isDataFile(filePath, projectRoot, extraDataFiles) {
   if (extraDataFiles.includes(relativePath)) return true;
   
   if (relativePath.startsWith('src/') && (relativePath.endsWith('.js') || relativePath.endsWith('.json'))) {
-    if (relativePath.includes('/data/') || relativePath.includes('/content/') || relativePath.includes('/constants/')) {
+    if (
+      relativePath.includes('/data/') ||
+      relativePath.includes('/content/') ||
+      relativePath.includes('/constants/') ||
+      relativePath.includes('/config/') ||
+      relativePath.includes('/lib/')
+    ) {
       return true;
     }
   }
@@ -88,7 +108,9 @@ function isDataFile(filePath, projectRoot, extraDataFiles) {
 async function findDataFiles(projectRoot) {
   let extraDataFiles = [];
   try {
-    const rcPath = path.join(projectRoot, 'meridianrc.json');
+    const rcPath = existsSync(path.join(projectRoot, '.meridianrc.json'))
+      ? path.join(projectRoot, '.meridianrc.json')
+      : path.join(projectRoot, 'meridianrc.json');
     if (existsSync(rcPath)) {
       const rcContent = await fs.readFile(rcPath, 'utf8');
       const rcJson = JSON.parse(rcContent);
@@ -393,15 +415,23 @@ export async function promoteDataFileKeys(filePath, projectRoot, fileRegistry, t
  * @param {string[]} translatableKeys - Allowed field names.
  * @param {Set<string>} out          - Accumulator.
  */
-function collectValues(node, translatableKeys, out) {
+function collectValues(node, translatableKeys, out, isParentTranslatable = false) {
+  if (typeof node === 'string') {
+    if (isParentTranslatable) {
+      out.add(node);
+    }
+    return;
+  }
+
   if (Array.isArray(node)) {
-    node.forEach(item => collectValues(item, translatableKeys, out));
+    node.forEach(item => collectValues(item, translatableKeys, out, isParentTranslatable));
   } else if (node && typeof node === 'object') {
     for (const [key, value] of Object.entries(node)) {
-      if (typeof value === 'string' && translatableKeys.includes(key)) {
+      const isCurrentTranslatable = translatableKeys.includes(key);
+      if (typeof value === 'string' && isCurrentTranslatable) {
         out.add(value);
       } else {
-        collectValues(value, translatableKeys, out);
+        collectValues(value, translatableKeys, out, isCurrentTranslatable);
       }
     }
   }

@@ -6,16 +6,33 @@ import babel from '@babel/core';
 /**
  * Finds user's React entry point, safely injects 'import "./i18n";' at the top,
  * and maintains original formatting and comments. Also wraps root in Suspense.
- * @param {string} cwd - Current working directory
+ * @param {boolean} isNextJs - Whether the project is Next.js
  * @returns {Promise<string|null>} - Returns a warning string if entry point not found, otherwise null on success
  */
-export async function injectI18nImport(cwd) {
-  const possibleEntries = [
+export async function injectI18nImport(cwd, isNextJs = false) {
+  let possibleEntries = [
     'src/index.js',
     'src/index.tsx',
     'src/main.jsx',
-    'src/main.tsx'
+    'src/main.tsx',
+    'src/pages/_app.jsx',
+    'src/pages/_app.tsx',
+    'pages/_app.jsx',
+    'pages/_app.tsx'
   ];
+
+  if (isNextJs) {
+    possibleEntries = [
+      'src/app/layout.jsx',
+      'src/app/layout.tsx',
+      'app/layout.jsx',
+      'app/layout.tsx',
+      'src/pages/_app.jsx',
+      'src/pages/_app.tsx',
+      'pages/_app.jsx',
+      'pages/_app.tsx'
+    ];
+  }
 
   let entryFile = null;
   for (const file of possibleEntries) {
@@ -33,20 +50,34 @@ export async function injectI18nImport(cwd) {
   try {
     const code = await fs.readFile(entryFile, 'utf8');
 
+    const isTsx = entryFile.endsWith('.tsx');
+    const plugins = ['jsx'];
+    if (isTsx) {
+      plugins.push('typescript');
+    }
+
     // Parse AST to safely locate where to insert the import
     const ast = babel.parse(code, {
       filename: entryFile,
       parserOpts: {
-        plugins: [
-          'jsx',
-          'typescript'
-        ]
+        plugins: plugins
       }
     });
 
     if (!ast) {
       throw new Error('Failed to parse AST from entry file');
     }
+
+    // Compute relative path from the entry file to src/i18n.js
+    const i18nFilePath = path.join(cwd, 'src', 'i18n.js');
+    const entryDir = path.dirname(entryFile);
+    let i18nRelativePath = path.relative(entryDir, i18nFilePath).replace(/\\/g, '/');
+    // Ensure it starts with './' or '../'
+    if (!i18nRelativePath.startsWith('.')) {
+      i18nRelativePath = './' + i18nRelativePath;
+    }
+    // Remove the .js extension for the import statement
+    i18nRelativePath = i18nRelativePath.replace(/\.js$/, '');
 
     let alreadyImportedI18n = false;
     let insertIndex = 0;
@@ -57,7 +88,7 @@ export async function injectI18nImport(cwd) {
 
     babel.traverse(ast, {
       ImportDeclaration(path) {
-        if (path.node.source.value === './i18n') {
+        if (path.node.source.value === i18nRelativePath || path.node.source.value.endsWith('/i18n')) {
           alreadyImportedI18n = true;
         }
       },
@@ -69,6 +100,7 @@ export async function injectI18nImport(cwd) {
         }
       },
       CallExpression(path) {
+        if (isNextJs) return; // Next.js doesn't use ReactDOM.render
         const callee = path.node.callee;
         // Look for ReactDOM.render(...) or root.render(...)
         if (
@@ -87,13 +119,16 @@ export async function injectI18nImport(cwd) {
       }
     });
 
-    if (alreadyImportedI18n && !rootRenderFound) {
-      return 'Info: "./i18n" is already imported in the entry file and root render modify failed.';
+    if (alreadyImportedI18n && !rootRenderFound && !isNextJs) {
+      return `Info: "${i18nRelativePath}" is already imported in the entry file.`;
     }
 
     let importsToInject = "";
     if (!alreadyImportedI18n) {
-      importsToInject = "import { Suspense } from 'react';\nimport './i18n';\n";
+      // For Next.js, don't inject Suspense import — we don't wrap _app.tsx with Suspense.
+      // SSR in older Next.js (Pages Router) doesn't support Suspense at all.
+      const suspenseImport = isNextJs ? '' : `import { Suspense } from 'react';\n`;
+      importsToInject = `${suspenseImport}import '${i18nRelativePath}';\n`;
     }
 
     let newCode = code;

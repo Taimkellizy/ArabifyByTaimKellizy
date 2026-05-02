@@ -4,7 +4,7 @@ import { applyEdits } from './i18n/applyEdits.js';
 import { analyzeProviderScope } from './reactInjection/detectScope.js';
 import { generateImportEdits, generateToggleImportEdits } from './reactInjection/injectImports.js';
 import { injectContextHook, analyzeHookInfo } from './reactInjection/injectHooks.js';
-import { analyzeExportDefault, analyzeToggleTarget, generateProviderWrapperEdit, generateToggleInsertEdit } from './reactInjection/injectElements.js';
+import { analyzeExportDefault, analyzeToggleTarget, generateProviderWrapperEdit, generateToggleInsertEdit, analyzeAppRouterLayout } from './reactInjection/injectElements.js';
 
 /**
  * Parses source code into AST with support for JSX, TypeScript, and modern JS features.
@@ -41,8 +41,10 @@ export const injectProvider = (code, config = {}, fileName = '') => {
         ? (scope.hasContextImport && scope.hasProviderWrapper) 
         : (scope.hasContextImport && scope.hasHook && scope.hasProviderWrapper);
 
+    const isAppRouterLayout = config.isNextJs && fileName && (fileName.endsWith('layout.jsx') || fileName.endsWith('layout.tsx'));
+
     if (isFullyInjected) return code;
-    if (!scope.exportDefaultNodePath) return code;
+    if (!scope.exportDefaultNodePath && !isAppRouterLayout) return code;
 
     const edits = [];
 
@@ -78,8 +80,15 @@ export const injectProvider = (code, config = {}, fileName = '') => {
     }
 
     if (!scope.hasProviderWrapper) {
-        const exportInfo = analyzeExportDefault(ast);
-        const wrapperEdit = generateProviderWrapperEdit(code, exportInfo);
+        let exportInfo = null;
+        let appRouterInfo = null;
+        if (isAppRouterLayout) {
+            appRouterInfo = analyzeAppRouterLayout(ast);
+        } else {
+            exportInfo = analyzeExportDefault(ast);
+        }
+
+        const wrapperEdit = generateProviderWrapperEdit(code, exportInfo, isAppRouterLayout, appRouterInfo);
         if (wrapperEdit) {
             edits.push(wrapperEdit);
         }

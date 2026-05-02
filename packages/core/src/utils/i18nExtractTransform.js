@@ -18,7 +18,7 @@ const findLastImportEnd = (ast) => {
 
 const findHookInsertionPoint = (ast, source) => {
     let targetFunc = null;
-    
+
     for (const node of ast.program.body) {
         if (t.isExportNamedDeclaration(node) && t.isVariableDeclaration(node.declaration)) {
             const decl = node.declaration;
@@ -38,12 +38,14 @@ const findHookInsertionPoint = (ast, source) => {
             }
         }
     }
-    
+
     if (!targetFunc) return null;
     
-    const funcNode = targetFunc.declaration?.declarations?.[0]?.init || targetFunc.declaration?.init;
+    const funcNode = targetFunc.declaration
+        ? (targetFunc.declaration.declarations?.[0]?.init || targetFunc.declaration.init)
+        : targetFunc.declarations?.[0]?.init;
     if (!funcNode) return null;
-    
+
     if (t.isArrowFunctionExpression(funcNode)) {
         if (t.isBlockStatement(funcNode.body)) {
             return { type: 'block', bodyStart: funcNode.body.start, node: funcNode };
@@ -160,9 +162,22 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
                 });
             } else if (hookInfo.type === 'implicit') {
                 const node = hookInfo.node;
+                const bodyEdits = uniqueEdits.filter(e =>
+                    e.start >= node.body.start && e.end <= node.body.end
+                );
+                const bodySource = codeString.slice(node.body.start, node.body.end);
+                const transformedBody = applyEdits(
+                    bodySource,
+                    bodyEdits.map(e => ({
+                        ...e,
+                        start: e.start - node.body.start,
+                        end: e.end - node.body.start
+                    }))
+                );
+                const arrowPrefix = codeString.slice(node.start, node.body.start);
                 
                 uniqueEdits.forEach(e => {
-                    if (e.start >= node.body.start && e.end <= node.end) {
+                    if (e.start >= node.body.start && e.end <= node.body.end) {
                         e.skip = true;
                     }
                 });
@@ -170,7 +185,7 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
                 uniqueEdits.push({
                     start: node.start,
                     end: node.end,
-                    replacement: '() => {\n  const { t } = useTranslation();\n  return ' + codeString.slice(node.body.start, node.body.end) + ';\n}'
+                    replacement: arrowPrefix + '{\n  const { t } = useTranslation();\n  return ' + transformedBody + ';\n}'
                 });
             }
         }

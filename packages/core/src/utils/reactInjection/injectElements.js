@@ -38,12 +38,59 @@ export const analyzeExportDefault = (ast) => {
 };
 
 /**
+ * Analyzes AST to find Next.js App Router {children} inside <body>.
+ * @param {import('@babel/parser').ParseResult} ast - The parsed AST
+ * @returns {Object} Target children container information
+ */
+export const analyzeAppRouterLayout = (ast) => {
+    let targetChildrenPath = null;
+
+    traverse(ast, {
+        JSXElement(path) {
+            const name = path.node.openingElement.name?.name;
+            if (name === 'body') {
+                path.traverse({
+                    JSXExpressionContainer(innerPath) {
+                        if (innerPath.parentPath !== path) return;
+                        if (t.isIdentifier(innerPath.node.expression) && innerPath.node.expression.name === 'children') {
+                            targetChildrenPath = innerPath;
+                            innerPath.stop();
+                        }
+                    }
+                });
+                if (targetChildrenPath) path.stop();
+            }
+        }
+    });
+
+    if (targetChildrenPath) {
+        return {
+            start: targetChildrenPath.node.start,
+            end: targetChildrenPath.node.end
+        };
+    }
+    return null;
+};
+
+/**
  * Generates the provider wrapper edit using string replacement.
  * @param {string} source - The source code
  * @param {Object} exportInfo - Export default information
+ * @param {boolean} isAppRouterLayout - Is this an App Router layout file
+ * @param {Object} appRouterInfo - App Router layout information
  * @returns {Object} Edit details
  */
-export const generateProviderWrapperEdit = (source, exportInfo) => {
+export const generateProviderWrapperEdit = (source, exportInfo, isAppRouterLayout = false, appRouterInfo = null) => {
+    if (isAppRouterLayout) {
+        if (!appRouterInfo || !appRouterInfo.start || !appRouterInfo.end) return null;
+        const wrappedCode = `\n  <Suspense fallback={<div style={{ padding: '20px', textAlign: 'center' }}>Loading translations...</div>}>\n    <LanguageProvider>\n      {children}\n    </LanguageProvider>\n  </Suspense>\n`;
+        return {
+            start: appRouterInfo.start,
+            end: appRouterInfo.end,
+            replacement: wrappedCode
+        };
+    }
+
     if (!exportInfo || !exportInfo.start || !exportInfo.end) return null;
     
     const { exportName, start, end } = exportInfo;

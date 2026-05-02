@@ -610,6 +610,49 @@ program
     }
   });
 
+program
+  .command('add-button')
+  .description('Injects the frontend structural language toggle')
+  .option('-p, --position <position>', 'Where to inject (e.g., nav, header, floating, custom)')
+  .option('--tag <tag>', 'Custom HTML tag if position is custom')
+  .option('--id <id>', 'Target element HTML ID')
+  .option('--file <file>', 'Target file path')
+  .option('--mode <mode>', 'Insert mode: append or prepend', 'append')
+  .option('--class <className>', 'Custom CSS class for the toggle')
+  .action(async (options) => {
+    const configPath = path.join(process.cwd(), '.meridianrc.json');
+    if (!fs.existsSync(configPath)) {
+      console.log(chalk.red('❌ Error: .meridianrc.json not found. Run `meridian init` first.'));
+      process.exit(1);
+    }
+
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+    if (!options.position && !options.file) {
+      console.log(chalk.yellow('⚠️  Please provide a --position (e.g., nav) or --file path (e.g., src/components/Header.jsx)'));
+      process.exit(1);
+    }
+
+    config.languageSwitcher = {
+        position: {
+            tag: options.position === 'floating' ? undefined : (options.position === 'custom' ? options.tag : options.position),
+            floating: options.position === 'floating',
+            id: options.id,
+            filePath: options.file,
+            insertMode: options.mode.toLowerCase()
+        },
+        customClass: options.class || '',
+        showFlags: true
+    };
+
+    saveConfig(process.cwd(), config);
+    console.log(chalk.green('✓ Configuration updated for Language Switcher.'));
+
+    const runConfig = { ...config, translation: false, i18next: false, extractText: false };
+
+    await runModifications(process.cwd(), runConfig);
+  });
+
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {

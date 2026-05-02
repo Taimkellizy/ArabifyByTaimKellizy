@@ -5,10 +5,20 @@ import path from 'path';
  * Generates and writes the i18n.js configuration file to the src/ directory.
  * @param {string} cwd - Current working directory
  * @param {Array<string>} languages - Array of supported language codes (e.g., ['en', 'ar'])
+ * @param {boolean} isNextJs - Whether the project is Next.js (disables Suspense for SSR)
  * @returns {Promise<void>}
  */
-export async function generateI18nConfig(cwd, languages) {
+export async function generateI18nConfig(cwd, languages, isNextJs = false) {
   const fallbackLng = languages.length > 0 ? languages[0] : 'en';
+
+  // Next.js Pages Router does not support Suspense during SSR (ReactDOMServer).
+  // We always disable useSuspense since our LanguageProvider manages state independently.
+  const nextjsOptions = `
+    // Required for Next.js SSR: prevents Suspense usage during server-side rendering
+    initImmediate: false,
+    react: {
+      useSuspense: false,
+    },`;
 
   const content = `import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -19,7 +29,7 @@ i18n
   .use(HttpApi)
   .use(LanguageDetector)
   .use(initReactI18next)
-  .init({
+  .init({${isNextJs ? nextjsOptions : ''}
     fallbackLng: '${fallbackLng}',
     supportedLngs: ${JSON.stringify(languages)},
     interpolation: {

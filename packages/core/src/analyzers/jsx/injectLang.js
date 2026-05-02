@@ -29,7 +29,7 @@ export const handleInjections = (codeString, foundTags, options) => {
         const normalizedTarget = targetConfig.filePath.replace(/\\/g, '/');
         const normalizedFile = (options.fileName || '').replace(/\\/g, '/');
         
-        if (normalizedFile.endsWith(normalizedTarget)) {
+        if (normalizedTarget.endsWith(normalizedFile) || normalizedFile.endsWith(normalizedTarget)) {
             shouldInject = true;
         } else {
             return { modifiedCode, injected }; // Fast exit, don't inject in other files

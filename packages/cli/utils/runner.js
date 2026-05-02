@@ -72,6 +72,28 @@ export async function runModifications(cwd, config) {
     }
   }
 
+  // Next.js Triple-Signal Detection (supports both App Router and Pages Router)
+  const hasNextConfig = fs.existsSync(path.join(cwd, 'next.config.js')) || fs.existsSync(path.join(cwd, 'next.config.mjs'));
+  let hasNextDep = false;
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'));
+    if ((pkg.dependencies && pkg.dependencies.next) || (pkg.devDependencies && pkg.devDependencies.next)) {
+      hasNextDep = true;
+    }
+  } catch (e) {}
+  // App Router: app/layout.* exists
+  const hasAppLayout = fs.existsSync(path.join(cwd, 'src', 'app', 'layout.jsx')) ||
+                       fs.existsSync(path.join(cwd, 'src', 'app', 'layout.tsx')) ||
+                       fs.existsSync(path.join(cwd, 'app', 'layout.jsx')) ||
+                       fs.existsSync(path.join(cwd, 'app', 'layout.tsx'));
+  // Pages Router: pages/_app.* exists
+  const hasPagesApp = fs.existsSync(path.join(cwd, 'src', 'pages', '_app.jsx')) ||
+                      fs.existsSync(path.join(cwd, 'src', 'pages', '_app.tsx')) ||
+                      fs.existsSync(path.join(cwd, 'pages', '_app.jsx')) ||
+                      fs.existsSync(path.join(cwd, 'pages', '_app.tsx'));
+  const isNextJs = hasNextConfig && hasNextDep && (hasAppLayout || hasPagesApp);
+  config.isNextJs = isNextJs; // Pass down to analyzers
+
   // 2. Initial Setup (i18next)
   if (config.i18next) {
     console.log(chalk.blue('\n📦 Setting up i18next...'));
@@ -81,11 +103,11 @@ export async function runModifications(cwd, config) {
       console.log(chalk.green('  ✓ Dependencies installed.'));
 
       console.log(chalk.gray('  Generating i18n configurations...'));
-      await generateI18nConfig(cwd, config.languages);
+      await generateI18nConfig(cwd, config.languages, isNextJs);
       console.log(chalk.green('  ✓ i18n.js configuration created.'));
 
       console.log(chalk.gray('  Injecting i18n into entry point...'));
-      const injectionWarn = await injectI18nImport(cwd);
+      const injectionWarn = await injectI18nImport(cwd, isNextJs);
       if (injectionWarn) {
         console.log(chalk.yellow(`  ⚠️  ${injectionWarn}`));
       } else {
@@ -200,7 +222,7 @@ export async function runModifications(cwd, config) {
         }
       } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
          
-         const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', 'main.tsx', 'main.jsx', 'index.js', 'index.jsx'].some(name => relativePath.endsWith(name));
+         const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', '_app.ts', '_app.tsx', 'main.tsx', 'main.jsx', 'main.ts', 'index.js', 'index.jsx', 'index.tsx'].some(name => relativePath.endsWith(name));
          /**
           * Phase 5 – Babel JSX Extractor.
           * The scanner registry is forwarded so that shouldWrapMemberExpression()
@@ -274,7 +296,7 @@ export async function runModifications(cwd, config) {
         
         const contextPath = path.join(contextDir, 'LanguageContext.jsx');
         if (!fs.existsSync(contextPath)) {
-            const templateToUse = config.i18next ? getI18nContextTemplate(config.languages, config.defaultLanguage) : getContextTemplate(config.languages, config.defaultLanguage);
+            const templateToUse = config.i18next ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs) : getContextTemplate(config.languages, config.defaultLanguage, isNextJs);
             fs.writeFileSync(contextPath, templateToUse, 'utf8');
             console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
         }
@@ -286,7 +308,7 @@ export async function runModifications(cwd, config) {
             
             const togglePath = path.join(compDir, 'LanguageToggle.jsx');
             if (!fs.existsSync(togglePath)) {
-                 const generatedToggleTemplate = getToggleTemplate(config.languages);
+                 const generatedToggleTemplate = getToggleTemplate(config.languages, isNextJs);
                  fs.writeFileSync(togglePath, generatedToggleTemplate, 'utf8');
                  console.log(chalk.green(`  Created: ${path.relative(cwd, togglePath)}`));
             }

@@ -44,9 +44,12 @@ Meridian is a comprehensive internationalization automation tool that transforms
 
 - **One-Command Setup**: `meridian init` handles the entire i18n process for you.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`).
-- **Semantic String Extraction**: Uses Babel to scan JSX and automatically extract hardcoded strings to dynamic translation structures.
+- **Semantic String Extraction**: Uses Babel to scan JSX/TSX and automatically wrap hardcoded text, JSX attributes, dynamic config values, and mapped data arrays with `t()`.
+- **Data File Promotion**: Scans common project data locations such as `src/config`, `src/data`, `src/content`, `src/constants`, and configured custom files, then promotes display strings into locale files.
+- **Next.js Support**: Detects both App Router and Pages Router projects, including `src/pages/_app.tsx`, and generates SSR-safe i18next configuration.
 - **Auto-Translation Engine**: Deep integration with Google Translate, DeepL, and LibreTranslate APIs. Adds new languages on the fly via CLI and dynamically scales UI components.
 - **Intelligent Component Injection**: Target specific DOM elements by HTML tag (`nav`, `header`, `custom`) or HTML ID (`#main-nav`), with granular append/prepend controls.
+- **Multi-Language Switcher**: Generated language controls cycle through all configured languages, not only a two-language pair.
 - **Prevention via Linters (Coming Soon)**: Custom ESLint and Stylelint plugins to prevent future localization bugs will be available post-release.
 
 ## Tech Stack
@@ -137,11 +140,13 @@ meridian-suite/
 
 1. **User runs `meridian init`**: CLI collects targets (languages, endpoints) via interactive prompt.
 2. **PostCSS Modernizer**: `core/parsers/cssParser` walks CSS AST, translating `left`/`right` rules to `inline-start`/`inline-end` while preserving file formats.
-3. **i18next Scaffold**: CLI installs dependencies (`i18next`, `react-i18next`) and injects the `i18n.js` root configuration template into the target React app.
-4. **Babel String Extractor**: Walks the AST of the target project, detecting textual nodes, substituting them with `t('key')` tokens, and generating a hierarchical `en/translation.json` structure.
-5. **Auto-translator Pipeline**: Iterates over extracted JSON structures, forwarding payload chunks to the requested Translator Provider, waiting iteratively if rate-limit constraints surface.
-6. **Linter Installation (Coming Soon)**: CLI drops `.eslintrc.js` enhancements to integrate linting rules.
-7. **Report**: Success statistics display in the console.
+3. **Project Detection**: Detects React and Next.js projects, including Next.js App Router and Pages Router entry files.
+4. **i18next Scaffold**: CLI installs dependencies (`i18next`, `react-i18next`) and injects an `i18n` configuration. Next.js projects receive SSR-safe options such as disabled suspense and synchronous initialization.
+5. **Data Registry Scan**: Scans JSON/JS data files in common content directories and any `.meridianrc.json > dataFiles` entries. Display values from config files are promoted into `public/locales/<defaultLang>/translation.json`.
+6. **Babel String Extractor**: Walks the AST of the target project, detecting text nodes, attributes, member expressions, optional chaining, method chains, and mapped arrays. It applies surgical source edits so formatting is preserved as much as possible.
+7. **Auto-translator Pipeline**: Iterates over extracted JSON structures, forwarding payload chunks to the requested Translator Provider, waiting iteratively if rate-limit constraints surface.
+8. **Linter Installation (Coming Soon)**: CLI drops `.eslintrc.js` enhancements to integrate linting rules.
+9. **Report**: Success statistics display in the console.
 
 ### Key Components
 
@@ -157,6 +162,14 @@ meridian-suite/
 - Dynamically generates the UI footprint: Renders simple buttons for 2 languages, but securely auto-scales to native `<select>` dropdown menus when 3 or more languages are requested.
 - Recognizes application indent spacing and adapts to it.
 
+**Data-Aware JSX Extraction**
+
+- Wraps config-backed expressions such as `{product.title}`, `{plan.name}`, `{plan.price}`, and `{plan.priceDetails}` only when the scanned data registry marks those fields as display text.
+- Handles optional chaining and method chains, including patterns such as `product.title.split(' ').map(...)`.
+- Handles mapped arrays without translating the array object itself. For example, `plan.features.map((feature) => <li>{feature}</li>)` becomes `plan.features.map((feature) => <li>{t(feature)}</li>)`.
+- Promotes JSON array items such as pricing features into locale files so runtime `t(feature)` calls have matching keys.
+- Uses flat runtime keys for promoted data values, where the English source string is both the key and the default value. This matches dynamic calls like `t(plan.name)` and `t(feature)`.
+
 ## Environment Variables
 
 ### Translation Overrides
@@ -166,6 +179,7 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 ```json
 {
   "languages": ["en", "ar", "es"],
+  "dataFiles": ["src/config/index.json"],
   "translation": {
     "provider": "google",
     "apiKey": "${MERIDIAN_GOOGLE_API_KEY}"
@@ -188,19 +202,40 @@ Meridian CLI can optionally read its setup using a localized `.meridianrc.json` 
 }
 ```
 
+### Data Files
+
+Meridian automatically scans likely content/config files under:
+
+- `src/config`
+- `src/data`
+- `src/content`
+- `src/constants`
+- `src/lib`
+
+Use `.meridianrc.json > dataFiles` when display text lives somewhere custom:
+
+```json
+{
+  "dataFiles": [
+    "src/site/settings.json",
+    "src/lib/pricing.js"
+  ]
+}
+```
+
+Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/translation.json`, which keeps dynamic runtime calls such as `t(product.title)` and `t(feature)` aligned with i18next lookup behavior.
+
 ## Available Scripts
 
 | Command                              | Description                                                                        |
 | ------------------------------------ | ---------------------------------------------------------------------------------- |
-| `npm run build`                      | Turborepo cached build cycle across all workspaces                                 |
-| `npm run lint`                       | Turborepo orchestrated linting                                                     |
-| `npm run dev`                        | Start continuous Turborepo local dev workflow                                      |
-| `npm run test`                       | Runs all tests recursively in workspaces                                           |
-| `meridian init`                      | Runs the entire automation suite interactively                                     |
-| `meridian fix-css <path>`            | Scans and corrects CSS logically in isolation                                      |
-| `meridian extract <path>`            | Extracts strings from JSX into translation objects                                 |
-| `meridian translate [languages...]`  | Translates files, updates `i18n.js` config, and regenerates UI pickers dynamically |
-| `meridian add-button --position ...` | Injects the frontend structural language toggle                                    |
+| `npm run test`                      | Runs workspace test scripts; package-level test scripts are currently placeholders |
+| `npm run build --workspace apps/web` | Builds the Vite documentation/landing app                                         |
+| `npm run dev --workspace apps/web`  | Starts the Vite documentation/landing app locally                                  |
+| `meridian init`                     | Runs the full interactive automation flow                                          |
+| `meridian sync [languages...]`      | Syncs newly discovered strings and optionally translates requested languages        |
+| `meridian translate [languages...]` | Translates strings, updates `i18n` config, and regenerates language controls        |
+| `meridian add-button`               | Re-runs language switcher injection using the saved `.meridianrc.json` config       |
 
 ## Knowledge Graph
 
