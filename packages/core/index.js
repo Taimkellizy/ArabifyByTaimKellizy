@@ -3,6 +3,10 @@ import analyzeJSX from './src/analyzeJSX.js';
 import analyzeHTML from './src/analyzeHTML.js';
 import { extractAndTransformJSX } from './src/utils/i18nExtractTransform.js';
 import { getContextTemplate, getI18nContextTemplate, getToggleTemplate } from './src/utils/reactGenerators.js';
+import { injectTailwindLogical } from './src/utils/tailwindInjector.js';
+import { rewriteTailwindClasses } from './src/utils/tailwindClassRewriter.js';
+import { injectDirAttribute } from './src/utils/dirInjector.js';
+import { injectDirToHtml } from './src/utils/htmlInjector.js';
 
 import { TranslatorService } from './src/translator/index.js';
 import GoogleProvider from './src/translator/providers/GoogleProvider.js';
@@ -18,6 +22,10 @@ export {
     getContextTemplate, 
     getI18nContextTemplate, 
     getToggleTemplate,
+    injectTailwindLogical,
+    rewriteTailwindClasses,
+    injectDirAttribute,
+    injectDirToHtml,
     TranslatorService,
     GoogleProvider,
     DeepLProvider,

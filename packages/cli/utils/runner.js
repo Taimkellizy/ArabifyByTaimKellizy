@@ -3,14 +3,128 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, extractAndTransformJSX, getContextTemplate, getI18nContextTemplate, getToggleTemplate } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
 import { runTranslations } from './translator-runner.js';
 import { scanDataFiles, promoteDataFileKeys } from './scanDataFiles.js';
 
-// Helper to recursively find files
+const TAILWIND_CSS_ENTRY_CANDIDATES = [
+  'src/index.css',
+  'src/app.css',
+  'src/global.css',
+  'app/globals.css',
+  'src/styles/globals.css'
+];
+
+/**
+ * Extracts the Tailwind major version from a package.json dependency range.
+ *
+ * @param {string} versionRange - Dependency version range from package.json.
+ * @returns {2 | 3 | 4 | null} Tailwind major version when it can be determined.
+ */
+function parseTailwindMajorVersion(versionRange) {
+  const match = versionRange.match(/\d+/);
+  if (!match) {
+    return null;
+  }
+
+  const majorVersion = Number(match[0]);
+  if (majorVersion === 2 || majorVersion === 3 || majorVersion === 4) {
+    return majorVersion;
+  }
+
+  return null;
+}
+
+/**
+ * Finds the Tailwind v4 CSS entry file by checking common framework paths.
+ *
+ * @param {string} projectRoot - Absolute project root.
+ * @returns {string | null} Absolute CSS entry path when detected.
+ */
+function findTailwindCssEntryPath(projectRoot) {
+  for (const relativePath of TAILWIND_CSS_ENTRY_CANDIDATES) {
+    const cssPath = path.join(projectRoot, relativePath);
+    if (!fs.existsSync(cssPath)) {
+      continue;
+    }
+
+    const cssSource = fs.readFileSync(cssPath, 'utf8');
+    if (cssSource.includes('@import "tailwindcss"') || cssSource.includes('@tailwind base')) {
+      return cssPath;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Detects whether a project uses Tailwind CSS and identifies the integration
+ * point needed for logical property support.
+ *
+ * Detection is intentionally package.json-led so Meridian only prompts for
+ * Tailwind projects that have an explicit Tailwind dependency.
+ *
+ * @param {string} projectRoot - Absolute project root.
+ * @returns {{ hasTailwind: boolean, version: 2 | 3 | 4 | null, configPath: string | null, cssEntryPath: string | null }} Tailwind detection result.
+ */
+export function detectTailwind(projectRoot) {
+  const emptyResult = {
+    hasTailwind: false,
+    version: null,
+    configPath: null,
+    cssEntryPath: null
+  };
+  const packageJsonPath = path.join(projectRoot, 'package.json');
+
+  if (!fs.existsSync(packageJsonPath)) {
+    return emptyResult;
+  }
+
+  let packageJson;
+  try {
+    const packageJsonSource = fs.readFileSync(packageJsonPath, 'utf8').replace(/^\uFEFF/, '');
+    packageJson = JSON.parse(packageJsonSource);
+  } catch (error) {
+    return emptyResult;
+  }
+
+  const dependencyVersion = packageJson.dependencies?.tailwindcss
+    || packageJson.devDependencies?.tailwindcss;
+  if (!dependencyVersion) {
+    return emptyResult;
+  }
+
+  const version = parseTailwindMajorVersion(dependencyVersion);
+  if (!version) {
+    console.log(chalk.yellow('⚠ Tailwind detected but version could not be determined.\n Skipping Tailwind logical support. Configure manually if needed.'));
+    return emptyResult;
+  }
+
+  const configPath = version === 2 || version === 3
+    ? ['tailwind.config.js', 'tailwind.config.ts']
+      .map((fileName) => path.join(projectRoot, fileName))
+      .find((candidatePath) => fs.existsSync(candidatePath)) || null
+    : null;
+  const cssEntryPath = version === 4 ? findTailwindCssEntryPath(projectRoot) : null;
+
+  return {
+    hasTailwind: true,
+    version,
+    configPath,
+    cssEntryPath
+  };
+}
+
+/**
+ * Recursively finds source files that Meridian can analyze.
+ *
+ * @param {string} dir - Directory to scan.
+ * @param {string[]} fileList - Accumulator for discovered source file paths.
+ * @returns {string[]} Absolute file paths discovered under the directory.
+ */
 function walkFiles(dir, fileList = []) {
   if (!fs.existsSync(dir)) return fileList;
   
@@ -31,6 +145,17 @@ function walkFiles(dir, fileList = []) {
   return fileList;
 }
 
+/**
+ * Runs Meridian's project modernization pipeline.
+ *
+ * Tailwind class rewriting is gated behind a verified successful
+ * tailwindcss-logical installation and config injection so physical classes
+ * are never replaced unless the project can understand the logical utilities.
+ *
+ * @param {string} cwd - Project root to modify.
+ * @param {Object} config - Meridian configuration collected from init.
+ * @returns {Promise<void>} Resolves after all enabled modification phases finish.
+ */
 export async function runModifications(cwd, config) {
   console.log(chalk.blue('\n🔍 Scanning project files for RTL issues...'));
 
@@ -151,6 +276,9 @@ export async function runModifications(cwd, config) {
 
   let fixedCssCount = 0;
   let fixedJsxCount = 0;
+  let tailwindPluginReady = false;
+  let tailwindClassesRewritten = 0;
+  let tailwindClassRewriteFailures = 0;
   let allExtractedStrings = {};
   let wasSwitcherInjected = false;
 
@@ -260,6 +388,51 @@ export async function runModifications(cwd, config) {
     }
   }
 
+  if (config.tailwind?.install) {
+    console.log(chalk.blue('\n🎨 Applying Tailwind logical utilities...'));
+
+    try {
+      const result = await injectTailwindLogical(cwd, config.tailwind);
+      tailwindPluginReady = Boolean(result?.success);
+      if (tailwindPluginReady) {
+        console.log(chalk.green('  ✓ tailwindcss-logical installed and verified.'));
+      } else {
+        console.warn(chalk.yellow(`⚠ Tailwind plugin setup failed: ${result?.reason || 'unknown error'}`));
+        console.warn(chalk.yellow('  Skipping class rewrite to avoid breaking your project.'));
+      }
+    } catch (err) {
+      console.warn(chalk.yellow(`⚠ Tailwind plugin setup failed: ${err.message}`));
+      console.warn(chalk.yellow('  Skipping class rewrite to avoid breaking your project.'));
+      tailwindPluginReady = false;
+    }
+
+    if (tailwindPluginReady) {
+      try {
+        const rewriteReport = await rewriteTailwindClasses(cwd);
+        tailwindClassesRewritten = rewriteReport.classesReplaced;
+        tailwindClassRewriteFailures = rewriteReport.failed;
+        if (rewriteReport.classesReplaced > 0) {
+          console.log(chalk.green(`  ✓ Rewrote ${rewriteReport.classesReplaced} Tailwind class(es).`));
+        } else {
+          console.log(chalk.gray('  No Tailwind class rewrites needed.'));
+        }
+
+        if (rewriteReport.autoMirroredCount > 0) {
+          console.log(chalk.green(`  ✓ Auto-applied RTL mirror to ${rewriteReport.autoMirroredCount} graphical element(s).`));
+        }
+
+        if (rewriteReport.unsafeMirrorWarnings && rewriteReport.unsafeMirrorWarnings.length > 0) {
+          console.log(chalk.yellow(`  ⚠ ${rewriteReport.unsafeMirrorWarnings.length} element(s) could not be auto-mirrored — review manually:`));
+          rewriteReport.unsafeMirrorWarnings.forEach(warn => {
+            console.log(chalk.yellow(`      ${warn}`));
+          });
+        }
+      } catch (err) {
+        console.warn(chalk.yellow(`⚠ Tailwind class rewrite failed: ${err.message}`));
+      }
+    }
+  }
+
   // Write Translations JSON
   if (Object.keys(allExtractedStrings).length > 0) {
       const defaultLanguage = config.defaultLanguage || 'en';
@@ -339,7 +512,15 @@ ${dummyEntries}
   console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
   console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files`));
   console.log(chalk.green(`   - Data files scanned: ${dataFilesScanned}`));
-  console.log(chalk.green(`   - Data keys promoted: ${dataKeysPromoted}\n`));
+  console.log(chalk.green(`   - Data keys promoted: ${dataKeysPromoted}`));
+  if (tailwindPluginReady) {
+    console.log(chalk.green('   - Tailwind logical plugin: installed'));
+  }
+  console.log(chalk.green(`   - Tailwind classes rewritten: ${tailwindClassesRewritten}`));
+  if (tailwindClassRewriteFailures > 0) {
+    console.log(chalk.yellow(`   - Tailwind class rewrite failures restored: ${tailwindClassRewriteFailures}`));
+  }
+  console.log('');
   
   if (isGitRepo) {
       console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
@@ -350,7 +531,38 @@ ${dummyEntries}
       console.log(chalk.yellow(`   Please check your file path or HTML ID targeting options, or manually add <LanguageToggle />\n`));
   }
 
-  // 5. Automatic Translation Step
+  // 5. RTL dir attribute injection
+  let dirInjected = false;
+  try {
+    const hasRTL = Array.isArray(config.languages) && config.languages.some(l =>
+      ['ar', 'he', 'fa', 'ur', 'ku', 'dv', 'ps', 'sd', 'ug', 'yi'].includes(l)
+    );
+    if (hasRTL) {
+      // Next.js Pages Router — _document file.
+      const documentCandidates = [
+        'src/pages/_document.tsx', 'src/pages/_document.jsx',
+        'pages/_document.tsx',     'pages/_document.jsx'
+      ];
+      for (const relDoc of documentCandidates) {
+        const absDoc = path.join(cwd, relDoc);
+        if (fs.existsSync(absDoc)) {
+          dirInjected = injectDirAttribute(absDoc, config.languages);
+          break;
+        }
+      }
+      // Standard React — public/index.html.
+      const htmlInjected = injectDirToHtml(cwd, config.languages);
+      dirInjected = dirInjected || htmlInjected;
+    }
+  } catch (err) {
+    console.warn(chalk.yellow(`⚠ Dir attribute injection failed: ${err.message}`));
+  }
+
+  if (dirInjected) {
+    console.log(chalk.green('   - RTL dir attribute: injected'));
+  }
+
+  // 6. Automatic Translation Step
   if (config.translation) {
     await runTranslations(cwd, config);
   }

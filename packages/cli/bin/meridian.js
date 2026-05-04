@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
 import { saveConfig } from '../utils/config.js';
-import { runModifications } from '../utils/runner.js';
+import { detectTailwind, runModifications } from '../utils/runner.js';
 import { runTranslations } from '../utils/translator-runner.js';
 import { runSync } from '../utils/sync-runner.js';
 import { getToggleTemplate } from '@meridian/core';
@@ -68,6 +68,8 @@ program
 
     /** @type {Object} */
     let answers;
+    const projectRoot = process.cwd();
+    const tailwindDetection = detectTailwind(projectRoot);
 
     if (mode[0] === 'Quick Start') {
       /** @type {Object} */
@@ -205,6 +207,7 @@ program
         targetFileById: qsAnswers.targetFileById,
         targetId: qsAnswers.targetId,
         wantsCustomClass: false,
+        installTailwindLogical: tailwindDetection.hasTailwind,
         installLinters: false
       };
 
@@ -223,6 +226,7 @@ program
         ...(qsAnswers.targetFilePath ? [`Target File: ${qsAnswers.targetFilePath}`] : []),
         ...(qsAnswers.targetId ? [`Target ID: ${qsAnswers.targetId}`] : []),
         `Custom Class: false`,
+        ...(tailwindDetection.hasTailwind ? ['Tailwind logical utilities: enabled'] : []),
         `Install Linters: false`
       ];
 
@@ -408,6 +412,13 @@ program
         },
         {
           type: 'confirm',
+          name: 'installTailwindLogical',
+          message: 'Tailwind CSS detected. Install tailwindcss-logical to add logical property utilities (mis-*, mie-*, pbs-*, etc.)?',
+          default: true,
+          when: () => tailwindDetection.hasTailwind
+        },
+        {
+          type: 'confirm',
           name: 'installLinters',
           message: 'Do you want to install ESLint/Stylelint plugins?',
           default: true
@@ -479,6 +490,15 @@ program
         customClass: answers.wantsCustomClass ? answers.switcherClass : '',
         showFlags: true
       } : false,
+      tailwind: tailwindDetection.hasTailwind ? {
+        detected: true,
+        version: tailwindDetection.version,
+        install: Boolean(answers.installTailwindLogical)
+      } : {
+        detected: false,
+        version: null,
+        install: false
+      },
       linters: answers.installLinters
     };
 

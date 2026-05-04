@@ -15,6 +15,7 @@
     "@babel/parser": "^7.29.0",
     "@babel/traverse": "^7.29.0",
     "@babel/types": "^7.29.0",
+    "chalk": "^4.1.2",
     "node-html-parser": "^7.1.0",
     "postcss": "^8.5.6",
     "postcss-safe-parser": "^7.0.1"
