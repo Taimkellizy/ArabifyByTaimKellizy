@@ -159,8 +159,81 @@ function walkFiles(dir, fileList = []) {
 export async function runModifications(cwd, config) {
   console.log(chalk.blue('\n🔍 Scanning project files for RTL issues...'));
 
-  let isGitRepo = false;
   // 1. Git Safety Check
+  const isGitRepo = await verifyGitSafety(cwd);
+
+  // 2. Next.js Triple-Signal Detection
+  const isNextJs = detectFrameworks(cwd, config);
+
+  // 3. Initial Setup (i18next)
+  await initializeI18n(cwd, config, isNextJs);
+
+  // 4. Find targeting files
+  const targetFiles = discoverSourceFiles(cwd);
+  if (targetFiles.length === 0) {
+    console.log(chalk.yellow('No target files found to analyze.'));
+    return;
+  }
+
+  console.log(chalk.gray(`Found ${targetFiles.length} files. Applying fixes...`));
+
+  const allExtractedStrings = {};
+
+  // 5. Data File Scan & Promotion
+  const { dataRegistry, dataFilesScanned, dataKeysPromoted } = await scanAndPromoteDataFiles(cwd, config, allExtractedStrings);
+
+  // 6. Process JSX/TSX and CSS source files
+  const { fixedCssCount, fixedJsxCount, wasSwitcherInjected } = await processSourceFiles(
+    targetFiles,
+    cwd,
+    config,
+    allExtractedStrings,
+    dataRegistry
+  );
+
+  // 7. Tailwind logical utilities support
+  const { tailwindPluginReady, tailwindClassesRewritten, tailwindClassRewriteFailures } = await applyTailwindLogicalSupport(cwd, config);
+
+  // 8. Write Translations JSON
+  writeTranslationJson(cwd, config, allExtractedStrings);
+
+  // 9. Create Support Files (Context & Toggle & content.js)
+  createSupportTemplates(cwd, config, targetFiles, isNextJs);
+
+  // 10. Print Success Statistics
+  printSuccessStatistics({
+    fixedCssCount,
+    fixedJsxCount,
+    dataFilesScanned,
+    dataKeysPromoted,
+    tailwindPluginReady,
+    tailwindClassesRewritten,
+    tailwindClassRewriteFailures,
+    isGitRepo,
+    config,
+    wasSwitcherInjected
+  });
+
+  // 11. RTL dir attribute injection
+  const dirInjected = injectRtlDirAttribute(cwd, config);
+  if (dirInjected) {
+    console.log(chalk.green('   - RTL dir attribute: injected'));
+  }
+
+  // 12. Automatic Translation Step
+  if (config.translation) {
+    await runTranslations(cwd, config);
+  }
+}
+
+/**
+ * Verifies Git repository status and prompts user if uncommitted changes exist.
+ *
+ * @param {string} cwd - The project root directory.
+ * @returns {Promise<boolean>} True if the directory is a Git repository.
+ */
+async function verifyGitSafety(cwd) {
+  let isGitRepo = false;
   try {
     // Check if git is initialized
     execSync('git rev-parse --is-inside-work-tree', { stdio: 'ignore', cwd });
@@ -196,8 +269,17 @@ export async function runModifications(cwd, config) {
       process.exit(0);
     }
   }
+  return isGitRepo;
+}
 
-  // Next.js Triple-Signal Detection (supports both App Router and Pages Router)
+/**
+ * Detects whether the project uses Next.js using a triple-signal approach.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @returns {boolean} True if a Next.js project is detected.
+ */
+function detectFrameworks(cwd, config) {
   const hasNextConfig = fs.existsSync(path.join(cwd, 'next.config.js')) || fs.existsSync(path.join(cwd, 'next.config.mjs'));
   let hasNextDep = false;
   try {
@@ -206,20 +288,33 @@ export async function runModifications(cwd, config) {
       hasNextDep = true;
     }
   } catch (e) {}
+  
   // App Router: app/layout.* exists
   const hasAppLayout = fs.existsSync(path.join(cwd, 'src', 'app', 'layout.jsx')) ||
                        fs.existsSync(path.join(cwd, 'src', 'app', 'layout.tsx')) ||
                        fs.existsSync(path.join(cwd, 'app', 'layout.jsx')) ||
                        fs.existsSync(path.join(cwd, 'app', 'layout.tsx'));
+                       
   // Pages Router: pages/_app.* exists
   const hasPagesApp = fs.existsSync(path.join(cwd, 'src', 'pages', '_app.jsx')) ||
                       fs.existsSync(path.join(cwd, 'src', 'pages', '_app.tsx')) ||
                       fs.existsSync(path.join(cwd, 'pages', '_app.jsx')) ||
                       fs.existsSync(path.join(cwd, 'pages', '_app.tsx'));
+                      
   const isNextJs = hasNextConfig && hasNextDep && (hasAppLayout || hasPagesApp);
   config.isNextJs = isNextJs; // Pass down to analyzers
+  return isNextJs;
+}
 
-  // 2. Initial Setup (i18next)
+/**
+ * Sets up i18next dependencies, generates configurations, and injects imports.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @param {boolean} isNextJs - Next.js detection flag.
+ * @returns {Promise<void>}
+ */
+async function initializeI18n(cwd, config, isNextJs) {
   if (config.i18next) {
     console.log(chalk.blue('\n📦 Setting up i18next...'));
     try {
@@ -242,8 +337,15 @@ export async function runModifications(cwd, config) {
       console.log(chalk.red(`  ❌ Error during i18next setup: ${err.message}`));
     }
   }
+}
 
-  // 3. Find targeting files. Let's scan specific subdirectories to avoid modifying core configs.
+/**
+ * Scans directories for React and CSS source files that Meridian can analyze.
+ *
+ * @param {string} cwd - The project root directory.
+ * @returns {string[]} An array of absolute file paths.
+ */
+function discoverSourceFiles(cwd) {
   let targetFiles = [];
   const dirsToScan = ['src', 'app', 'pages', 'components'];
   let foundTarget = false;
@@ -257,37 +359,27 @@ export async function runModifications(cwd, config) {
   }
   
   if (!foundTarget) {
-      console.log(chalk.gray(`Warning: Standard source directories not found. Falling back to specific root scans...`));
-      // Scan root, but explicitly ignore lots to avoid touching configs
-      targetFiles = walkFiles(cwd).filter(file => {
-          return !file.includes('node_modules') 
-              && !file.includes('.git')
-              && !file.includes('packages') // Safety for monorepo development
-              && !file.includes('config')
-      });
+    console.log(chalk.gray(`Warning: Standard source directories not found. Falling back to specific root scans...`));
+    // Scan root, but explicitly ignore lots to avoid touching configs
+    targetFiles = walkFiles(cwd).filter(file => {
+      return !file.includes('node_modules') 
+          && !file.includes('.git')
+          && !file.includes('packages') // Safety for monorepo development
+          && !file.includes('config')
+    });
   }
+  return targetFiles;
+}
 
-  if (targetFiles.length === 0) {
-    console.log(chalk.yellow('No target files found to analyze.'));
-    return;
-  }
-
-  console.log(chalk.gray(`Found ${targetFiles.length} files. Applying fixes...`));
-
-  let fixedCssCount = 0;
-  let fixedJsxCount = 0;
-  let tailwindPluginReady = false;
-  let tailwindClassesRewritten = 0;
-  let tailwindClassRewriteFailures = 0;
-  let allExtractedStrings = {};
-  let wasSwitcherInjected = false;
-
-  /**
-   * Phase 3 – Data File Scanner.
-   * Discovers JS/JSON data files under src/ and classifies their string leaves.
-   * Failures are non-fatal: a warning is printed and the registry stays empty.
-   * @type {Object}
-   */
+/**
+ * Scans static data files and promotes their translatable keys into the shared storage.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @param {Object} allExtractedStrings - Accumulator for extracted translation strings.
+ * @returns {Promise<{ dataRegistry: Object, dataFilesScanned: number, dataKeysPromoted: number }>}
+ */
+async function scanAndPromoteDataFiles(cwd, config, allExtractedStrings) {
   let dataRegistry = {};
   let dataFilesScanned = 0;
   console.log(chalk.blue('\n📂 Scanning data files...'));
@@ -303,13 +395,6 @@ export async function runModifications(cwd, config) {
     console.log(chalk.yellow(`  ⚠️  Data file scan failed and will be skipped: ${err.message}`));
   }
 
-  /**
-   * Phase 4 – Key Promotion.
-   * For each file found by the scanner, promote translatable strings into the
-   * shared translations object using the _data.<baseName>.<dotPath> key scheme.
-   * Promotion is idempotent — existing keys are never overwritten.
-   * @type {number}
-   */
   let dataKeysPromoted = 0;
   if (dataFilesScanned > 0 && (config.i18next || config.translation)) {
     console.log(chalk.blue('\n🔑 Promoting data file keys...'));
@@ -334,7 +419,24 @@ export async function runModifications(cwd, config) {
     }
   }
 
-  // 3. Process files
+  return { dataRegistry, dataFilesScanned, dataKeysPromoted };
+}
+
+/**
+ * Processes JSX, TSX, and CSS files to inject logical layout models and translation wrappers.
+ *
+ * @param {string[]} targetFiles - List of absolute file paths to modify.
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @param {Object} allExtractedStrings - Accumulator for extracted translation strings.
+ * @param {Object} dataRegistry - Registry of static data structures.
+ * @returns {Promise<{ fixedCssCount: number, fixedJsxCount: number, wasSwitcherInjected: boolean }>}
+ */
+async function processSourceFiles(targetFiles, cwd, config, allExtractedStrings, dataRegistry) {
+  let fixedCssCount = 0;
+  let fixedJsxCount = 0;
+  let wasSwitcherInjected = false;
+
   for (const fullPath of targetFiles) {
     const content = fs.readFileSync(fullPath, 'utf8');
     const ext = path.extname(fullPath);
@@ -351,12 +453,7 @@ export async function runModifications(cwd, config) {
       } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
          
          const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', '_app.ts', '_app.tsx', 'main.tsx', 'main.jsx', 'main.ts', 'index.js', 'index.jsx', 'index.tsx'].some(name => relativePath.endsWith(name));
-         /**
-          * Phase 5 – Babel JSX Extractor.
-          * The scanner registry is forwarded so that shouldWrapMemberExpression()
-          * can correctly gate member-expression wrapping by consulting the
-          * data-file registry.
-          */
+         
          const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath, dataRegistry });
          if (result.injected) wasSwitcherInjected = true;
          
@@ -383,10 +480,24 @@ export async function runModifications(cwd, config) {
          }
       }
     } catch (err) {
-      // console.log(chalk.red(`❌ Failed to parse: ${relativePath} - ${err.message}`));
-      // We will suppress heavy error logs during scanning unless requested
+      // suppress parse errors during scanning
     }
   }
+
+  return { fixedCssCount, fixedJsxCount, wasSwitcherInjected };
+}
+
+/**
+ * Installs tailwindcss-logical plugin and rewrites legacy physical Tailwind classes.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @returns {Promise<{ tailwindPluginReady: boolean, tailwindClassesRewritten: number, tailwindClassRewriteFailures: number }>}
+ */
+async function applyTailwindLogicalSupport(cwd, config) {
+  let tailwindPluginReady = false;
+  let tailwindClassesRewritten = 0;
+  let tailwindClassRewriteFailures = 0;
 
   if (config.tailwind?.install) {
     console.log(chalk.blue('\n🎨 Applying Tailwind logical utilities...'));
@@ -433,105 +544,112 @@ export async function runModifications(cwd, config) {
     }
   }
 
-  // Write Translations JSON
+  return { tailwindPluginReady, tailwindClassesRewritten, tailwindClassRewriteFailures };
+}
+
+/**
+ * Saves extracted translation strings to translation.json inside the locale directory.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @param {Object} allExtractedStrings - Extracted translation keys.
+ * @returns {void}
+ */
+function writeTranslationJson(cwd, config, allExtractedStrings) {
   if (Object.keys(allExtractedStrings).length > 0) {
-      const defaultLanguage = config.defaultLanguage || 'en';
-      const localesFolder = path.join(cwd, 'public', 'locales', defaultLanguage);
-      if (!fs.existsSync(localesFolder)) {
-          fs.mkdirSync(localesFolder, { recursive: true });
+    const defaultLanguage = config.defaultLanguage || 'en';
+    const localesFolder = path.join(cwd, 'public', 'locales', defaultLanguage);
+    if (!fs.existsSync(localesFolder)) {
+      fs.mkdirSync(localesFolder, { recursive: true });
+    }
+    
+    const sortedKeys = Object.keys(allExtractedStrings).sort();
+    const sortedStrings = {};
+    sortedKeys.forEach(key => {
+      sortedStrings[key] = allExtractedStrings[key];
+    });
+
+    const translationPath = path.join(localesFolder, 'translation.json');
+    fs.writeFileSync(translationPath, JSON.stringify(sortedStrings, null, 2), 'utf8');
+    console.log(chalk.green(`  Created: ${path.relative(cwd, translationPath)}`));
+  }
+}
+
+/**
+ * Creates LanguageContext, LanguageToggle, and local mock dictionary files.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @param {string[]} targetFiles - Discovered source files.
+ * @param {boolean} isNextJs - Next.js detection flag.
+ * @returns {void}
+ */
+function createSupportTemplates(cwd, config, targetFiles, isNextJs) {
+  const dirsToScan = ['src', 'app', 'pages', 'components'];
+  if (config.languageSwitcher || config.translation) {
+    if (dirsToScan.length > 0 && targetFiles.length > 0) {
+      let baseSrcDir = cwd;
+      const validRootSrc = targetFiles[0].split(path.sep).find(p => dirsToScan.includes(p));
+      if (validRootSrc) {
+        baseSrcDir = targetFiles[0].substring(0, targetFiles[0].indexOf(validRootSrc)) + validRootSrc;
+      } else {
+        baseSrcDir = path.join(cwd, 'src');
       }
       
-      const sortedKeys = Object.keys(allExtractedStrings).sort();
-      const sortedStrings = {};
-      sortedKeys.forEach(key => {
-          sortedStrings[key] = allExtractedStrings[key];
-      });
-
-      const translationPath = path.join(localesFolder, 'translation.json');
-      fs.writeFileSync(translationPath, JSON.stringify(sortedStrings, null, 2), 'utf8');
-      console.log(chalk.green(`  Created: ${path.relative(cwd, translationPath)}`));
-  }
-
-  // 4. Create Support Files (Context & Toggle) if they don't exist
-  // We explicitly search for the first valid project sub-folder matched instead of generating at root.
-  if (config.languageSwitcher || config.translation) {
-      if (dirsToScan.length > 0 && targetFiles.length > 0) {
-        let baseSrcDir = cwd;
-        const validRootSrc = targetFiles[0].split(path.sep).find(p => ['src', 'app', 'pages', 'components'].includes(p));
-        if (validRootSrc) {
-            baseSrcDir = targetFiles[0].substring(0, targetFiles[0].indexOf(validRootSrc)) + validRootSrc;
-        } else {
-            baseSrcDir = path.join(cwd, 'src');
-        }
-        
-        const contextDir = path.join(baseSrcDir, 'contexts');
-        if (!fs.existsSync(contextDir)) fs.mkdirSync(contextDir, { recursive: true });
-        
-        const contextPath = path.join(contextDir, 'LanguageContext.jsx');
-        if (!fs.existsSync(contextPath)) {
-            const templateToUse = config.i18next ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs) : getContextTemplate(config.languages, config.defaultLanguage, isNextJs);
-            fs.writeFileSync(contextPath, templateToUse, 'utf8');
-            console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
-        }
-
-        if (config.languageSwitcher) {
-            const tempBaseSrc = baseSrcDir;
-            const compDir = path.join(tempBaseSrc, 'components');
-            if (!fs.existsSync(compDir)) fs.mkdirSync(compDir, { recursive: true });
-            
-            const togglePath = path.join(compDir, 'LanguageToggle.jsx');
-            if (!fs.existsSync(togglePath)) {
-                 const generatedToggleTemplate = getToggleTemplate(config.languages, isNextJs);
-                 fs.writeFileSync(togglePath, generatedToggleTemplate, 'utf8');
-                 console.log(chalk.green(`  Created: ${path.relative(cwd, togglePath)}`));
-            }
-        }
-        
-         if (!config.i18next) {
-           const utilsDir = path.join(baseSrcDir, 'utils');
-           if (!fs.existsSync(utilsDir)) fs.mkdirSync(utilsDir, { recursive: true });
-           const contentPath = path.join(utilsDir, 'content.js');
-           if (!fs.existsSync(contentPath)) {
-              // Need a dummy dictionary so the app doesn't crash on boot before manual trans
-              const dummyEntries = config.languages.map(lang => {
-                  if (lang === (config.defaultLanguage || 'en')) return `    ${lang}: { title: "Hello World", welcome: "Welcome" }`;
-                  return `    ${lang}: { title: "Title placeholder", welcome: "Welcome placeholder" }`;
-              }).join(',\\n');
-              
-              const dummyDict = `export const content = {
-${dummyEntries}
-  };`;
-               fs.writeFileSync(contentPath, dummyDict, 'utf8');
-               console.log(chalk.green(`  Created: ${path.relative(cwd, contentPath)}`));
-           }
-         }
+      const contextDir = path.join(baseSrcDir, 'contexts');
+      if (!fs.existsSync(contextDir)) fs.mkdirSync(contextDir, { recursive: true });
+      
+      const contextPath = path.join(contextDir, 'LanguageContext.jsx');
+      if (!fs.existsSync(contextPath)) {
+        const templateToUse = config.i18next 
+          ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs) 
+          : getContextTemplate(config.languages, config.defaultLanguage, isNextJs);
+        fs.writeFileSync(contextPath, templateToUse, 'utf8');
+        console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
       }
-  }
 
-  console.log(chalk.green(`\n✅ Modification complete:`));
-  console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
-  console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files`));
-  console.log(chalk.green(`   - Data files scanned: ${dataFilesScanned}`));
-  console.log(chalk.green(`   - Data keys promoted: ${dataKeysPromoted}`));
-  if (tailwindPluginReady) {
-    console.log(chalk.green('   - Tailwind logical plugin: installed'));
+      if (config.languageSwitcher) {
+        const compDir = path.join(baseSrcDir, 'components');
+        if (!fs.existsSync(compDir)) fs.mkdirSync(compDir, { recursive: true });
+        
+        const togglePath = path.join(compDir, 'LanguageToggle.jsx');
+        if (!fs.existsSync(togglePath)) {
+          const generatedToggleTemplate = getToggleTemplate(config.languages, isNextJs);
+          fs.writeFileSync(togglePath, generatedToggleTemplate, 'utf8');
+          console.log(chalk.green(`  Created: ${path.relative(cwd, togglePath)}`));
+        }
+      }
+      
+      if (!config.i18next) {
+        const utilsDir = path.join(baseSrcDir, 'utils');
+        if (!fs.existsSync(utilsDir)) fs.mkdirSync(utilsDir, { recursive: true });
+        const contentPath = path.join(utilsDir, 'content.js');
+        if (!fs.existsSync(contentPath)) {
+          // Need a dummy dictionary so the app doesn't crash on boot before manual trans
+          const dummyEntries = config.languages.map(lang => {
+            if (lang === (config.defaultLanguage || 'en')) {
+              return `    ${lang}: { title: "Hello World", welcome: "Welcome" }`;
+            }
+            return `    ${lang}: { title: "Title placeholder", welcome: "Welcome placeholder" }`;
+          }).join(',\n');
+          
+          const dummyDict = `export const content = {\n${dummyEntries}\n};`;
+          fs.writeFileSync(contentPath, dummyDict, 'utf8');
+          console.log(chalk.green(`  Created: ${path.relative(cwd, contentPath)}`));
+        }
+      }
+    }
   }
-  console.log(chalk.green(`   - Tailwind classes rewritten: ${tailwindClassesRewritten}`));
-  if (tailwindClassRewriteFailures > 0) {
-    console.log(chalk.yellow(`   - Tailwind class rewrite failures restored: ${tailwindClassRewriteFailures}`));
-  }
-  console.log('');
-  
-  if (isGitRepo) {
-      console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
-  }
+}
 
-  if (config.languageSwitcher && config.languageSwitcher.position && config.languageSwitcher.position.tag !== 'skip' && !wasSwitcherInjected) {
-      console.log(chalk.yellow(`⚠️  Warning: Could not automatically inject the Language Switcher.`));
-      console.log(chalk.yellow(`   Please check your file path or HTML ID targeting options, or manually add <LanguageToggle />\n`));
-  }
-
-  // 5. RTL dir attribute injection
+/**
+ * Injects direction (dir="ltr" / dir="rtl") toggling attribute into index.html or Next.js _document.
+ *
+ * @param {string} cwd - The project root directory.
+ * @param {Object} config - Meridian configuration.
+ * @returns {boolean} True if direction attribute was successfully injected.
+ */
+function injectRtlDirAttribute(cwd, config) {
   let dirInjected = false;
   try {
     const hasRTL = Array.isArray(config.languages) && config.languages.some(l =>
@@ -557,13 +675,49 @@ ${dummyEntries}
   } catch (err) {
     console.warn(chalk.yellow(`⚠ Dir attribute injection failed: ${err.message}`));
   }
+  return dirInjected;
+}
 
-  if (dirInjected) {
-    console.log(chalk.green('   - RTL dir attribute: injected'));
+/**
+ * Prints the results summary and modernizer statistics to console.
+ *
+ * @param {Object} stats - Collected metrics for printing.
+ * @returns {void}
+ */
+function printSuccessStatistics(stats) {
+  const {
+    fixedCssCount,
+    fixedJsxCount,
+    dataFilesScanned,
+    dataKeysPromoted,
+    tailwindPluginReady,
+    tailwindClassesRewritten,
+    tailwindClassRewriteFailures,
+    isGitRepo,
+    config,
+    wasSwitcherInjected
+  } = stats;
+
+  console.log(chalk.green(`\n✅ Modification complete:`));
+  console.log(chalk.green(`   - Fixed ${fixedCssCount} CSS files`));
+  console.log(chalk.green(`   - Fixed ${fixedJsxCount} JS/JSX files`));
+  console.log(chalk.green(`   - Data files scanned: ${dataFilesScanned}`));
+  console.log(chalk.green(`   - Data keys promoted: ${dataKeysPromoted}`));
+  if (tailwindPluginReady) {
+    console.log(chalk.green('   - Tailwind logical plugin: installed'));
+  }
+  console.log(chalk.green(`   - Tailwind classes rewritten: ${tailwindClassesRewritten}`));
+  if (tailwindClassRewriteFailures > 0) {
+    console.log(chalk.yellow(`   - Tailwind class rewrite failures restored: ${tailwindClassRewriteFailures}`));
+  }
+  console.log('');
+  
+  if (isGitRepo) {
+    console.log(chalk.magenta(`To undo these changes at any time, run: `) + chalk.white.bold(`git checkout .\n`));
   }
 
-  // 6. Automatic Translation Step
-  if (config.translation) {
-    await runTranslations(cwd, config);
+  if (config.languageSwitcher && config.languageSwitcher.position && config.languageSwitcher.position.tag !== 'skip' && !wasSwitcherInjected) {
+    console.log(chalk.yellow(`⚠️  Warning: Could not automatically inject the Language Switcher.`));
+    console.log(chalk.yellow(`   Please check your file path or HTML ID targeting options, or manually add <LanguageToggle />\n`));
   }
 }
