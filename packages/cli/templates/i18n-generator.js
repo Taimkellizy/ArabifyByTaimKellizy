@@ -24,14 +24,15 @@ export async function generateI18nConfig(cwd, languages, isNextJs = false) {
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
+import { locales, defaultLocale } from './i18n/locales';
 
 i18n
   .use(HttpApi)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({${isNextJs ? nextjsOptions : ''}
-    fallbackLng: '${fallbackLng}',
-    supportedLngs: ${JSON.stringify(languages)},
+    fallbackLng: defaultLocale,
+    supportedLngs: locales.map(l => l.code),
     interpolation: {
       escapeValue: false, // React already protects from XSS
     },

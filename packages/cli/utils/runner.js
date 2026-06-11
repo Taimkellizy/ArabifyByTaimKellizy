@@ -9,6 +9,7 @@ import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
 import { runTranslations } from './translator-runner.js';
 import { scanDataFiles, promoteDataFileKeys } from './scanDataFiles.js';
+import { runSyncConfig } from './sync-config.js';
 
 const TAILWIND_CSS_ENTRY_CANDIDATES = [
   'src/index.css',
@@ -164,6 +165,14 @@ export async function runModifications(cwd, config) {
 
   // 2. Next.js Triple-Signal Detection
   const isNextJs = detectFrameworks(cwd, config);
+
+  // 2.5 Generate locales.ts (Single source of truth)
+  console.log(chalk.blue('\n⚙️  Generating locales configuration...'));
+  try {
+    runSyncConfig(cwd, config);
+  } catch (err) {
+    console.log(chalk.red(`  ❌ Failed to generate locales.ts: ${err.message}`));
+  }
 
   // 3. Initial Setup (i18next)
   await initializeI18n(cwd, config, isNextJs);

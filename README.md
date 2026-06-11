@@ -238,6 +238,8 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 | `meridian sync [languages...]`      | Syncs newly discovered strings and optionally translates requested languages        |
 | `meridian translate [languages...]` | Translates strings, updates `i18n` config, and regenerates language controls        |
 | `meridian add-button`               | Re-runs language switcher injection using the saved `.meridianrc.json` config       |
+| `meridian doctor`                   | Scans the project for hardcoded language arrays to ensure the single source of truth is maintained |
+| `meridian sync-config`              | Generates or updates `src/i18n/locales.ts` as the single source of truth for supported languages |
 
 ## Knowledge Graph
 

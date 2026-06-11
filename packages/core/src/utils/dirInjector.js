@@ -138,8 +138,8 @@ export function injectDirAttribute(filePath, languages) {
   if (/\bdir\s*=/.test(source)) return false;
 
   const ast = parseSource(source, filePath);
-  const hasRTL = languages.some(l => RTL_LANGUAGE_CODES.has(l));
-
+  // Check if we need to do anything. If they already have `dir` we skip.
+  if (/\bdir\s*=/.test(source)) return false;
   // Locate the <Html> or <html> opening element.
   let htmlOpeningElement = null;
   traverse(ast, {
@@ -156,23 +156,31 @@ export function injectDirAttribute(filePath, languages) {
 
   // Insert dir attribute immediately after the tag name ("Html" / "html").
   const insertAfterName = htmlOpeningElement.name.end;
-  const dirAttrText = hasRTL
-    ? ' dir={i18n.dir(i18n.language)}'
-    : ' dir="ltr"';
+  const dirAttrText = ' dir={locales.find(l => l.code === i18n.language)?.dir || "ltr"}';
 
   const edits = [
     { start: insertAfterName, end: insertAfterName, replacement: dirAttrText }
   ];
 
-  // Add the i18n default import when needed.
-  if (hasRTL && !source.includes('import i18n from')) {
-    const lastImportEnd = findLastImportEnd(ast);
-    if (lastImportEnd > 0) {
-      const i18nImportPath = computeRelativeImport(filePath, 'i18n');
+  // Add the i18n default import and locales import
+  const lastImportEnd = findLastImportEnd(ast);
+  if (lastImportEnd > 0) {
+    const i18nImportPath = computeRelativeImport(filePath, 'i18n');
+    const localesImportPath = computeRelativeImport(filePath, 'i18n/locales');
+    
+    let importAdditions = '';
+    if (!source.includes('import i18n from')) {
+      importAdditions += `\nimport i18n from '${i18nImportPath}';`;
+    }
+    if (!source.includes('import { locales }')) {
+      importAdditions += `\nimport { locales } from '${localesImportPath}';`;
+    }
+    
+    if (importAdditions) {
       edits.push({
         start: lastImportEnd,
         end: lastImportEnd,
-        replacement: `\nimport i18n from '${i18nImportPath}';`
+        replacement: importAdditions
       });
     }
   }

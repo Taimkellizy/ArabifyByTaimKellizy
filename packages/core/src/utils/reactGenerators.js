@@ -2,16 +2,17 @@ export const getContextTemplate = (languages, defaultLang = 'en', isNextJs = fal
   const useClient = isNextJs ? '"use client";\n\n' : '';
   return `${useClient}import React, { createContext, useState, useEffect } from 'react';
 import { content } from '../utils/content';
+import { locales, defaultLocale } from '../i18n/locales';
 
 export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   // 1. Initialize logic
-  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || '${defaultLang}');
+  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || defaultLocale);
   const [text, setText] = useState(content[lang]);
   
   // 2. Control Logic
-  const _languages = ${JSON.stringify(languages)};
+  const _languages = locales.map(l => l.code);
   const toggleLanguage = () => {
     const currentIdx = _languages.indexOf(lang);
     const nextIdx = (currentIdx + 1) % _languages.length;
@@ -25,8 +26,8 @@ export const LanguageProvider = ({ children }) => {
   // 3. Side Effects (Update Dir, Storage, and Text)
   useEffect(() => {
     document.documentElement.lang = lang;
-    const isRtl = ['ar', 'he', 'fa', 'ur'].includes(lang);
-    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    const localeObj = locales.find(l => l.code === lang);
+    document.documentElement.dir = localeObj ? localeObj.dir : 'ltr';
     localStorage.setItem('appLang', lang);
     if(content[lang]) setText(content[lang]);
   }, [lang]);
@@ -44,14 +45,15 @@ export const getI18nContextTemplate = (languages, defaultLang = 'en', isNextJs =
   const useClient = isNextJs ? '"use client";\n\n' : '';
   return `${useClient}import React, { createContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { locales, defaultLocale } from '../i18n/locales';
 
 export const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
   const { i18n } = useTranslation();
-  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || i18n.language || '${defaultLang}');
+  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || i18n.language || defaultLocale);
   
-  const _languages = ${JSON.stringify(languages)};
+  const _languages = locales.map(l => l.code);
   const toggleLanguage = () => {
     const currentIdx = _languages.indexOf(lang);
     const nextIdx = (currentIdx + 1) % _languages.length;
@@ -67,8 +69,8 @@ export const LanguageProvider = ({ children }) => {
 
   useEffect(() => {
     document.documentElement.lang = lang;
-    const isRtl = ['ar', 'he', 'fa', 'ur'].includes(lang);
-    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+    const localeObj = locales.find(l => l.code === lang);
+    document.documentElement.dir = localeObj ? localeObj.dir : 'ltr';
     localStorage.setItem('appLang', lang);
   }, [lang]);
 
@@ -84,18 +86,20 @@ export const LanguageProvider = ({ children }) => {
 export const getToggleTemplate = (languages, isNextJs = false) => {
   const useClient = isNextJs ? '"use client";\n\n' : '';
   if (languages.length > 2) {
-    const options = languages.map(l => `                <option value="${l}">${l.toUpperCase()}</option>`).join('\n');
     return `${useClient}import React, { useContext } from 'react';
 import { LanguageContext } from '../contexts/LanguageContext';
+import { locales } from '../i18n/locales';
 
 const LanguageToggle = () => {
     const context = useContext(LanguageContext);
-    const lang = context?.lang || '${languages[0]}';
+    const lang = context?.lang || locales[0].code;
     const changeLanguage = context?.changeLanguage || (() => console.warn('LanguageContext missing'));
 
     return (
         <select value={lang} onChange={(e) => changeLanguage(e.target.value)}>
-${options}
+            {locales.map(l => (
+                <option key={l.code} value={l.code}>{l.code.toUpperCase()}</option>
+            ))}
         </select>
     );
 }
@@ -106,15 +110,16 @@ export default LanguageToggle;
     // 2 or fewer languages, default dual-button
     return `${useClient}import React, { useContext } from 'react';
 import { LanguageContext } from '../contexts/LanguageContext';
+import { locales } from '../i18n/locales';
 
 const LanguageToggle = () => {
     const context = useContext(LanguageContext);
-    const lang = context?.lang || '${languages[0]}';
+    const lang = context?.lang || locales[0].code;
     const toggleLanguage = context?.toggleLanguage || (() => console.warn('LanguageContext missing'));
 
     return (
         <button onClick={toggleLanguage}>
-            <span>{lang === '${languages[0]}' ? '${languages[0].toUpperCase()}' : '${(languages[1] || languages[0]).toUpperCase()}'}</span>
+            <span>{lang === locales[0].code ? locales[0].code.toUpperCase() : (locales[1] || locales[0]).code.toUpperCase()}</span>
         </button>
     );
 }

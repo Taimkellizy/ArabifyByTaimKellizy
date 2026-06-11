@@ -13,6 +13,8 @@ import { saveConfig } from '../utils/config.js';
 import { detectTailwind, runModifications } from '../utils/runner.js';
 import { runTranslations } from '../utils/translator-runner.js';
 import { runSync } from '../utils/sync-runner.js';
+import { runSyncConfig } from '../utils/sync-config.js';
+import { runDoctor } from '../utils/doctor.js';
 import { getToggleTemplate } from '@meridian/core';
 import { getModeQuestion, getQuickStartQuestions, getAdvancedQuestions } from '../utils/prompts.js';
 
@@ -369,6 +371,40 @@ program
     const runConfig = { ...config, translation: false, i18next: false, extractText: false };
 
     await runModifications(process.cwd(), runConfig);
+  });
+
+program
+  .command('sync-config')
+  .description('Generate src/i18n/locales.ts from .meridianrc.json')
+  .action(() => {
+    const configPath = path.join(process.cwd(), '.meridianrc.json');
+    if (!fs.existsSync(configPath)) {
+      console.log(chalk.red('❌ Error: .meridianrc.json not found. Run `meridian init` first.'));
+      process.exit(1);
+    }
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    try {
+      runSyncConfig(process.cwd(), config);
+    } catch (err) {
+      console.log(chalk.red(`❌ Error running sync-config: ${err.message}`));
+    }
+  });
+
+program
+  .command('doctor')
+  .description('Scan project for issues like hardcoded language arrays')
+  .action(() => {
+    const configPath = path.join(process.cwd(), '.meridianrc.json');
+    if (!fs.existsSync(configPath)) {
+      console.log(chalk.red('❌ Error: .meridianrc.json not found. Run `meridian init` first.'));
+      process.exit(1);
+    }
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    try {
+      runDoctor(process.cwd(), config);
+    } catch (err) {
+      console.log(chalk.red(`❌ Error running doctor: ${err.message}`));
+    }
   });
 
 program.parse(process.argv);
