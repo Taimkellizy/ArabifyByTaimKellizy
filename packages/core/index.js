@@ -7,6 +7,9 @@ import { injectTailwindLogical } from './src/utils/tailwindInjector.js';
 import { rewriteTailwindClasses } from './src/utils/tailwindClassRewriter.js';
 import { injectDirAttribute } from './src/utils/dirInjector.js';
 import { injectDirToHtml } from './src/utils/htmlInjector.js';
+import { nextDocumentFixer } from './src/utils/nextDocumentFixer.js';
+import { nextLayoutFixer } from './src/utils/nextLayoutFixer.js';
+import { nextConfigFixer } from './src/utils/nextConfigFixer.js';
 
 import { TranslatorService } from './src/translator/index.js';
 import GoogleProvider from './src/translator/providers/GoogleProvider.js';
@@ -26,6 +29,9 @@ export {
     rewriteTailwindClasses,
     injectDirAttribute,
     injectDirToHtml,
+    nextDocumentFixer,
+    nextLayoutFixer,
+    nextConfigFixer,
     TranslatorService,
     GoogleProvider,
     DeepLProvider,

@@ -281,14 +281,36 @@ async function verifyGitSafety(cwd) {
   return isGitRepo;
 }
 
+import { nextDocumentFixer, nextLayoutFixer, nextConfigFixer } from '@meridian/core';
+
+/**
+ * Recursively find a file by name within a directory.
+ */
+function findFileInDir(dir, fileName) {
+  let results = [];
+  if (!fs.existsSync(dir)) return results;
+  const list = fs.readdirSync(dir);
+  for (const file of list) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(findFileInDir(filePath, fileName));
+    } else if (file === fileName) {
+      results.push(filePath);
+    }
+  }
+  return results;
+}
+
 /**
  * Detects whether the project uses Next.js using a triple-signal approach.
+ * Also triggers Next.js specific layout/document fixers.
  *
  * @param {string} cwd - The project root directory.
  * @param {Object} config - Meridian configuration.
  * @returns {boolean} True if a Next.js project is detected.
  */
-function detectFrameworks(cwd, config) {
+export function detectFrameworks(cwd, config) {
   const hasNextConfig = fs.existsSync(path.join(cwd, 'next.config.js')) || fs.existsSync(path.join(cwd, 'next.config.mjs'));
   let hasNextDep = false;
   try {
@@ -298,18 +320,79 @@ function detectFrameworks(cwd, config) {
     }
   } catch (e) {}
   
-  // App Router: app/layout.* exists
-  const hasAppLayout = fs.existsSync(path.join(cwd, 'src', 'app', 'layout.jsx')) ||
-                       fs.existsSync(path.join(cwd, 'src', 'app', 'layout.tsx')) ||
-                       fs.existsSync(path.join(cwd, 'app', 'layout.jsx')) ||
-                       fs.existsSync(path.join(cwd, 'app', 'layout.tsx'));
-                       
-  // Pages Router: pages/_app.* exists
-  const hasPagesApp = fs.existsSync(path.join(cwd, 'src', 'pages', '_app.jsx')) ||
-                      fs.existsSync(path.join(cwd, 'src', 'pages', '_app.tsx')) ||
-                      fs.existsSync(path.join(cwd, 'pages', '_app.jsx')) ||
-                      fs.existsSync(path.join(cwd, 'pages', '_app.tsx'));
-                      
+  const appDir = fs.existsSync(path.join(cwd, 'src', 'app')) ? path.join(cwd, 'src', 'app') : (fs.existsSync(path.join(cwd, 'app')) ? path.join(cwd, 'app') : null);
+  const pagesDir = fs.existsSync(path.join(cwd, 'src', 'pages')) ? path.join(cwd, 'src', 'pages') : (fs.existsSync(path.join(cwd, 'pages')) ? path.join(cwd, 'pages') : null);
+
+  let hasAppLayout = false;
+  let hasPagesApp = false;
+
+  if (appDir) {
+    const layouts = findFileInDir(appDir, 'layout.tsx').concat(findFileInDir(appDir, 'layout.jsx'));
+    if (layouts.length > 0) hasAppLayout = true;
+    
+    // Apply layout fixers
+    for (const layoutPath of layouts) {
+      try {
+        nextLayoutFixer(layoutPath);
+      } catch (err) {
+        console.warn(chalk.yellow(`  ⚠️  Next.js Layout Fixer: ${err.message}`));
+      }
+    }
+  }
+
+  if (pagesDir) {
+    hasPagesApp = fs.existsSync(path.join(pagesDir, '_app.jsx')) || fs.existsSync(path.join(pagesDir, '_app.tsx'));
+    
+    // Check for _document and fallback if needed
+    const docCandidates = [path.join(pagesDir, '_document.tsx'), path.join(pagesDir, '_document.jsx')];
+    let docExists = false;
+    for (const doc of docCandidates) {
+      if (fs.existsSync(doc)) {
+        docExists = true;
+        try {
+          nextDocumentFixer(doc);
+        } catch (err) {
+          console.warn(chalk.yellow(`  ⚠️  Next.js Document Fixer: ${err.message}`));
+        }
+        break;
+      }
+    }
+
+    if (!docExists && hasPagesApp) {
+      // Create fallback _document.tsx
+      const fallbackDest = path.join(pagesDir, '_document.tsx');
+      const fallbackSrc = path.join(__dirname, '../templates/nextjs/_document.tsx');
+      if (fs.existsSync(fallbackSrc)) {
+        fs.copyFileSync(fallbackSrc, fallbackDest);
+        console.log(chalk.green(`  ✓ Created fallback _document.tsx at ${path.relative(cwd, fallbackDest)}`));
+      }
+    }
+
+    if (hasPagesApp && hasNextConfig) {
+      const configCandidates = [path.join(cwd, 'next.config.js'), path.join(cwd, 'next.config.mjs')];
+      for (const configPath of configCandidates) {
+        if (fs.existsSync(configPath)) {
+          try {
+            const src = fs.readFileSync(configPath, 'utf8');
+            const result = nextConfigFixer(src, {
+              locales: config.languages,
+              defaultLocale: config.defaultLanguage || 'en'
+            });
+            if (result.success && result.modified) {
+              fs.writeFileSync(configPath, result.code, 'utf8');
+              console.log(chalk.green(`  ✓ Injected Next.js SSR i18n routing into ${path.basename(configPath)}`));
+            } else if (!result.success) {
+              console.warn(chalk.yellow(`  ⚠️  Next.js Config Fixer Bailout: ${result.reason}`));
+            }
+          } catch (err) {
+            console.warn(chalk.yellow(`  ⚠️  Next.js Config Fixer Failed: ${err.message}`));
+          }
+          break;
+        }
+      }
+    }
+  }
+
   const isNextJs = hasNextConfig && hasNextDep && (hasAppLayout || hasPagesApp);
   config.isNextJs = isNextJs; // Pass down to analyzers
   return isNextJs;

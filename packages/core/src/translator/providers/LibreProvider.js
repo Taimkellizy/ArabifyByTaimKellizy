@@ -12,7 +12,12 @@ class LibreProvider extends TranslationProvider {
    */
   constructor(apiKey = '', apiUrl = 'https://translate.terraprint.co/translate') {
     super(apiKey);
-    this.apiUrl = apiUrl;
+    // Ensure the URL ends with /translate if a base URL is provided
+    if (!apiUrl.endsWith('/translate')) {
+      this.apiUrl = apiUrl.endsWith('/') ? `${apiUrl}translate` : `${apiUrl}/translate`;
+    } else {
+      this.apiUrl = apiUrl;
+    }
   }
 
   /**

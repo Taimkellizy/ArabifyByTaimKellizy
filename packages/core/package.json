@@ -18,6 +18,7 @@
     "chalk": "^4.1.2",
     "node-html-parser": "^7.1.0",
     "postcss": "^8.5.6",
-    "postcss-safe-parser": "^7.0.1"
+    "postcss-safe-parser": "^7.0.1",
+    "recast": "^0.23.11"
   }
 }

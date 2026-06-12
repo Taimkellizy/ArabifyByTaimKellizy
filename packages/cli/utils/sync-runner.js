@@ -80,7 +80,12 @@ async function extractStringsFromJs(filePath, translatableKeys) {
   return result;
 }
 
+import { detectFrameworks } from './runner.js';
+
 export async function runSync(projectRoot, config, spinner, cliLanguages, force = false) {
+  // Wire Next.js fixers into sync by running detection step
+  detectFrameworks(projectRoot, config);
+
   const registry = await scanDataFiles(projectRoot);
   const defaultLang = config.defaultLanguage || 'en';
   const translationPath = path.join(projectRoot, 'public', 'locales', defaultLang, 'translation.json');

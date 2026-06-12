@@ -47,6 +47,11 @@ ${localesObjects.map(l => `  { code: '${l.code}', label: '${l.label}', dir: '${l
 
 export const defaultLocale = '${defaultLocale}';
 export type Locale = typeof locales[number]['code'];
+
+export function dirFromLocale(locale: string) {
+  const found = locales.find(l => l.code === locale);
+  return found ? found.dir : 'ltr';
+}
 `;
   } else {
     content = `export const locales = [
@@ -54,6 +59,11 @@ ${localesObjects.map(l => `  { code: '${l.code}', label: '${l.label}', dir: '${l
 ];
 
 export const defaultLocale = '${defaultLocale}';
+
+export function dirFromLocale(locale) {
+  const found = locales.find(l => l.code === locale);
+  return found ? found.dir : 'ltr';
+}
 `;
   }
 

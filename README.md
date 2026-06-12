@@ -164,6 +164,18 @@ meridian-suite/
 - Dynamically generates the UI footprint: Renders simple buttons for 2 languages, but securely auto-scales to native `<select>` dropdown menus when 3 or more languages are requested.
 - Recognizes application indent spacing and adapts to it.
 
+**Next.js SSR Locale Routing**
+
+- For Pages Router projects, Meridian automatically injects Next.js native `i18n` configurations directly into your `next.config.js` via safe AST manipulation, instantly fixing SSR flash issues and establishing correct `lang` HTML outputs for crawlers.
+- **Manual Injection Note:** If your `next.config.js` is wrapped in higher-order functions or plugins (e.g. `module.exports = withBundleAnalyzer(...)`), Meridian's safety constraints will intentionally **abort** the injection to prevent breaking your build. In this scenario, you must add the block manually inside the exported object:
+  ```javascript
+  module.exports = withBundleAnalyzer({
+    // ... your existing config
+    i18n: { locales: ['en', 'ar', 'es'], defaultLocale: 'en' }
+  });
+  ```
+- For App Router projects, it updates your root `layout.tsx` to pull `dir` and `lang` directly from route segment `params`. If your layout has no parameters at all (`export default function Layout() { ... }`), Meridian will throw a descriptive error requesting you to manually add `({ children, params })` to the signature for safe insertion.
+
 **Data-Aware JSX Extraction**
 
 - Wraps config-backed expressions such as `{product.title}`, `{plan.name}`, `{plan.price}`, and `{plan.priceDetails}` only when the scanned data registry marks those fields as display text.
