@@ -47,7 +47,7 @@ export const analyzeProviderScope = (ast) => {
             }
         },
         JSXOpeningElement(path) {
-            if (t.isJSXIdentifier(path.node.name) && path.node.name.name === "LanguageProvider") {
+            if (t.isJSXIdentifier(path.node.name) && (path.node.name.name === "LanguageProvider" || path.node.name.name === "I18nextProvider")) {
                 hasProviderWrapper = true;
             }
         },
