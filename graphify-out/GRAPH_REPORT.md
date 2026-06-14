@@ -1,12 +1,12 @@
-# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-12)
+# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-14)
 
 ## Corpus Check
-- 78 files · ~76,946 words
+- 78 files · ~77,410 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 301 nodes · 441 edges · 40 communities detected
-- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 93 edges (avg confidence: 0.8)
+- 304 nodes · 449 edges · 40 communities detected
+- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 94 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -53,7 +53,7 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `runModifications()` - 29 edges
-2. `injectProvider()` - 13 edges
+2. `injectProvider()` - 14 edges
 3. `applyEdits()` - 11 edges
 4. `isMemberExpressionLike()` - 11 edges
 5. `analyzeJSX()` - 10 edges
@@ -93,12 +93,12 @@ Cohesion: 0.1
 Nodes (27): analyzeCSS(), injectI18nImport(), atomicWriteFile(), findIndexHtml(), injectDirToHtml(), generateI18nConfig(), installI18nDependencies(), getContextTemplate() (+19 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.14
-Nodes (28): addStringLiteralEdit(), addTranslationEdit(), buildTextReplacement(), collectTextRun(), extractMemberInfo(), findNearestArrowFunction(), findTranslatableFieldInExpression(), findTranslatableMember() (+20 more)
+Cohesion: 0.1
+Nodes (25): analyzeProviderScope(), analyzeAppRouterLayout(), analyzeExportDefault(), analyzeToggleTarget(), generateProviderWrapperEdit(), generateToggleInsertEdit(), injectToggleNode(), wrapExportWithProvider() (+17 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.11
-Nodes (22): analyzeProviderScope(), analyzeAppRouterLayout(), analyzeExportDefault(), analyzeToggleTarget(), generateProviderWrapperEdit(), generateToggleInsertEdit(), injectToggleNode(), wrapExportWithProvider() (+14 more)
+Cohesion: 0.14
+Nodes (27): addStringLiteralEdit(), addTranslationEdit(), buildTextReplacement(), collectTextRun(), extractMemberInfo(), findNearestArrowFunction(), findTranslatableFieldInExpression(), findTranslatableMember() (+19 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.07
@@ -125,8 +125,8 @@ Cohesion: 0.24
 Nodes (8): atomicWriteFile(), parseJsxSource(), rewriteClassNameValue(), rewriteClassToken(), rewriteStringLiteralNode(), rewriteTailwindClasses(), rewriteTemplateLiteralClassName(), splitSupportedVariants()
 
 ### Community 9 - "Community 9"
-Cohesion: 0.27
-Nodes (7): buildExtractVisitor(), extractAndTransformJSX(), findHookInsertionPoint(), findLastImportEnd(), getReactComponentAncestor(), injectImportStatements(), isReactComponent()
+Cohesion: 0.25
+Nodes (8): buildExtractVisitor(), extractAndTransformJSX(), findHookInsertionPoint(), findLastImportEnd(), getReactComponentAncestor(), injectHook(), injectImportStatements(), isReactComponent()
 
 ### Community 10 - "Community 10"
 Cohesion: 0.44
@@ -286,11 +286,11 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `runModifications()` connect `Community 0` to `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 12`?**
-  _High betweenness centrality (0.306) - this node is a cross-community bridge._
+  _High betweenness centrality (0.303) - this node is a cross-community bridge._
 - **Why does `extractAndTransformJSX()` connect `Community 9` to `Community 0`, `Community 6`?**
   _High betweenness centrality (0.186) - this node is a cross-community bridge._
-- **Why does `applyEdits()` connect `Community 6` to `Community 2`, `Community 5`, `Community 8`, `Community 9`, `Community 12`?**
-  _High betweenness centrality (0.157) - this node is a cross-community bridge._
+- **Why does `applyEdits()` connect `Community 6` to `Community 1`, `Community 5`, `Community 8`, `Community 9`, `Community 12`?**
+  _High betweenness centrality (0.164) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `runModifications()` (e.g. with `runSyncConfig()` and `runTranslations()`) actually correct?**
   _`runModifications()` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `injectProvider()` (e.g. with `handleInjections()` and `analyzeProviderScope()`) actually correct?**
