@@ -46,7 +46,8 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **Tailwind CSS Support**: Fully integrated with Tailwind CSS. meridian automatically scans, rewrites, and modernizes Tailwind utility classes, injecting dynamic RTL logical utilities.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`). Generates project-aware logical mappings for both Tailwind v2 and v3/v4.
 - **RTL Layout Symmetry**: Intelligently identifies layout-critical `translate-x` transformations and applies surgical `.meridian-rtl-mirror` and `.meridian-rtl-translate-reverse` CSS utilities to preserve exact spatial positioning and SVG mirroring in RTL mode without breaking original LTR layouts.
-- **Semantic String Extraction**: Uses Babel to scan JSX/TSX and automatically wrap hardcoded text, JSX attributes, dynamic config values, and mapped data arrays with `t()`.
+- **Semantic String Extraction**: Uses `recast` and Babel to scan JSX/TSX and automatically wrap hardcoded text, JSX attributes, dynamic config values, and mapped data arrays with `t()`, fully preserving your original source code formatting and line endings.
+- **Intelligent Pre-flight Checking**: Automatically detects legacy environments (React < 16.8, TypeScript < 5.0) and intelligently installs compatibility-friendly i18n packages to prevent build errors.
 - **Data File Promotion**: Scans common project data locations such as `src/config`, `src/data`, `src/content`, `src/constants`, and configured custom files, then promotes display strings into locale files.
 - **Next.js Support**: Detects both App Router and Pages Router projects, including `src/pages/_app.tsx`, and generates SSR-safe i18next configuration.
 - **Auto-Translation Engine**: Deep integration with Google Translate, DeepL, and LibreTranslate APIs. Adds new languages on the fly via CLI and dynamically scales UI components.
@@ -161,6 +162,7 @@ meridian-suite/
 
 - Features granular DOM injection controls: Target components explicitly by HTML Tag (e.g. `nav`, `aside`, `custom`), or target exact elements by HTML ID.
 - Supports both `Append` and `Prepend` injection modes for flawless structural alignment.
+- **Double-Wrap Prevention**: Astutely scans root layouts (like `_app.tsx`) to guarantee that `I18nextProvider` and `LanguageProvider` are never redundantly injected multiple times.
 - Dynamically generates the UI footprint: Renders simple buttons for 2 languages, but securely auto-scales to native `<select>` dropdown menus when 3 or more languages are requested.
 - Recognizes application indent spacing and adapts to it.
 
