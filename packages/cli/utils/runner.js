@@ -155,9 +155,10 @@ function walkFiles(dir, fileList = []) {
  *
  * @param {string} cwd - Project root to modify.
  * @param {Object} config - Meridian configuration collected from init.
+ * @param {Object} [dependencies={}] - Specific dependency versions from environment checker.
  * @returns {Promise<void>} Resolves after all enabled modification phases finish.
  */
-export async function runModifications(cwd, config) {
+export async function runModifications(cwd, config, dependencies = {}) {
   console.log(chalk.blue('\n🔍 Scanning project files for RTL issues...'));
 
   // 1. Git Safety Check
@@ -175,7 +176,7 @@ export async function runModifications(cwd, config) {
   }
 
   // 3. Initial Setup (i18next)
-  await initializeI18n(cwd, config, isNextJs);
+  await initializeI18n(cwd, config, isNextJs, dependencies);
 
   // 4. Find targeting files
   const targetFiles = discoverSourceFiles(cwd);
@@ -404,14 +405,15 @@ export function detectFrameworks(cwd, config) {
  * @param {string} cwd - The project root directory.
  * @param {Object} config - Meridian configuration.
  * @param {boolean} isNextJs - Next.js detection flag.
+ * @param {Object} dependencies - Dictionary of dependency versions to install.
  * @returns {Promise<void>}
  */
-async function initializeI18n(cwd, config, isNextJs) {
+async function initializeI18n(cwd, config, isNextJs, dependencies = {}) {
   if (config.i18next) {
     console.log(chalk.blue('\n📦 Setting up i18next...'));
     try {
       console.log(chalk.gray('  Installing dependencies (this may take a minute)...'));
-      await installI18nDependencies(cwd);
+      await installI18nDependencies(cwd, dependencies);
       console.log(chalk.green('  ✓ Dependencies installed.'));
 
       console.log(chalk.gray('  Generating i18n configurations...'));

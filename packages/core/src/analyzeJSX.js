@@ -1,4 +1,4 @@
-import _generate from '@babel/generator';
+import * as recast from 'recast';
 
 import { parseCode } from './analyzers/jsx/parse.js';
 import { traverseAST } from './analyzers/jsx/traverse.js';
@@ -8,7 +8,7 @@ import { fixStylesVisitor } from './analyzers/jsx/fixStyles.js';
 import { handleInjections } from './analyzers/jsx/injectLang.js';
 import { applyPenalty } from './analyzers/jsx/scoring.js';
 
-const generate = _generate.default || _generate;
+
 
 /**
  * Analyzes JSX/React code for inline styles, semantic structure, and accessibility.
@@ -20,7 +20,9 @@ const generate = _generate.default || _generate;
  * @param {boolean} [options.isAppFile=false] - Whether this is the main App component.
  * @returns {object} Result object containing score, warnings, foundTags, and fixedCode.
  */
-const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false, fileName: '' }) => {
+const analyzeJSX = (rawCodeString, text, options = { mode: 'scan', isAppFile: false, fileName: '' }) => {
+    // Normalize to CRLF so any string splicing perfectly matches Recast AST indices
+    const codeString = rawCodeString.replace(/\r?\n/g, '\r\n');
     let score = 100;
     let warnings = [];
     let fixedCode = null;
@@ -80,11 +82,7 @@ const analyzeJSX = (codeString, text, options = { mode: 'scan', isAppFile: false
     // Generate intermediate code from fixed AST using @babel/generator 
     let modifiedCode = codeString;
     if (styleFixed) {
-        const output = generate(ast, {
-            retainLines: true, // Keep original formatting
-            compact: false
-        }, codeString);
-        modifiedCode = output.code;
+        modifiedCode = recast.print(ast).code;
     }
 
     // 3. Injection Phase

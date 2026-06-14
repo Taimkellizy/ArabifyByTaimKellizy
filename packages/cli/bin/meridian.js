@@ -17,6 +17,7 @@ import { runSyncConfig } from '../utils/sync-config.js';
 import { runDoctor } from '../utils/doctor.js';
 import { getToggleTemplate } from '@meridian/core';
 import { getModeQuestion, getQuickStartQuestions, getAdvancedQuestions } from '../utils/prompts.js';
+import { checkEnvironment } from '../utils/envChecker.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +46,14 @@ program
     console.log(chalk.cyan(figlet.textSync('MERIDIAN', { font: 'isometric3', horizontalLayout: 'fitted' })));
     console.log(chalk.bold.blue('Welcome to the Meridian Suite CLI!\n'));
     
+    // Environment Pre-flight Check
+    const envData = checkEnvironment(process.cwd());
+    if (envData.status === 'unsupported') {
+      console.log(chalk.red('❌ Initialization Aborted.'));
+      console.log(chalk.red(envData.reason));
+      process.exit(1);
+    }
+
     /**
      * @typedef {Object} ModeAnswer
      * @property {string[]} mode
@@ -124,6 +133,13 @@ program
 
     } else {
       answers = await inquirer.prompt(getAdvancedQuestions(tailwindDetection));
+    }
+
+    if (envData.nextjsWarning) {
+      console.log(chalk.blue(envData.nextjsWarning));
+    }
+    if (envData.status === 'legacy') {
+      console.log(chalk.yellow('⚠️  Legacy environment detected. Meridian will install compatibility-friendly versions of i18next to prevent build errors.'));
     }
 
     const spinner = createSpinner('Initializing Meridian...').start();
@@ -227,7 +243,7 @@ program
     if (keySavedMsg) console.log(keySavedMsg);
     
     // Execute Modifications
-    await runModifications(process.cwd(), configData);
+    await runModifications(process.cwd(), configData, envData.dependencies);
   });
 
 program

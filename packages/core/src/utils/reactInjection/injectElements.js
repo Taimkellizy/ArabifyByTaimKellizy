@@ -1,9 +1,7 @@
 import * as t from '@babel/types';
 import _traverse from '@babel/traverse';
-import generatorModule from '@babel/generator';
 
 const traverse = _traverse.default || _traverse;
-const generate = generatorModule.default?.generate || generatorModule.generate;
 
 /**
  * Analyzes AST to find the export default wrapper position.

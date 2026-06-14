@@ -1,4 +1,5 @@
 import { parse } from '@babel/parser';
+import * as recast from 'recast';
 
 export const parseCode = (codeString, fileName = '') => {
     const isTS = fileName && fileName.toLowerCase().endsWith('.ts') && !fileName.toLowerCase().endsWith('.tsx');
@@ -14,8 +15,15 @@ export const parseCode = (codeString, fileName = '') => {
         plugins.push('jsx');
     }
 
-    return parse(codeString, {
-        sourceType: 'module',
-        plugins: plugins
+    return recast.parse(codeString, {
+        parser: {
+            parse(source) {
+                return parse(source, {
+                    sourceType: 'module',
+                    plugins: plugins,
+                    tokens: true
+                });
+            }
+        }
     });
 };

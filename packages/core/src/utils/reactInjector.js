@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { parse } from '@babel/parser';
 import * as t from '@babel/types';
+import * as recast from 'recast';
 import { applyEdits } from './i18n/applyEdits.js';
 import { analyzeProviderScope } from './reactInjection/detectScope.js';
 import { generateImportEdits, generateToggleImportEdits } from './reactInjection/injectImports.js';
@@ -14,9 +15,17 @@ import { analyzeExportDefault, analyzeToggleTarget, generateProviderWrapperEdit,
  * @returns {import('@babel/parser').ParseResult} Parsed AST
  */
 const getAST = (code) => {
-    return parse(code, {
-        sourceType: "module",
-        plugins: ["jsx", "typescript", "classProperties", "dynamicImport", "exportDefaultFrom", "exportNamespaceFrom"],
+    const plugins = ["jsx", "typescript", "classProperties", "dynamicImport", "exportDefaultFrom", "exportNamespaceFrom"];
+    return recast.parse(code, {
+        parser: {
+            parse(source) {
+                return parse(source, {
+                    sourceType: "module",
+                    plugins: plugins,
+                    tokens: true
+                });
+            }
+        }
     });
 };
 
@@ -94,7 +103,9 @@ function checkLayoutProvider(fileName) {
  * @param {string} fileName - Current file name
  * @returns {string} Modified code
  */
-export const injectProvider = (code, config = {}, fileName = '') => {
+export const injectProvider = (rawCode, config = {}, fileName = '') => {
+    // Normalize to CRLF to ensure AST offsets perfectly match string slice offsets
+    const code = rawCode.replace(/\r?\n/g, '\r\n');
     let ast;
     try {
         ast = getAST(code);
@@ -192,7 +203,9 @@ export const injectProvider = (code, config = {}, fileName = '') => {
  * @param {string} fileName - Current file name
  * @returns {{code: string, injected: boolean}} Result with modified code and injected status
  */
-export const injectToggle = (code, targetConfig = { tag: "nav" }, fileName = '') => {
+export const injectToggle = (rawCode, targetConfig = { tag: "nav" }, fileName = '') => {
+    // Normalize to CRLF to ensure AST offsets perfectly match string slice offsets
+    const code = rawCode.replace(/\r?\n/g, '\r\n');
     let ast;
     try {
         ast = getAST(code);

@@ -1,5 +1,5 @@
 import * as t from '@babel/types';
-import generatorModule from '@babel/generator';
+import * as recast from 'recast';
 
 export const isReactComponent = (funcPath) => {
     if (t.isFunctionDeclaration(funcPath.node) && funcPath.node.id) {
@@ -92,8 +92,7 @@ export const processHookEdits = (source, edits, ctx) => {
         const blockBody = t.blockStatement([hookDecl, returnStmt]);
         arrowFn.body = blockBody;
         
-        const generated = generatorModule.default(arrowFn);
-        const code = generated.code;
+        const code = recast.print(arrowFn).code;
         
         const edit = {
             start: arrowFn.start,

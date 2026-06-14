@@ -1,10 +1,9 @@
 import * as t from '@babel/types';
-import generatorModule from '@babel/generator';
+import * as recast from 'recast';
 import chalk from 'chalk';
 import { generateKey } from './hashKey.js';
 import { injectHook } from './injectTranslation.js';
 
-const generate = generatorModule.default?.generate || generatorModule.generate;
 
 export const NEVER_WRAP_PROPS = [
     'className', 'key', 'id', 'href', 'src', 'onClick', 'style',
@@ -29,7 +28,7 @@ const isCallExpressionLike = (node) =>
     t.isCallExpression(node) || t.isOptionalCallExpression(node);
 
 const generateCode = (node) => {
-    const result = generate(node);
+    const result = recast.print(node);
     return result.code;
 };
 
@@ -40,6 +39,10 @@ const addTranslationEdit = (path, ctx, expr) => {
     if (!injectHook(path, ctx)) return false;
 
     const newExpr = t.callExpression(t.identifier('t'), [expr]);
+    // The AST we're splicing against was parsed from a \r\n normalized string.
+    // However, expr.start and expr.end inside extractJSX rely on parseCode which gets called elsewhere.
+    // Actually, extractJSX itself is passed `source` but the AST is passed to it?
+    // Wait, extractJSX doesn't parse! It is just a visitor!
     ctx.edits.push({
         start: expr.start,
         end: expr.end,
