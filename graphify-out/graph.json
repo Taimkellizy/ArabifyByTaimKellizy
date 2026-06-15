@@ -4506,8 +4506,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L162",
       "weight": 1.0,
-      "_src": "sync_runner_extractdynamickeysfromdata",
-      "_tgt": "scandatafiles_scandatafiles",
+      "_src": "scandatafiles_scandatafiles",
+      "_tgt": "sync_runner_extractdynamickeysfromdata",
       "source": "scandatafiles_scandatafiles",
       "target": "sync_runner_extractdynamickeysfromdata"
     },
