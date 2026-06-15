@@ -53,6 +53,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **Auto-Translation Engine**: Deep integration with Google Translate, DeepL, and LibreTranslate APIs. Adds new languages on the fly via CLI and dynamically scales UI components.
 - **Intelligent Component Injection**: Target specific DOM elements by HTML tag (`nav`, `header`, `custom`) or HTML ID (`#main-nav`), with granular append/prepend controls.
 - **Multi-Language Switcher**: Generated language controls cycle through all configured languages, not only a two-language pair.
+- **Continuous Integration (CI/CD)**: Run `meridian sync --ci` in your GitHub Actions via the automatically generated `i18n-check.yml` workflow to block PRs with orphaned strings or missing translations.
 - **Prevention via Linters (Coming Soon)**: Custom ESLint and Stylelint plugins to prevent future localization bugs will be available post-release.
 
 ## Tech Stack
@@ -250,6 +251,8 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 | `npm run dev --workspace apps/web`  | Starts the Vite documentation/landing app locally                                  |
 | `meridian init`                     | Runs the full interactive automation flow                                          |
 | `meridian sync [languages...]`      | Syncs newly discovered strings and optionally translates requested languages        |
+| `meridian sync --check`             | Runs a read-only reconciliation check to report orphaned keys and translation gaps  |
+| `meridian sync --ci`                | Same as `--check`, but exits with code 1 if coverage is below the target threshold  |
 | `meridian translate [languages...]` | Translates strings, updates `i18n` config, and regenerates language controls        |
 | `meridian add-button`               | Re-runs language switcher injection using the saved `.meridianrc.json` config       |
 | `meridian doctor`                   | Scans the project for hardcoded language arrays to ensure the single source of truth is maintained |

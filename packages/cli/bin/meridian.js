@@ -91,7 +91,8 @@ program
         targetId: qsAnswers.targetId,
         wantsCustomClass: false,
         installTailwindLogical: tailwindDetection.hasTailwind,
-        installLinters: false
+        installLinters: false,
+        setupCI: qsAnswers.setupCI
       };
 
       const summaryLines = [
@@ -110,7 +111,8 @@ program
         ...(qsAnswers.targetId ? [`Target ID: ${qsAnswers.targetId}`] : []),
         `Custom Class: false`,
         ...(tailwindDetection.hasTailwind ? ['Tailwind logical utilities: enabled'] : []),
-        `Install Linters: false`
+        `Install Linters: false`,
+        `Setup GitHub CI: ${qsAnswers.setupCI ? 'true' : 'false'}`
       ];
 
       /**
@@ -239,6 +241,38 @@ program
       keySavedMsg = chalk.green('\n   ✓ API key safely stored in .env and ignored in Git.');
     }
 
+    if (answers.setupCI) {
+      const workflowsDir = path.join(process.cwd(), '.github', 'workflows');
+      if (!fs.existsSync(workflowsDir)) {
+        fs.mkdirSync(workflowsDir, { recursive: true });
+      }
+      const ciPath = path.join(workflowsDir, 'i18n-check.yml');
+      if (!fs.existsSync(ciPath)) {
+        const ciContent = `name: i18n Check
+
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  check-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Meridian Sync Check
+        run: npx meridian sync --check --ci
+`;
+        fs.writeFileSync(ciPath, ciContent, 'utf8');
+        keySavedMsg += chalk.green('\n   ✓ Created GitHub Action workflow at .github/workflows/i18n-check.yml');
+      }
+    }
+
     spinner.success({ text: 'Initialization complete!' });
     if (keySavedMsg) console.log(keySavedMsg);
     
@@ -250,6 +284,9 @@ program
   .command('sync [languages...]')
   .description('Sync newly added or changed strings from data files to the translation pipeline')
   .option('-f, --force', 'Force writing changes even if array reordering warning is triggered')
+  .option('--check', 'Run reconciliation check')
+  .option('--ci', 'Exit with code 1 if check fails')
+  .option('--prune', 'Remove orphaned keys during sync')
   .action(async (cliLanguages, options) => {
     const configPath = path.join(process.cwd(), '.meridianrc.json');
     if (!fs.existsSync(configPath)) {
@@ -260,7 +297,7 @@ program
     try {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       const spinner = createSpinner('Syncing data files...').start();
-      await runSync(process.cwd(), config, spinner, cliLanguages, options.force);
+      await runSync(process.cwd(), config, spinner, cliLanguages, options);
     } catch (err) {
       console.log(chalk.red(`\n❌ Error running sync: ${err.message}`));
     }
@@ -313,13 +350,17 @@ program
               
               if (updateToggle) {
                   let foundPath = null;
-                  const searchPaths = [
-                      'src/components/LanguageToggle.jsx', 
-                      'app/components/LanguageToggle.jsx', 
-                      'components/LanguageToggle.jsx',
-                      'src/LanguageToggle.jsx'
+                  const compPaths = [
+                    'src/components/LanguageToggle.tsx',
+                    'src/components/LanguageToggle.jsx', 
+                    'app/components/LanguageToggle.tsx',
+                    'app/components/LanguageToggle.jsx', 
+                    'components/LanguageToggle.tsx',
+                    'components/LanguageToggle.jsx',
+                    'src/LanguageToggle.tsx',
+                    'src/LanguageToggle.jsx'
                   ];
-                  for (const sp of searchPaths) {
+                  for (const sp of compPaths) {
                       const full = path.join(process.cwd(), sp);
                       if (fs.existsSync(full)) {
                           foundPath = full;
@@ -328,7 +369,8 @@ program
                   }
                   
                   if (foundPath) {
-                      fs.writeFileSync(foundPath, getToggleTemplate(config.languages), 'utf8');
+                      const isTs = foundPath.endsWith('.tsx');
+                      fs.writeFileSync(foundPath, getToggleTemplate(config.languages, config.isNextJs || false, isTs), 'utf8');
                       console.log(chalk.green(`✓ Regenerated Language Toggle at ${path.relative(process.cwd(), foundPath)}`));
                   } else {
                       console.log(chalk.yellow(`⚠️ LanguageToggle.jsx not found in standard paths. You may need to update the options list manually.`));

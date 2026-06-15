@@ -1,14 +1,17 @@
-export const getContextTemplate = (languages, defaultLang = 'en', isNextJs = false) => {
+export const getContextTemplate = (languages, defaultLang = 'en', isNextJs = false, isTs = false) => {
   const useClient = isNextJs ? '"use client";\n\n' : '';
+  const tsInterface = isTs ? `\nexport interface LanguageContextType {\n  lang: string;\n  text?: any;\n  toggleLanguage: () => void;\n  changeLanguage: (lang: string) => void;\n}\n` : '';
+  const tsType = isTs ? '<LanguageContextType | null>' : '';
+
   return `${useClient}import React, { createContext, useState, useEffect } from 'react';
 import { content } from '../utils/content';
 import { locales, defaultLocale } from '../i18n/locales';
+${tsInterface}
+export const LanguageContext = createContext${tsType}(null);
 
-export const LanguageContext = createContext();
-
-export const LanguageProvider = ({ children }) => {
+export const LanguageProvider = ({ children }${isTs ? ': { children: React.ReactNode }' : ''}) => {
   // 1. Initialize logic
-  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || defaultLocale);
+  const [lang, setLang] = useState${isTs ? '<string>' : ''}(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || defaultLocale);
   const [text, setText] = useState(content[lang]);
   
   // 2. Control Logic
@@ -19,7 +22,7 @@ export const LanguageProvider = ({ children }) => {
     setLang(_languages[nextIdx]);
   };
 
-  const changeLanguage = (newLang) => {
+  const changeLanguage = (newLang${isTs ? ': string' : ''}) => {
     setLang(newLang);
   };
 
@@ -41,17 +44,20 @@ export const LanguageProvider = ({ children }) => {
 `;
 };
 
-export const getI18nContextTemplate = (languages, defaultLang = 'en', isNextJs = false) => {
+export const getI18nContextTemplate = (languages, defaultLang = 'en', isNextJs = false, isTs = false) => {
   const useClient = isNextJs ? '"use client";\n\n' : '';
+  const tsInterface = isTs ? `\nexport interface LanguageContextType {\n  lang: string;\n  toggleLanguage: () => void;\n  changeLanguage: (lang: string) => void;\n}\n` : '';
+  const tsType = isTs ? '<LanguageContextType | null>' : '';
+
   return `${useClient}import React, { createContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { locales, defaultLocale } from '../i18n/locales';
+${tsInterface}
+export const LanguageContext = createContext${tsType}(null);
 
-export const LanguageContext = createContext();
-
-export const LanguageProvider = ({ children }) => {
+export const LanguageProvider = ({ children }${isTs ? ': { children: React.ReactNode }' : ''}) => {
   const { i18n } = useTranslation();
-  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || i18n.language || defaultLocale);
+  const [lang, setLang] = useState${isTs ? '<string>' : ''}(() => (typeof window !== 'undefined' ? localStorage.getItem('appLang') : null) || i18n.language || defaultLocale);
   
   const _languages = locales.map(l => l.code);
   const toggleLanguage = () => {
@@ -62,7 +68,7 @@ export const LanguageProvider = ({ children }) => {
     i18n.changeLanguage(newLang);
   };
 
-  const changeLanguage = (newLang) => {
+  const changeLanguage = (newLang${isTs ? ': string' : ''}) => {
     setLang(newLang);
     i18n.changeLanguage(newLang);
   };
@@ -83,7 +89,7 @@ export const LanguageProvider = ({ children }) => {
 `;
 };
 
-export const getToggleTemplate = (languages, isNextJs = false) => {
+export const getToggleTemplate = (languages, isNextJs = false, isTs = false) => {
   const useClient = isNextJs ? '"use client";\n\n' : '';
   if (languages.length > 2) {
     return `${useClient}import React, { useContext } from 'react';
@@ -93,7 +99,7 @@ import { locales } from '../i18n/locales';
 const LanguageToggle = () => {
     const context = useContext(LanguageContext);
     const lang = context?.lang || locales[0].code;
-    const changeLanguage = context?.changeLanguage || (() => console.warn('LanguageContext missing'));
+    const changeLanguage = context?.changeLanguage || ((${isTs ? 'l: string' : 'l'}) => console.warn('LanguageContext missing'));
 
     return (
         <select value={lang} onChange={(e) => changeLanguage(e.target.value)}>

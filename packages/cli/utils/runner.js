@@ -693,11 +693,15 @@ function createSupportTemplates(cwd, config, targetFiles, isNextJs) {
       const contextDir = path.join(baseSrcDir, 'contexts');
       if (!fs.existsSync(contextDir)) fs.mkdirSync(contextDir, { recursive: true });
       
-      const contextPath = path.join(contextDir, 'LanguageContext.jsx');
+      const isTs = fs.existsSync(path.join(cwd, 'tsconfig.json'));
+      const ext = isTs ? '.tsx' : '.jsx';
+      const jsExt = isTs ? '.ts' : '.js';
+      
+      const contextPath = path.join(contextDir, `LanguageContext${ext}`);
       if (!fs.existsSync(contextPath)) {
         const templateToUse = config.i18next 
-          ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs) 
-          : getContextTemplate(config.languages, config.defaultLanguage, isNextJs);
+          ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs, isTs) 
+          : getContextTemplate(config.languages, config.defaultLanguage, isNextJs, isTs);
         fs.writeFileSync(contextPath, templateToUse, 'utf8');
         console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
       }
@@ -706,7 +710,7 @@ function createSupportTemplates(cwd, config, targetFiles, isNextJs) {
         const compDir = path.join(baseSrcDir, 'components');
         if (!fs.existsSync(compDir)) fs.mkdirSync(compDir, { recursive: true });
         
-        const togglePath = path.join(compDir, 'LanguageToggle.jsx');
+        const togglePath = path.join(compDir, `LanguageToggle${ext}`);
         if (!fs.existsSync(togglePath)) {
           const generatedToggleTemplate = getToggleTemplate(config.languages, isNextJs);
           fs.writeFileSync(togglePath, generatedToggleTemplate, 'utf8');
@@ -717,7 +721,7 @@ function createSupportTemplates(cwd, config, targetFiles, isNextJs) {
       if (!config.i18next) {
         const utilsDir = path.join(baseSrcDir, 'utils');
         if (!fs.existsSync(utilsDir)) fs.mkdirSync(utilsDir, { recursive: true });
-        const contentPath = path.join(utilsDir, 'content.js');
+        const contentPath = path.join(utilsDir, `content${jsExt}`);
         if (!fs.existsSync(contentPath)) {
           // Need a dummy dictionary so the app doesn't crash on boot before manual trans
           const dummyEntries = config.languages.map(lang => {
