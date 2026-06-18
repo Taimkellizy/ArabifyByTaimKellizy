@@ -1,12 +1,12 @@
-# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-18)
+# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-19)
 
 ## Corpus Check
-- 83 files · ~83,072 words
+- 85 files · ~85,005 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 329 nodes · 489 edges · 45 communities detected
-- Extraction: 80% EXTRACTED · 20% INFERRED · 0% AMBIGUOUS · INFERRED: 98 edges (avg confidence: 0.8)
+- 336 nodes · 506 edges · 45 communities detected
+- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 105 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -58,19 +58,19 @@
 
 ## God Nodes (most connected - your core abstractions)
 1. `runModifications()` - 29 edges
-2. `injectProvider()` - 14 edges
-3. `runSync()` - 11 edges
+2. `runSync()` - 16 edges
+3. `injectProvider()` - 14 edges
 4. `applyEdits()` - 11 edges
 5. `isMemberExpressionLike()` - 11 edges
 6. `handleTextRun()` - 11 edges
 7. `analyzeJSX()` - 10 edges
 8. `injectTailwindLogical()` - 10 edges
-9. `nextDocumentFixer()` - 9 edges
-10. `nextLayoutFixer()` - 9 edges
+9. `extractAndTransformJSX()` - 9 edges
+10. `nextDocumentFixer()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `processSourceFiles()` --calls--> `saveKeyMap()`  [INFERRED]
-  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\core\src\extractors\keyGenerator.js
+- `analyzeJSX()` --calls--> `detectRTLVisitor()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\core\src\analyzeJSX.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\core\src\analyzers\jsx\detectRTL.js
 - `runTests()` --calls--> `runSync()`  [INFERRED]
   C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\test\sync-reconciliation.test.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\sync-runner.js
 - `runModifications()` --calls--> `runSyncConfig()`  [INFERRED]
@@ -94,8 +94,8 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.06
-Nodes (33): analyzeCSS(), analyzeJSX(), injectI18nImport(), detectA11yVisitor(), detectRTLVisitor(), fixStylesVisitor(), atomicWriteFile(), findIndexHtml() (+25 more)
+Cohesion: 0.07
+Nodes (32): analyzeCSS(), analyzeJSX(), injectI18nImport(), detectA11yVisitor(), fixStylesVisitor(), atomicWriteFile(), findIndexHtml(), injectDirToHtml() (+24 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.14
@@ -106,24 +106,24 @@ Cohesion: 0.1
 Nodes (25): analyzeProviderScope(), analyzeAppRouterLayout(), analyzeExportDefault(), analyzeToggleTarget(), generateProviderWrapperEdit(), generateToggleInsertEdit(), injectToggleNode(), wrapExportWithProvider() (+17 more)
 
 ### Community 3 - "Community 3"
+Cohesion: 0.12
+Nodes (25): generateContextAwareKey(), getAstPathSignature(), getNamespace(), getRole(), getScope(), getSourceTextHash(), loadKeyMap(), resetKeyGeneratorStateForTesting() (+17 more)
+
+### Community 4 - "Community 4"
 Cohesion: 0.19
 Nodes (13): computeRelativeImport(), findDocumentNodes(), getHtmlAttributesEdits(), getImportsEdits(), getInitialPropsEdits(), nextDocumentFixer(), parseSource(), findLayoutNodes() (+5 more)
 
-### Community 4 - "Community 4"
+### Community 5 - "Community 5"
 Cohesion: 0.24
 Nodes (14): applyEdits(), atomicWriteFile(), ensureV2LogicalVariants(), findCssEntryPath(), findCssPluginInsertionPoint(), findObjectProperty(), findPluginsArray(), findRootConfigObject() (+6 more)
 
-### Community 5 - "Community 5"
-Cohesion: 0.14
-Nodes (6): analyzeHTML(), detectA11y(), detectMeta(), detectStructure(), parseHTML(), applyPenalty()
-
 ### Community 6 - "Community 6"
-Cohesion: 0.27
-Nodes (10): scanAndPromoteDataFiles(), classifyString(), collectValues(), findDataFiles(), getAllFiles(), parseJsFile(), parseJsonFile(), promoteDataFileKeys() (+2 more)
+Cohesion: 0.25
+Nodes (12): scanAndPromoteDataFiles(), classifyString(), collectValues(), extractDataPaths(), findDataFiles(), getAllFiles(), parseJsFile(), parseJsonFile() (+4 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.27
-Nodes (11): runTests(), computeSyncDeltas(), extractDynamicKeysFromData(), extractDynamicStringsFromJs(), extractFlatKeysFromSource(), loadExistingTranslations(), runReconciliationCheck(), runSync() (+3 more)
+Cohesion: 0.14
+Nodes (6): analyzeHTML(), detectA11y(), detectMeta(), detectStructure(), parseHTML(), applyPenalty()
 
 ### Community 8 - "Community 8"
 Cohesion: 0.17
@@ -134,44 +134,44 @@ Cohesion: 0.24
 Nodes (8): atomicWriteFile(), parseJsxSource(), rewriteClassNameValue(), rewriteClassToken(), rewriteStringLiteralNode(), rewriteTailwindClasses(), rewriteTemplateLiteralClassName(), splitSupportedVariants()
 
 ### Community 10 - "Community 10"
-Cohesion: 0.31
-Nodes (9): generateContextAwareKey(), getAstPathSignature(), getNamespace(), getRole(), getScope(), getSourceTextHash(), loadKeyMap(), saveKeyMap() (+1 more)
-
-### Community 11 - "Community 11"
 Cohesion: 0.27
 Nodes (7): buildExtractVisitor(), extractAndTransformJSX(), findHookInsertionPoint(), findLastImportEnd(), getReactComponentAncestor(), injectImportStatements(), isReactComponent()
 
-### Community 12 - "Community 12"
+### Community 11 - "Community 11"
 Cohesion: 0.44
 Nodes (7): findConfigExportNode(), findProperty(), injectDefaultLocale(), injectI18nProperty(), injectLocales(), nextConfigFixer(), parseNextConfig()
 
-### Community 13 - "Community 13"
+### Community 12 - "Community 12"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 14 - "Community 14"
+### Community 13 - "Community 13"
 Cohesion: 0.6
 Nodes (5): atomicWriteFile(), computeRelativeImport(), findLastImportEnd(), injectDirAttribute(), parseSource()
 
-### Community 15 - "Community 15"
+### Community 14 - "Community 14"
 Cohesion: 0.5
 Nodes (2): Hero(), useMousePosition()
 
-### Community 16 - "Community 16"
+### Community 15 - "Community 15"
 Cohesion: 0.5
 Nodes (1): MyDocument
 
-### Community 17 - "Community 17"
+### Community 16 - "Community 16"
 Cohesion: 0.83
 Nodes (3): getRegexForLanguages(), runDoctor(), scanDir()
 
-### Community 18 - "Community 18"
+### Community 17 - "Community 17"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 19 - "Community 19"
+### Community 18 - "Community 18"
 Cohesion: 0.5
 Nodes (2): detectRTLAndFix(), applyFixes()
+
+### Community 19 - "Community 19"
+Cohesion: 0.5
+Nodes (1): detectRTLVisitor()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.5
@@ -314,17 +314,17 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `runModifications()` connect `Community 0` to `Community 4`, `Community 6`, `Community 8`, `Community 9`, `Community 11`, `Community 14`?**
-  _High betweenness centrality (0.301) - this node is a cross-community bridge._
-- **Why does `extractAndTransformJSX()` connect `Community 11` to `Community 0`, `Community 4`?**
-  _High betweenness centrality (0.174) - this node is a cross-community bridge._
-- **Why does `applyEdits()` connect `Community 4` to `Community 2`, `Community 3`, `Community 9`, `Community 11`, `Community 14`?**
-  _High betweenness centrality (0.150) - this node is a cross-community bridge._
+- **Why does `runModifications()` connect `Community 0` to `Community 5`, `Community 6`, `Community 8`, `Community 9`, `Community 10`, `Community 13`?**
+  _High betweenness centrality (0.278) - this node is a cross-community bridge._
+- **Why does `extractAndTransformJSX()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`?**
+  _High betweenness centrality (0.182) - this node is a cross-community bridge._
+- **Why does `applyEdits()` connect `Community 5` to `Community 2`, `Community 4`, `Community 9`, `Community 10`, `Community 13`?**
+  _High betweenness centrality (0.151) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `runModifications()` (e.g. with `runSyncConfig()` and `runTranslations()`) actually correct?**
   _`runModifications()` has 17 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 7 inferred relationships involving `runSync()` (e.g. with `runTest()` and `runTest()`) actually correct?**
+  _`runSync()` has 7 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `injectProvider()` (e.g. with `handleInjections()` and `analyzeProviderScope()`) actually correct?**
   _`injectProvider()` has 11 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 4 inferred relationships involving `runSync()` (e.g. with `runTests()` and `detectFrameworks()`) actually correct?**
-  _`runSync()` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 10 inferred relationships involving `applyEdits()` (e.g. with `injectDirAttribute()` and `extractAndTransformJSX()`) actually correct?**
   _`applyEdits()` has 10 INFERRED edges - model-reasoned connections that need verification._
