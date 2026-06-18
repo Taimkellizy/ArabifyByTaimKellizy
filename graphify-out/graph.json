@@ -4830,8 +4830,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L497",
       "weight": 1.0,
-      "_src": "sync_runner_runsync",
-      "_tgt": "scandatafiles_extractdatapaths",
+      "_src": "scandatafiles_extractdatapaths",
+      "_tgt": "sync_runner_runsync",
       "source": "scandatafiles_extractdatapaths",
       "target": "sync_runner_runsync"
     },
