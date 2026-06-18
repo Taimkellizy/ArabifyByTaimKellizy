@@ -46,7 +46,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **Tailwind CSS Support**: Fully integrated with Tailwind CSS. meridian automatically scans, rewrites, and modernizes Tailwind utility classes, injecting dynamic RTL logical utilities.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`). Generates project-aware logical mappings for both Tailwind v2 and v3/v4.
 - **RTL Layout Symmetry**: Intelligently identifies layout-critical `translate-x` transformations and applies surgical `.meridian-rtl-mirror` and `.meridian-rtl-translate-reverse` CSS utilities to preserve exact spatial positioning and SVG mirroring in RTL mode without breaking original LTR layouts.
-- **Semantic String Extraction**: Uses `recast` and Babel to scan JSX/TSX and automatically wrap hardcoded text, JSX attributes, dynamic config values, and mapped data arrays with `t()`, fully preserving your original source code formatting and line endings.
+- **Semantic String Extraction**: Uses `recast` and Babel to scan JSX/TSX and automatically wrap hardcoded text, JSX attributes, dynamic config values, and mapped data arrays with `t()`, fully preserving your original source code formatting and line endings. Automatically generates scalable **Context-Aware Keys** (e.g., `hero.title`) preventing key collisions across languages and namespaces.
 - **Intelligent Pre-flight Checking**: Automatically detects legacy environments (React < 16.8, TypeScript < 5.0) and intelligently installs compatibility-friendly i18n packages to prevent build errors.
 - **Data File Promotion**: Scans common project data locations such as `src/config`, `src/data`, `src/content`, `src/constants`, and configured custom files, then promotes display strings into locale files.
 - **Next.js Support**: Detects both App Router and Pages Router projects, including `src/pages/_app.tsx`, and generates SSR-safe i18next configuration.
@@ -186,6 +186,15 @@ meridian-suite/
 - Handles mapped arrays without translating the array object itself. For example, `plan.features.map((feature) => <li>{feature}</li>)` becomes `plan.features.map((feature) => <li>{t(feature)}</li>)`.
 - Promotes JSON array items such as pricing features into locale files so runtime `t(feature)` calls have matching keys.
 - Uses flat runtime keys for promoted data values, where the English source string is both the key and the default value. This matches dynamic calls like `t(plan.name)` and `t(feature)`.
+
+**Context-Aware Translation Keys**
+
+- Meridian intelligently infers contextual translation keys using a `<namespace>.<scope>.<role>` format:
+  - **Namespace**: Derived from the file path and stem (e.g., `src/components/Hero.jsx` -> `hero`).
+  - **Scope**: Identified by traversing the AST up to the enclosing component or function.
+  - **Role**: Discovered dynamically via explicit developer comments (`{/* i18n: headline */}`), JSX attributes (`alt`, `title`), HTML tags, or sluggified strings.
+- Keys are collision-safe, auto-incrementing safely within a namespace (e.g., `hero.body`, `hero.body2`).
+- Generated keys are stored with deterministic AST traversal signatures in `.meridian/key-map.json`, guaranteeing perfectly idempotent generations on successive extractions without overwriting manual developer overrides.
 
 ## Environment Variables
 

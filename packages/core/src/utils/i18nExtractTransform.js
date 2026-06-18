@@ -85,6 +85,7 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
 
     const extractedStrings = new Map();
     const ctx = {
+        fileName: options.fileName,
         needsImport: false,
         needsHook: false,
         injectedNodeSet: new Set(),

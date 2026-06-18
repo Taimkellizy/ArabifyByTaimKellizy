@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, extractAndTransformJSX, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, saveKeyMap, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
@@ -531,51 +531,55 @@ async function processSourceFiles(targetFiles, cwd, config, allExtractedStrings,
   let fixedJsxCount = 0;
   let wasSwitcherInjected = false;
 
-  for (const fullPath of targetFiles) {
-    const content = fs.readFileSync(fullPath, 'utf8');
-    const ext = path.extname(fullPath);
-    const relativePath = path.relative(cwd, fullPath);
+  try {
+    for (const fullPath of targetFiles) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      const ext = path.extname(fullPath);
+      const relativePath = path.relative(cwd, fullPath);
 
-    try {
-      if (ext === '.css') {
-        const result = await analyzeCSS(content, {}, { isMainFile: true });
-        if (result.fixedCSS && result.fixedCSS !== content) {
-          fs.writeFileSync(fullPath, result.fixedCSS, 'utf8');
-          fixedCssCount++;
-          console.log(chalk.green(`  Fixed CSS: ${relativePath}`));
+      try {
+        if (ext === '.css') {
+          const result = await analyzeCSS(content, {}, { isMainFile: true });
+          if (result.fixedCSS && result.fixedCSS !== content) {
+            fs.writeFileSync(fullPath, result.fixedCSS, 'utf8');
+            fixedCssCount++;
+            console.log(chalk.green(`  Fixed CSS: ${relativePath}`));
+          }
+        } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
+           
+           const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', '_app.ts', '_app.tsx', 'main.tsx', 'main.jsx', 'main.ts', 'index.js', 'index.jsx', 'index.tsx'].some(name => relativePath.endsWith(name));
+           
+           const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath, dataRegistry });
+           if (result.injected) wasSwitcherInjected = true;
+           
+           let finalCode = result.fixedCode || content;
+           let isModified = finalCode !== content;
+
+           if (config.i18next || config.translation) {
+               const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath, registry: dataRegistry });
+               if (extraction.modifiedCode !== finalCode) {
+                   finalCode = extraction.modifiedCode;
+                   isModified = true;
+               }
+               if (extraction.extractedStrings && extraction.extractedStrings.size > 0) {
+                   extraction.extractedStrings.forEach((val, key) => {
+                       allExtractedStrings[key] = val;
+                   });
+               }
+           }
+           
+           if (isModified) {
+              fs.writeFileSync(fullPath, finalCode, 'utf8');
+              fixedJsxCount++;
+              console.log(chalk.green(`  Fixed JSX: ${relativePath}`));
+           }
         }
-      } else if (['.js', '.jsx', '.ts', '.tsx'].includes(ext)) {
-         
-         const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', '_app.ts', '_app.tsx', 'main.tsx', 'main.jsx', 'main.ts', 'index.js', 'index.jsx', 'index.tsx'].some(name => relativePath.endsWith(name));
-         
-         const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath, dataRegistry });
-         if (result.injected) wasSwitcherInjected = true;
-         
-         let finalCode = result.fixedCode || content;
-         let isModified = finalCode !== content;
-
-         if (config.i18next || config.translation) {
-             const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath, registry: dataRegistry });
-             if (extraction.modifiedCode !== finalCode) {
-                 finalCode = extraction.modifiedCode;
-                 isModified = true;
-             }
-             if (extraction.extractedStrings && extraction.extractedStrings.size > 0) {
-                 extraction.extractedStrings.forEach((val, key) => {
-                     allExtractedStrings[key] = val;
-                 });
-             }
-         }
-         
-         if (isModified) {
-            fs.writeFileSync(fullPath, finalCode, 'utf8');
-            fixedJsxCount++;
-            console.log(chalk.green(`  Fixed JSX: ${relativePath}`));
-         }
+      } catch (err) {
+        // suppress parse errors during scanning
       }
-    } catch (err) {
-      // suppress parse errors during scanning
     }
+  } finally {
+    saveKeyMap();
   }
 
   return { fixedCssCount, fixedJsxCount, wasSwitcherInjected };

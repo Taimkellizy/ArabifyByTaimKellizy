@@ -1,7 +1,20 @@
 import * as t from '@babel/types';
 import * as recast from 'recast';
 import chalk from 'chalk';
-import { generateKey } from './hashKey.js';
+import { generateContextAwareKey } from '../../extractors/keyGenerator.js';
+
+const assertNotDataPromoted = (ctx) => {
+    if (!ctx || !ctx.fileName) return;
+    const normalized = ctx.fileName.replace(/\\/g, '/');
+    if (
+        normalized.includes('src/config') ||
+        normalized.includes('src/data') ||
+        normalized.includes('src/content') ||
+        normalized.includes('src/constants')
+    ) {
+        throw new Error('Data-promoted keys must never be passed to generateContextAwareKey. Path: ' + ctx.fileName);
+    }
+};
 import { injectHook } from './injectTranslation.js';
 
 
@@ -372,7 +385,8 @@ const handleAttributeStrings = (path, extractedMap, ctx) => {
         if (!injectHook(path, ctx)) return;
 
         const strValue = attr.value.value;
-        const key = generateKey(strValue);
+        assertNotDataPromoted(ctx);
+        const key = generateContextAwareKey(path, ctx, strValue);
         extractedMap.set(key, strValue);
 
         const newValue = t.jsxExpressionContainer(
@@ -422,7 +436,8 @@ const handleTextRun = (path, extractedMap, ctx, startIndex, childEditRanges) => 
             return endIndex;
         }
 
-        const key = generateKey(normalizedText);
+        assertNotDataPromoted(ctx);
+        const key = generateContextAwareKey(path, ctx, normalizedText);
         extractedMap.set(key, normalizedText);
         childEditRanges.push({
             start: children[startIndex].start,
