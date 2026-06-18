@@ -5643,8 +5643,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
       "source_location": "L440",
       "weight": 1.0,
-      "_src": "extractjsx_handletextrun",
-      "_tgt": "keygenerator_generatecontextawarekey",
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "extractjsx_handletextrun",
       "source": "keygenerator_generatecontextawarekey",
       "target": "extractjsx_handletextrun"
     },

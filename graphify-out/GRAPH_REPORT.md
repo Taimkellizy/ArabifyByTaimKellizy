@@ -1,7 +1,7 @@
 # Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-18)
 
 ## Corpus Check
-- 83 files · ~82,154 words
+- 83 files · ~83,072 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
