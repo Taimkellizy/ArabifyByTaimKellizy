@@ -436,3 +436,44 @@ function collectValues(node, translatableKeys, out, isParentTranslatable = false
     }
   }
 }
+
+/**
+ * Extracts a map of { file: { dotPath: stringValue } } for all data files.
+ * @param {string} projectRoot - Absolute path to project root.
+ * @param {Object} dataRegistry - Registry produced by scanDataFiles.
+ * @returns {Promise<Object>} The dot-path map.
+ */
+export async function extractDataPaths(projectRoot, dataRegistry) {
+  const result = {};
+  
+  for (const [relPath, fileRegistry] of Object.entries(dataRegistry)) {
+    const translatableKeys = fileRegistry.translatable || [];
+    if (translatableKeys.length === 0) continue;
+
+    const absoluteFilePath = path.join(projectRoot, relPath);
+    const fileResult = {};
+    
+    if (absoluteFilePath.endsWith('.json')) {
+      try {
+        const raw = await fs.readFile(absoluteFilePath, 'utf8');
+        const data = JSON.parse(raw);
+        walkValueTree(data, [], translatableKeys, fileResult);
+      } catch (err) {}
+    } else if (absoluteFilePath.endsWith('.js')) {
+      // For JS data files we dynamically import to get the value tree
+      // Using a timestamp to bypass module cache
+      try {
+        const fileUrl = `file://${absoluteFilePath.replace(/\\/g, '/')}`;
+        const mod = await import(`${fileUrl}?t=${Date.now()}`);
+        const exportsObj = { ...mod };
+        walkValueTree(exportsObj, [], translatableKeys, fileResult);
+      } catch (err) {}
+    }
+    
+    if (Object.keys(fileResult).length > 0) {
+      result[relPath] = fileResult;
+    }
+  }
+  
+  return result;
+}

@@ -56,6 +56,20 @@ Meridian is a comprehensive internationalization automation tool that transforms
 - **Continuous Integration (CI/CD)**: Run `meridian sync --ci` in your GitHub Actions via the automatically generated `i18n-check.yml` workflow to block PRs with orphaned strings or missing translations.
 - **Prevention via Linters (Coming Soon)**: Custom ESLint and Stylelint plugins to prevent future localization bugs will be available post-release.
 
+## Day-to-Day Editing Workflow
+
+| I want to… | What I do |
+| --- | --- |
+| Change display text that comes from a data file (`index.json`, etc.) | Edit the value in the source data file, then run `meridian sync` |
+| Change display text that was hardcoded in JSX | Edit the value in `public/locales/en/translation.json` for that key, then run `meridian sync` |
+| Add a new entry with text to a data file | Edit the data file normally, then run `meridian sync` |
+| Add a new hardcoded string to a JSX component | Write it as plain text, then run `meridian sync` — it will wrap and register it automatically |
+| Fix a wrong translation in a specific locale | Edit that locale's `translation.json` directly — no sync needed |
+| Translate newly added strings | Run `meridian sync <locale> [locale...]` (e.g. `meridian sync ar es`) |
+| Remove a string that's no longer used | Remove it from source, run `meridian sync --check` to confirm it's orphaned, then `meridian sync --prune` |
+| Rename a translation key | Do not do this manually — keys are managed by Meridian. Change the value, not the key |
+
+> **Never rename \`t()\` keys manually in JSX.** Keys are owned by Meridian and tracked in \`.meridian/key-map.json\`. Manually renaming a key in a component will cause that string to fall back to displaying the raw key name at runtime. If a key name is wrong, file an issue or run \`meridian sync\` — it will regenerate keys for strings that have been significantly changed.
 ## Tech Stack
 
 - **Language**: JavaScript / Node.js
@@ -266,6 +280,33 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 | `meridian add-button`               | Re-runs language switcher injection using the saved `.meridianrc.json` config       |
 | `meridian doctor`                   | Scans the project for hardcoded language arrays to ensure the single source of truth is maintained |
 | `meridian sync-config`              | Generates or updates `src/i18n/locales.ts` as the single source of truth for supported languages |
+
+### `meridian add-button`
+
+If your UI changes and the language switcher is lost, or if you skipped injecting it during initialization, use this command to manually inject the structural language toggle into your React components.
+
+**Options:**
+- `-p, --position <position>`: Where to inject (e.g., `nav`, `header`, `floating`, `custom`)
+- `--tag <tag>`: Custom HTML tag if position is `custom`
+- `--id <id>`: Target element HTML ID
+- `--file <file>`: Target file path relative to project root
+- `--mode <mode>`: Insert mode: `append` or `prepend` (default: `append`)
+- `--class <className>`: Custom CSS class for the toggle component
+
+**Examples:**
+```bash
+# Inject into a specific file
+meridian add-button --file src/components/Header.tsx --mode append
+
+# Inject into the first <nav> tag found
+meridian add-button --position nav --mode prepend
+
+# Inject into a custom HTML ID
+meridian add-button --position custom --id my-navbar-container
+
+# Inject as a floating widget
+meridian add-button --position floating
+```
 
 ## Knowledge Graph
 

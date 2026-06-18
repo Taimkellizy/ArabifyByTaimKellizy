@@ -45,11 +45,13 @@ export const handleInjections = (codeString, foundTags, options) => {
         }
     }
 
+    let switcherInjected = false;
     if (shouldInject) {
         const toggleResult = injectToggle(modifiedCode, targetConfig, options.fileName);
         modifiedCode = toggleResult.code;
-        injected = toggleResult.injected;
+        switcherInjected = toggleResult.injected;
+        injected = injected || switcherInjected;
     }
 
-    return { modifiedCode, injected };
+    return { modifiedCode, injected, switcherInjected };
 };

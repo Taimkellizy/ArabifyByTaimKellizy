@@ -92,7 +92,7 @@ const analyzeJSX = (rawCodeString, text, options = { mode: 'scan', isAppFile: fa
         fixedCode = injectionResult.modifiedCode;
     }
 
-    return { score, warnings, foundTags, fixedCode, injected: injectionResult.injected };
+    return { score, warnings, foundTags, fixedCode, injected: injectionResult.injected, switcherInjected: injectionResult.switcherInjected };
 };
 
 export default analyzeJSX;

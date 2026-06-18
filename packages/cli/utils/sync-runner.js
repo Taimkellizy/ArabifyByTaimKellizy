@@ -4,9 +4,105 @@ import path from 'path';
 import babel from '@babel/core';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { scanDataFiles } from './scanDataFiles.js';
+import { scanDataFiles, extractDataPaths } from './scanDataFiles.js';
 import { runTranslations } from './translator-runner.js';
 import { detectFrameworks } from './runner.js';
+import { extractAndTransformJSX, saveKeyMap } from '@meridian/core';
+
+function atomicWriteFileSync(filePath, content) {
+  const dir = path.dirname(filePath);
+  if (!fsSync.existsSync(dir)) fsSync.mkdirSync(dir, { recursive: true });
+  const tmpPath = `${filePath}.meridian-tmp`;
+  try {
+    fsSync.writeFileSync(tmpPath, content, 'utf8');
+    fsSync.renameSync(tmpPath, filePath);
+  } catch (err) {
+    if (fsSync.existsSync(tmpPath)) fsSync.unlinkSync(tmpPath);
+    throw err;
+  }
+}
+
+async function runIncrementalExtraction(projectRoot, config, options) {
+  if (options.noExtract || options.check || options.ci) return;
+  console.log(chalk.blue('\n🔍 Running Incremental Extraction...'));
+  
+  const lastSyncPath = path.join(projectRoot, '.meridian', 'last-sync');
+  let lastSyncMs = 0;
+  if (fsSync.existsSync(lastSyncPath)) {
+    try {
+      lastSyncMs = Number(fsSync.readFileSync(lastSyncPath, 'utf8').trim());
+    } catch (e) {}
+  }
+  
+  const dirsToScan = ['src', 'app', 'pages', 'components'];
+  const targetFiles = [];
+  for (const dir of dirsToScan) {
+    const absolutePath = path.join(projectRoot, dir);
+    if (fsSync.existsSync(absolutePath)) {
+      await walkSourceFiles(absolutePath, targetFiles);
+    }
+  }
+  
+  let modifiedFilesCount = 0;
+  let newStringsCount = 0;
+  const defaultLang = config.defaultLanguage || 'en';
+  const localesDir = path.join(projectRoot, 'public', 'locales');
+  
+  for (const file of targetFiles) {
+    const stat = await fs.stat(file);
+    if (stat.mtimeMs > lastSyncMs) {
+      const code = await fs.readFile(file, 'utf8');
+      const relativePath = path.relative(projectRoot, file);
+      const extraction = extractAndTransformJSX(code, { fileName: relativePath });
+      
+      if (extraction.modifiedCode !== code) {
+        atomicWriteFileSync(file, extraction.modifiedCode);
+        modifiedFilesCount++;
+        
+        if (extraction.extractedStrings && extraction.extractedStrings.size > 0) {
+          for (const [key, val] of extraction.extractedStrings.entries()) {
+            newStringsCount++;
+            
+            const defaultNsPath = path.join(localesDir, defaultLang, 'translation.json');
+            let defaultData = {};
+            if (fsSync.existsSync(defaultNsPath)) {
+              defaultData = JSON.parse(await fs.readFile(defaultNsPath, 'utf8'));
+            } else {
+               fsSync.mkdirSync(path.dirname(defaultNsPath), { recursive: true });
+            }
+            if (defaultData[key] === undefined) {
+               defaultData[key] = val;
+               atomicWriteFileSync(defaultNsPath, JSON.stringify(defaultData, null, 2));
+            }
+            
+            if (fsSync.existsSync(localesDir)) {
+              const availableLocales = fsSync.readdirSync(localesDir).filter(dir => fsSync.statSync(path.join(localesDir, dir)).isDirectory());
+              for (const loc of availableLocales) {
+                if (loc === defaultLang) continue;
+                const locNsPath = path.join(localesDir, loc, 'translation.json');
+                let locData = {};
+                if (fsSync.existsSync(locNsPath)) {
+                   locData = JSON.parse(await fs.readFile(locNsPath, 'utf8'));
+                } else {
+                   fsSync.mkdirSync(path.dirname(locNsPath), { recursive: true });
+                }
+                if (locData[key] === undefined) {
+                   locData[key] = "";
+                   atomicWriteFileSync(locNsPath, JSON.stringify(locData, null, 2));
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  if (modifiedFilesCount > 0) {
+    saveKeyMap();
+    console.log(chalk.green(`  ✓ Found ${newStringsCount} new string(s) in ${modifiedFilesCount} file(s) — wrapped and added to locale files. Run 'meridian sync <locales>' to translate.`));
+  }
+}
 
 /**
  * Recursively walks a JSON tree to extract values whose object keys
@@ -181,7 +277,7 @@ async function extractDynamicKeysFromData(projectRoot) {
     }
   }
   
-  return activeDataFlatKeys;
+  return { activeDataFlatKeys, registry };
 }
 
 /**
@@ -383,6 +479,8 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
 export async function runSync(projectRoot, config, spinner, cliLanguages, options = {}) {
   detectFrameworks(projectRoot, config);
 
+  await runIncrementalExtraction(projectRoot, config, options);
+
   const defaultLang = config.defaultLanguage || 'en';
   const translationPath = path.join(projectRoot, 'public', 'locales', defaultLang, 'translation.json');
 
@@ -393,8 +491,84 @@ export async function runSync(projectRoot, config, spinner, cliLanguages, option
   }
 
   const activeFlatKeys = await extractFlatKeysFromSource(projectRoot);
-  const activeDataFlatKeys = await extractDynamicKeysFromData(projectRoot);
+  const { activeDataFlatKeys, registry: dataRegistry } = await extractDynamicKeysFromData(projectRoot);
   const validKeys = new Set([...activeFlatKeys, ...activeDataFlatKeys]);
+
+  const currentDataScan = await extractDataPaths(projectRoot, dataRegistry);
+  const lastDataScanPath = path.join(projectRoot, '.meridian', 'last-data-scan.json');
+  let previousDataScan = {};
+  if (fsSync.existsSync(lastDataScanPath)) {
+    try {
+      previousDataScan = JSON.parse(fsSync.readFileSync(lastDataScanPath, 'utf8'));
+    } catch (e) {}
+  }
+
+  const allCurrentKeys = new Set(
+    Object.values(currentDataScan).flatMap(paths => Object.values(paths))
+  );
+  const allPreviousKeys = new Set(
+    Object.values(previousDataScan).flatMap(paths => Object.values(paths))
+  );
+
+  const valueEdits = [];
+  for (const [file, currentPaths] of Object.entries(currentDataScan)) {
+    const prevPaths = previousDataScan[file] || {};
+    for (const [dotPath, newKey] of Object.entries(currentPaths)) {
+      const oldKey = prevPaths[dotPath];
+      if (
+        oldKey && 
+        oldKey !== newKey && 
+        !allCurrentKeys.has(oldKey) && 
+        !allPreviousKeys.has(newKey)
+      ) {
+        valueEdits.push({ file, dotPath, oldKey, newKey });
+      }
+    }
+  }
+
+  if (valueEdits.length > 0) {
+    if (!options.migrateValue) {
+      spinner.stop();
+      for (const edit of valueEdits) {
+        console.log(chalk.yellow(`⚠ Detected a likely value edit: '${edit.oldKey}' → '${edit.newKey}' in ${edit.file}. Existing translations will be carried forward. Run with --migrate-value to apply, or --prune to discard them.`));
+      }
+      spinner.start('Syncing data files...');
+    } else {
+      spinner.stop();
+      console.log(chalk.blue('\n🔄 Migrating value edits across locales...'));
+      const localesDir = path.join(projectRoot, 'public', 'locales');
+      const availableLocales = fsSync.existsSync(localesDir) ? fsSync.readdirSync(localesDir).filter(dir => fsSync.statSync(path.join(localesDir, dir)).isDirectory()) : [];
+      
+      for (const edit of valueEdits) {
+        validKeys.add(edit.newKey);
+
+        for (const loc of availableLocales) {
+          const locNsPath = path.join(localesDir, loc, 'translation.json');
+          if (fsSync.existsSync(locNsPath)) {
+            const locData = JSON.parse(fsSync.readFileSync(locNsPath, 'utf8'));
+            if (locData[edit.oldKey] !== undefined) {
+              if (loc === defaultLang) {
+                locData[edit.newKey] = edit.newKey;
+              } else {
+                locData[edit.newKey] = locData[edit.oldKey];
+              }
+              delete locData[edit.oldKey];
+              atomicWriteFileSync(locNsPath, JSON.stringify(locData, null, 2));
+            }
+          }
+        }
+        
+        if (existingTranslations[edit.oldKey] !== undefined) {
+           existingTranslations[edit.newKey] = existingTranslations[edit.oldKey];
+           delete existingTranslations[edit.oldKey];
+        } else {
+           existingTranslations[edit.newKey] = edit.newKey;
+        }
+      }
+      console.log(chalk.green(`  ✓ Migrated ${valueEdits.length} string value(s).`));
+      spinner.start('Syncing data files...');
+    }
+  }
 
   const deltas = computeSyncDeltas(validKeys, existingTranslations);
   const isReadOnly = options.check || options.ci;
@@ -430,4 +604,9 @@ export async function runSync(projectRoot, config, spinner, cliLanguages, option
   if (options.prune) {
     await runReconciliationCheck(projectRoot, defaultLang, validKeys, options, config);
   }
+
+  // Write state files only on full successful completion
+  atomicWriteFileSync(lastDataScanPath, JSON.stringify(currentDataScan, null, 2));
+  const lastSyncPath = path.join(projectRoot, '.meridian', 'last-sync');
+  atomicWriteFileSync(lastSyncPath, Date.now().toString());
 }

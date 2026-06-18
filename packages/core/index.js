@@ -10,7 +10,7 @@ import { injectDirToHtml } from './src/utils/htmlInjector.js';
 import { nextDocumentFixer } from './src/utils/nextDocumentFixer.js';
 import { nextLayoutFixer } from './src/utils/nextLayoutFixer.js';
 import { nextConfigFixer } from './src/utils/nextConfigFixer.js';
-import { saveKeyMap } from './src/extractors/keyGenerator.js';
+import { saveKeyMap, resetKeyGeneratorStateForTesting } from './src/extractors/keyGenerator.js';
 
 import { TranslatorService } from './src/translator/index.js';
 import GoogleProvider from './src/translator/providers/GoogleProvider.js';
@@ -24,6 +24,7 @@ export {
     analyzeHTML, 
     extractAndTransformJSX, 
     saveKeyMap,
+    resetKeyGeneratorStateForTesting,
     getContextTemplate, 
     getI18nContextTemplate, 
     getToggleTemplate,

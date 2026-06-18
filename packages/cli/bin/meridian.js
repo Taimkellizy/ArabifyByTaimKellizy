@@ -233,9 +233,19 @@ program
       
       const gitignorePath = path.join(process.cwd(), '.gitignore');
       if (fs.existsSync(gitignorePath)) {
-        const gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+        let gitignoreContent = fs.readFileSync(gitignorePath, 'utf8');
+        let toAppend = '';
         if (!gitignoreContent.includes('.env')) {
-          fs.appendFileSync(gitignorePath, '\n.env\n');
+          toAppend += '\n.env\n';
+        }
+        if (!gitignoreContent.includes('.meridian/last-sync')) {
+          toAppend += '\n.meridian/last-sync\n';
+        }
+        if (!gitignoreContent.includes('.meridian/last-data-scan.json')) {
+          toAppend += '\n.meridian/last-data-scan.json\n';
+        }
+        if (toAppend) {
+          fs.appendFileSync(gitignorePath, toAppend);
         }
       }
       keySavedMsg = chalk.green('\n   ✓ API key safely stored in .env and ignored in Git.');
@@ -287,6 +297,8 @@ program
   .option('--check', 'Run reconciliation check')
   .option('--ci', 'Exit with code 1 if check fails')
   .option('--prune', 'Remove orphaned keys during sync')
+  .option('--migrate-value', 'Migrate translation values when data file keys are renamed')
+  .option('--no-extract', 'Skip incremental extraction of new strings from JSX')
   .action(async (cliLanguages, options) => {
     const configPath = path.join(process.cwd(), '.meridianrc.json');
     if (!fs.existsSync(configPath)) {

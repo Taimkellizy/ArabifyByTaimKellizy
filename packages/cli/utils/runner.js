@@ -550,7 +550,7 @@ async function processSourceFiles(targetFiles, cwd, config, allExtractedStrings,
            const isAppFile = ['App.js', 'App.jsx', 'App.ts', 'App.tsx', '_app.js', '_app.jsx', '_app.ts', '_app.tsx', 'main.tsx', 'main.jsx', 'main.ts', 'index.js', 'index.jsx', 'index.tsx'].some(name => relativePath.endsWith(name));
            
            const result = await analyzeJSX(content, {}, { isMainFile: true, isReact: true, mode: 'fix-all', isAppFile, config, fileName: relativePath, dataRegistry });
-           if (result.injected) wasSwitcherInjected = true;
+           if (result.switcherInjected) wasSwitcherInjected = true;
            
            let finalCode = result.fixedCode || content;
            let isModified = finalCode !== content;
