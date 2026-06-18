@@ -135,7 +135,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\eslint.config.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_eslint_config_js",
-      "community": 34,
+      "community": 35,
       "norm_label": "eslint.config.js"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\vite.config.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_vite_config_js",
-      "community": 35,
+      "community": 36,
       "norm_label": "vite.config.js"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\App.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_app_jsx",
-      "community": 26,
+      "community": 27,
       "norm_label": "app.jsx"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\App.jsx",
       "source_location": "L10",
       "id": "app_app",
-      "community": 26,
+      "community": 27,
       "norm_label": "app()"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\main.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_main_jsx",
-      "community": 36,
+      "community": 37,
       "norm_label": "main.jsx"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\CodeExample.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_codeexample_jsx",
-      "community": 27,
+      "community": 28,
       "norm_label": "codeexample.jsx"
     },
     {
@@ -189,7 +189,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\CodeExample.jsx",
       "source_location": "L8",
       "id": "codeexample_codeexample",
-      "community": 27,
+      "community": 28,
       "norm_label": "codeexample()"
     },
     {
@@ -198,7 +198,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Comparison.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_comparison_jsx",
-      "community": 28,
+      "community": 29,
       "norm_label": "comparison.jsx"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Comparison.jsx",
       "source_location": "L7",
       "id": "comparison_comparison",
-      "community": 28,
+      "community": 29,
       "norm_label": "comparison()"
     },
     {
@@ -216,7 +216,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\CtaSection.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_ctasection_jsx",
-      "community": 29,
+      "community": 30,
       "norm_label": "ctasection.jsx"
     },
     {
@@ -225,7 +225,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\CtaSection.jsx",
       "source_location": "L7",
       "id": "ctasection_ctasection",
-      "community": 29,
+      "community": 30,
       "norm_label": "ctasection()"
     },
     {
@@ -234,7 +234,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Hero.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_hero_jsx",
-      "community": 14,
+      "community": 15,
       "norm_label": "hero.jsx"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Hero.jsx",
       "source_location": "L5",
       "id": "hero_hero",
-      "community": 14,
+      "community": 15,
       "norm_label": "hero()"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_masonrygallery_jsx",
-      "community": 12,
+      "community": 13,
       "norm_label": "masonrygallery.jsx"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L9",
       "id": "masonrygallery_logicalblueprint",
-      "community": 12,
+      "community": 13,
       "norm_label": "logicalblueprint()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L31",
       "id": "masonrygallery_languagematrix",
-      "community": 12,
+      "community": 13,
       "norm_label": "languagematrix()"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L48",
       "id": "masonrygallery_astextraction",
-      "community": 12,
+      "community": 13,
       "norm_label": "astextraction()"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L81",
       "id": "masonrygallery_rtlmirror",
-      "community": 12,
+      "community": 13,
       "norm_label": "rtlmirror()"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L113",
       "id": "masonrygallery_lintershield",
-      "community": 12,
+      "community": 13,
       "norm_label": "lintershield()"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L133",
       "id": "masonrygallery_performancechip",
-      "community": 12,
+      "community": 13,
       "norm_label": "performancechip()"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\MasonryGallery.jsx",
       "source_location": "L187",
       "id": "masonrygallery_masonrygallery",
-      "community": 12,
+      "community": 13,
       "norm_label": "masonrygallery()"
     },
     {
@@ -324,7 +324,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Solution.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_solution_jsx",
-      "community": 30,
+      "community": 31,
       "norm_label": "solution.jsx"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\Solution.jsx",
       "source_location": "L7",
       "id": "solution_solution",
-      "community": 30,
+      "community": 31,
       "norm_label": "solution()"
     },
     {
@@ -342,7 +342,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\TerminalDemo.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_terminaldemo_jsx",
-      "community": 31,
+      "community": 32,
       "norm_label": "terminaldemo.jsx"
     },
     {
@@ -351,7 +351,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\TerminalDemo.jsx",
       "source_location": "L7",
       "id": "terminaldemo_terminaldemo",
-      "community": 31,
+      "community": 32,
       "norm_label": "terminaldemo()"
     },
     {
@@ -360,7 +360,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\TopNav.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_topnav_jsx",
-      "community": 32,
+      "community": 33,
       "norm_label": "topnav.jsx"
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\TopNav.jsx",
       "source_location": "L3",
       "id": "topnav_topnav",
-      "community": 32,
+      "community": 33,
       "norm_label": "topnav()"
     },
     {
@@ -378,7 +378,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\WorkflowFilmstrip.jsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_components_workflowfilmstrip_jsx",
-      "community": 33,
+      "community": 34,
       "norm_label": "workflowfilmstrip.jsx"
     },
     {
@@ -387,7 +387,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\components\\WorkflowFilmstrip.jsx",
       "source_location": "L7",
       "id": "workflowfilmstrip_workflowfilmstrip",
-      "community": 33,
+      "community": 34,
       "norm_label": "workflowfilmstrip()"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\hooks\\useMousePosition.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_apps_web_src_hooks_usemouseposition_js",
-      "community": 14,
+      "community": 15,
       "norm_label": "usemouseposition.js"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\apps\\web\\src\\hooks\\useMousePosition.js",
       "source_location": "L3",
       "id": "usemouseposition_usemouseposition",
-      "community": 14,
+      "community": 15,
       "norm_label": "usemouseposition()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\bin\\meridian.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_bin_meridian_js",
-      "community": 22,
+      "community": 23,
       "norm_label": "meridian.js"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\bin\\meridian.js",
       "source_location": "L122",
       "id": "meridian_printsummarybox",
-      "community": 22,
+      "community": 23,
       "norm_label": "printsummarybox()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\bin\\meridian.js",
       "source_location": "L180",
       "id": "meridian_resolvetargeting",
-      "community": 22,
+      "community": 23,
       "norm_label": "resolvetargeting()"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\templates\\nextjs\\_document.tsx",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_templates_nextjs_document_tsx",
-      "community": 15,
+      "community": 16,
       "norm_label": "_document.tsx"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\templates\\nextjs\\_document.tsx",
       "source_location": "L4",
       "id": "document_mydocument",
-      "community": 15,
+      "community": 16,
       "norm_label": "mydocument"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\templates\\nextjs\\_document.tsx",
       "source_location": "L5",
       "id": "document_mydocument_getinitialprops",
-      "community": 15,
+      "community": 16,
       "norm_label": ".getinitialprops()"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\templates\\nextjs\\_document.tsx",
       "source_location": "L10",
       "id": "document_mydocument_render",
-      "community": 15,
+      "community": 16,
       "norm_label": ".render()"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\test\\sync-reconciliation.test.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_test_sync_reconciliation_test_js",
-      "community": 6,
+      "community": 7,
       "norm_label": "sync-reconciliation.test.js"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\test\\sync-reconciliation.test.js",
       "source_location": "L10",
       "id": "sync_reconciliation_test_runtests",
-      "community": 6,
+      "community": 7,
       "norm_label": "runtests()"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\config.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_config_js",
-      "community": 23,
+      "community": 24,
       "norm_label": "config.js"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\config.js",
       "source_location": "L7",
       "id": "config_saveconfig",
-      "community": 23,
+      "community": 24,
       "norm_label": "saveconfig()"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\config.js",
       "source_location": "L17",
       "id": "config_loadconfig",
-      "community": 23,
+      "community": 24,
       "norm_label": "loadconfig()"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\doctor.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_doctor_js",
-      "community": 16,
+      "community": 17,
       "norm_label": "doctor.js"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\doctor.js",
       "source_location": "L5",
       "id": "doctor_getregexforlanguages",
-      "community": 16,
+      "community": 17,
       "norm_label": "getregexforlanguages()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\doctor.js",
       "source_location": "L12",
       "id": "doctor_scandir",
-      "community": 16,
+      "community": 17,
       "norm_label": "scandir()"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\doctor.js",
       "source_location": "L28",
       "id": "doctor_rundoctor",
-      "community": 16,
+      "community": 17,
       "norm_label": "rundoctor()"
     },
     {
@@ -594,7 +594,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\envChecker.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_envchecker_js",
-      "community": 24,
+      "community": 25,
       "norm_label": "envchecker.js"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\envChecker.js",
       "source_location": "L9",
       "id": "envchecker_getmajorversion",
-      "community": 24,
+      "community": 25,
       "norm_label": "getmajorversion()"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\envChecker.js",
       "source_location": "L22",
       "id": "envchecker_checkenvironment",
-      "community": 24,
+      "community": 25,
       "norm_label": "checkenvironment()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\prompts.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_prompts_js",
-      "community": 17,
+      "community": 18,
       "norm_label": "prompts.js"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\prompts.js",
       "source_location": "L9",
       "id": "prompts_getmodequestion",
-      "community": 17,
+      "community": 18,
       "norm_label": "getmodequestion()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\prompts.js",
       "source_location": "L34",
       "id": "prompts_getquickstartquestions",
-      "community": 17,
+      "community": 18,
       "norm_label": "getquickstartquestions()"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\prompts.js",
       "source_location": "L162",
       "id": "prompts_getadvancedquestions",
-      "community": 17,
+      "community": 18,
       "norm_label": "getadvancedquestions()"
     },
     {
@@ -774,7 +774,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
       "source_location": "L476",
       "id": "runner_scanandpromotedatafiles",
-      "community": 7,
+      "community": 6,
       "norm_label": "scanandpromotedatafiles()"
     },
     {
@@ -790,16 +790,16 @@
       "label": "applyTailwindLogicalSupport()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L591",
+      "source_location": "L595",
       "id": "runner_applytailwindlogicalsupport",
-      "community": 8,
+      "community": 0,
       "norm_label": "applytailwindlogicalsupport()"
     },
     {
       "label": "writeTranslationJson()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L652",
+      "source_location": "L656",
       "id": "runner_writetranslationjson",
       "community": 0,
       "norm_label": "writetranslationjson()"
@@ -808,7 +808,7 @@
       "label": "createSupportTemplates()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L681",
+      "source_location": "L685",
       "id": "runner_createsupporttemplates",
       "community": 0,
       "norm_label": "createsupporttemplates()"
@@ -817,7 +817,7 @@
       "label": "injectRtlDirAttribute()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L750",
+      "source_location": "L754",
       "id": "runner_injectrtldirattribute",
       "community": 0,
       "norm_label": "injectrtldirattribute()"
@@ -826,7 +826,7 @@
       "label": "printSuccessStatistics()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L785",
+      "source_location": "L789",
       "id": "runner_printsuccessstatistics",
       "community": 0,
       "norm_label": "printsuccessstatistics()"
@@ -837,7 +837,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_scandatafiles_js",
-      "community": 7,
+      "community": 6,
       "norm_label": "scandatafiles.js"
     },
     {
@@ -846,7 +846,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L12",
       "id": "scandatafiles_classifystring",
-      "community": 7,
+      "community": 6,
       "norm_label": "classifystring()"
     },
     {
@@ -855,7 +855,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L59",
       "id": "scandatafiles_getallfiles",
-      "community": 7,
+      "community": 6,
       "norm_label": "getallfiles()"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L83",
       "id": "scandatafiles_isdatafile",
-      "community": 7,
+      "community": 6,
       "norm_label": "isdatafile()"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L108",
       "id": "scandatafiles_finddatafiles",
-      "community": 7,
+      "community": 6,
       "norm_label": "finddatafiles()"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L148",
       "id": "scandatafiles_walktree",
-      "community": 7,
+      "community": 6,
       "norm_label": "walktree()"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L168",
       "id": "scandatafiles_parsejsonfile",
-      "community": 7,
+      "community": 6,
       "norm_label": "parsejsonfile()"
     },
     {
@@ -900,7 +900,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L194",
       "id": "scandatafiles_parsejsfile",
-      "community": 7,
+      "community": 6,
       "norm_label": "parsejsfile()"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L260",
       "id": "scandatafiles_scandatafiles",
-      "community": 7,
+      "community": 6,
       "norm_label": "scandatafiles()"
     },
     {
@@ -918,7 +918,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L291",
       "id": "scandatafiles_walkvaluetree",
-      "community": 7,
+      "community": 6,
       "norm_label": "walkvaluetree()"
     },
     {
@@ -927,7 +927,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L334",
       "id": "scandatafiles_promotedatafilekeys",
-      "community": 7,
+      "community": 6,
       "norm_label": "promotedatafilekeys()"
     },
     {
@@ -936,7 +936,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\scanDataFiles.js",
       "source_location": "L418",
       "id": "scandatafiles_collectvalues",
-      "community": 7,
+      "community": 6,
       "norm_label": "collectvalues()"
     },
     {
@@ -972,7 +972,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_sync_runner_js",
-      "community": 6,
+      "community": 7,
       "norm_label": "sync-runner.js"
     },
     {
@@ -981,7 +981,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L20",
       "id": "sync_runner_walkjson",
-      "community": 6,
+      "community": 7,
       "norm_label": "walkjson()"
     },
     {
@@ -990,7 +990,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L40",
       "id": "sync_runner_extractdynamicstringsfromjs",
-      "community": 6,
+      "community": 7,
       "norm_label": "extractdynamicstringsfromjs()"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L86",
       "id": "sync_runner_walksourcefiles",
-      "community": 6,
+      "community": 7,
       "norm_label": "walksourcefiles()"
     },
     {
@@ -1008,7 +1008,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L109",
       "id": "sync_runner_extractflatkeysfromsource",
-      "community": 6,
+      "community": 7,
       "norm_label": "extractflatkeysfromsource()"
     },
     {
@@ -1017,7 +1017,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L160",
       "id": "sync_runner_extractdynamickeysfromdata",
-      "community": 6,
+      "community": 7,
       "norm_label": "extractdynamickeysfromdata()"
     },
     {
@@ -1026,7 +1026,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L194",
       "id": "sync_runner_computesyncdeltas",
-      "community": 6,
+      "community": 7,
       "norm_label": "computesyncdeltas()"
     },
     {
@@ -1035,7 +1035,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L227",
       "id": "sync_runner_writetranslations",
-      "community": 6,
+      "community": 7,
       "norm_label": "writetranslations()"
     },
     {
@@ -1044,7 +1044,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L255",
       "id": "sync_runner_loadexistingtranslations",
-      "community": 6,
+      "community": 7,
       "norm_label": "loadexistingtranslations()"
     },
     {
@@ -1053,7 +1053,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L274",
       "id": "sync_runner_runreconciliationcheck",
-      "community": 6,
+      "community": 7,
       "norm_label": "runreconciliationcheck()"
     },
     {
@@ -1062,7 +1062,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L383",
       "id": "sync_runner_runsync",
-      "community": 6,
+      "community": 7,
       "norm_label": "runsync()"
     },
     {
@@ -1071,7 +1071,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\translator-runner.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_translator_runner_js",
-      "community": 9,
+      "community": 8,
       "norm_label": "translator-runner.js"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\translator-runner.js",
       "source_location": "L13",
       "id": "translator_runner_runtranslations",
-      "community": 9,
+      "community": 8,
       "norm_label": "runtranslations()"
     },
     {
@@ -1089,7 +1089,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\index.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_index_js",
-      "community": 37,
+      "community": 38,
       "norm_label": "index.js"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\scratch.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_scratch_js",
-      "community": 38,
+      "community": 39,
       "norm_label": "scratch.js"
     },
     {
@@ -1107,7 +1107,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\testTranslator.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_testtranslator_js",
-      "community": 9,
+      "community": 8,
       "norm_label": "testtranslator.js"
     },
     {
@@ -1116,7 +1116,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\testTranslator.js",
       "source_location": "L4",
       "id": "testtranslator_runtest",
-      "community": 9,
+      "community": 8,
       "norm_label": "runtest()"
     },
     {
@@ -1143,7 +1143,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzeHTML.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzehtml_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "analyzehtml.js"
     },
     {
@@ -1152,7 +1152,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzeHTML.js",
       "source_location": "L18",
       "id": "analyzehtml_analyzehtml",
-      "community": 3,
+      "community": 5,
       "norm_label": "analyzehtml()"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzeJSX.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzejsx_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "analyzejsx.js"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzeJSX.js",
       "source_location": "L23",
       "id": "analyzejsx_analyzejsx",
-      "community": 3,
+      "community": 0,
       "norm_label": "analyzejsx()"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\constants.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_constants_js",
-      "community": 39,
+      "community": 40,
       "norm_label": "constants.js"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\css\\detectRTL.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_css_detectrtl_js",
-      "community": 18,
+      "community": 19,
       "norm_label": "detectrtl.js"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\css\\detectRTL.js",
       "source_location": "L4",
       "id": "detectrtl_detectrtlandfix",
-      "community": 18,
+      "community": 19,
       "norm_label": "detectrtlandfix()"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\css\\fixStyles.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_css_fixstyles_js",
-      "community": 18,
+      "community": 19,
       "norm_label": "fixstyles.js"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\css\\fixStyles.js",
       "source_location": "L3",
       "id": "fixstyles_applyfixes",
-      "community": 18,
+      "community": 19,
       "norm_label": "applyfixes()"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\css\\scoring.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_css_scoring_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "scoring.js"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\scoring.js",
       "source_location": "L13",
       "id": "scoring_applypenalty",
-      "community": 3,
+      "community": 5,
       "norm_label": "applypenalty()"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectA11y.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_html_detecta11y_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "detecta11y.js"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectA11y.js",
       "source_location": "L1",
       "id": "detecta11y_detecta11y",
-      "community": 3,
+      "community": 5,
       "norm_label": "detecta11y()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectMeta.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_html_detectmeta_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "detectmeta.js"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectMeta.js",
       "source_location": "L1",
       "id": "detectmeta_detectmeta",
-      "community": 3,
+      "community": 5,
       "norm_label": "detectmeta()"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectStructure.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_html_detectstructure_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "detectstructure.js"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\detectStructure.js",
       "source_location": "L1",
       "id": "detectstructure_detectstructure",
-      "community": 3,
+      "community": 5,
       "norm_label": "detectstructure()"
     },
     {
@@ -1314,7 +1314,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\parse.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_html_parse_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "parse.js"
     },
     {
@@ -1323,7 +1323,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\parse.js",
       "source_location": "L3",
       "id": "parse_parsehtml",
-      "community": 3,
+      "community": 5,
       "norm_label": "parsehtml()"
     },
     {
@@ -1332,7 +1332,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\html\\scoring.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_html_scoring_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "scoring.js"
     },
     {
@@ -1341,7 +1341,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectA11y.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_detecta11y_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "detecta11y.js"
     },
     {
@@ -1350,7 +1350,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectA11y.js",
       "source_location": "L2",
       "id": "detecta11y_detecta11yvisitor",
-      "community": 3,
+      "community": 0,
       "norm_label": "detecta11yvisitor()"
     },
     {
@@ -1359,7 +1359,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectRTL.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_detectrtl_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "detectrtl.js"
     },
     {
@@ -1368,7 +1368,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectRTL.js",
       "source_location": "L8",
       "id": "detectrtl_getstylecontext",
-      "community": 3,
+      "community": 0,
       "norm_label": "getstylecontext()"
     },
     {
@@ -1377,7 +1377,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectRTL.js",
       "source_location": "L36",
       "id": "detectrtl_checkclassname",
-      "community": 3,
+      "community": 0,
       "norm_label": "checkclassname()"
     },
     {
@@ -1386,7 +1386,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\detectRTL.js",
       "source_location": "L52",
       "id": "detectrtl_detectrtlvisitor",
-      "community": 3,
+      "community": 0,
       "norm_label": "detectrtlvisitor()"
     },
     {
@@ -1395,7 +1395,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\fixStyles.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_fixstyles_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "fixstyles.js"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\fixStyles.js",
       "source_location": "L5",
       "id": "fixstyles_fixstylesvisitor",
-      "community": 3,
+      "community": 0,
       "norm_label": "fixstylesvisitor()"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\parse.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_parse_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "parse.js"
     },
     {
@@ -1431,7 +1431,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\parse.js",
       "source_location": "L4",
       "id": "parse_parsecode",
-      "community": 3,
+      "community": 0,
       "norm_label": "parsecode()"
     },
     {
@@ -1440,7 +1440,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\scoring.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_scoring_js",
-      "community": 3,
+      "community": 5,
       "norm_label": "scoring.js"
     },
     {
@@ -1449,7 +1449,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\traverse.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_analyzers_jsx_traverse_js",
-      "community": 3,
+      "community": 0,
       "norm_label": "traverse.js"
     },
     {
@@ -1458,8 +1458,116 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\analyzers\\jsx\\traverse.js",
       "source_location": "L3",
       "id": "traverse_traverseast",
-      "community": 3,
+      "community": 0,
       "norm_label": "traverseast()"
+    },
+    {
+      "label": "keyGenerator.js",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L1",
+      "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "community": 10,
+      "norm_label": "keygenerator.js"
+    },
+    {
+      "label": "resetKeyGeneratorStateForTesting()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L20",
+      "id": "keygenerator_resetkeygeneratorstatefortesting",
+      "community": 10,
+      "norm_label": "resetkeygeneratorstatefortesting()"
+    },
+    {
+      "label": "loadKeyMap()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L27",
+      "id": "keygenerator_loadkeymap",
+      "community": 10,
+      "norm_label": "loadkeymap()"
+    },
+    {
+      "label": "saveKeyMap()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L56",
+      "id": "keygenerator_savekeymap",
+      "community": 10,
+      "norm_label": "savekeymap()"
+    },
+    {
+      "label": "getSourceTextHash()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L68",
+      "id": "keygenerator_getsourcetexthash",
+      "community": 10,
+      "norm_label": "getsourcetexthash()"
+    },
+    {
+      "label": "getNamespace()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L72",
+      "id": "keygenerator_getnamespace",
+      "community": 10,
+      "norm_label": "getnamespace()"
+    },
+    {
+      "label": "getAstPathSignature()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L97",
+      "id": "keygenerator_getastpathsignature",
+      "community": 10,
+      "norm_label": "getastpathsignature()"
+    },
+    {
+      "label": "getScope()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L138",
+      "id": "keygenerator_getscope",
+      "community": 10,
+      "norm_label": "getscope()"
+    },
+    {
+      "label": "slugify()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L164",
+      "id": "keygenerator_slugify",
+      "community": 10,
+      "norm_label": "slugify()"
+    },
+    {
+      "label": "getRole()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L175",
+      "id": "keygenerator_getrole",
+      "community": 10,
+      "norm_label": "getrole()"
+    },
+    {
+      "label": "generateContextAwareKey()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L247",
+      "id": "keygenerator_generatecontextawarekey",
+      "community": 10,
+      "norm_label": "generatecontextawarekey()"
+    },
+    {
+      "label": "keyGenerator.test.js",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.test.js",
+      "source_location": "L1",
+      "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_test_js",
+      "community": 41,
+      "norm_label": "keygenerator.test.js"
     },
     {
       "label": "index.js",
@@ -1467,7 +1575,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\index.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_index_js",
-      "community": 9,
+      "community": 8,
       "norm_label": "index.js"
     },
     {
@@ -1476,7 +1584,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\index.js",
       "source_location": "L8",
       "id": "index_translatorservice",
-      "community": 9,
+      "community": 8,
       "norm_label": "translatorservice"
     },
     {
@@ -1485,7 +1593,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\index.js",
       "source_location": "L12",
       "id": "index_translatorservice_constructor",
-      "community": 9,
+      "community": 8,
       "norm_label": ".constructor()"
     },
     {
@@ -1494,7 +1602,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\index.js",
       "source_location": "L25",
       "id": "index_translatorservice_translateobject",
-      "community": 9,
+      "community": 8,
       "norm_label": ".translateobject()"
     },
     {
@@ -1503,7 +1611,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\DeepLProvider.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_providers_deeplprovider_js",
-      "community": 25,
+      "community": 26,
       "norm_label": "deeplprovider.js"
     },
     {
@@ -1512,7 +1620,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\DeepLProvider.js",
       "source_location": "L4",
       "id": "deeplprovider_deeplprovider",
-      "community": 25,
+      "community": 26,
       "norm_label": "deeplprovider"
     },
     {
@@ -1521,7 +1629,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\DeepLProvider.js",
       "source_location": "L11",
       "id": "deeplprovider_deeplprovider_translatebatch",
-      "community": 25,
+      "community": 26,
       "norm_label": ".translatebatch()"
     },
     {
@@ -1530,7 +1638,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\GoogleProvider.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_providers_googleprovider_js",
-      "community": 19,
+      "community": 20,
       "norm_label": "googleprovider.js"
     },
     {
@@ -1539,7 +1647,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\GoogleProvider.js",
       "source_location": "L4",
       "id": "googleprovider_googleprovider",
-      "community": 19,
+      "community": 20,
       "norm_label": "googleprovider"
     },
     {
@@ -1548,7 +1656,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\GoogleProvider.js",
       "source_location": "L8",
       "id": "googleprovider_googleprovider_translatebatch",
-      "community": 19,
+      "community": 20,
       "norm_label": ".translatebatch()"
     },
     {
@@ -1557,7 +1665,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\GoogleProvider.js",
       "source_location": "L62",
       "id": "googleprovider_googleprovider_unescapehtml",
-      "community": 19,
+      "community": 20,
       "norm_label": "._unescapehtml()"
     },
     {
@@ -1566,7 +1674,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\LibreProvider.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_providers_libreprovider_js",
-      "community": 20,
+      "community": 21,
       "norm_label": "libreprovider.js"
     },
     {
@@ -1575,7 +1683,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\LibreProvider.js",
       "source_location": "L6",
       "id": "libreprovider_libreprovider",
-      "community": 20,
+      "community": 21,
       "norm_label": "libreprovider"
     },
     {
@@ -1584,7 +1692,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\LibreProvider.js",
       "source_location": "L13",
       "id": "libreprovider_libreprovider_constructor",
-      "community": 20,
+      "community": 21,
       "norm_label": ".constructor()"
     },
     {
@@ -1593,7 +1701,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\LibreProvider.js",
       "source_location": "L26",
       "id": "libreprovider_libreprovider_translatebatch",
-      "community": 20,
+      "community": 21,
       "norm_label": ".translatebatch()"
     },
     {
@@ -1602,7 +1710,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\MockTranslationAdapter.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_providers_mocktranslationadapter_js",
-      "community": 21,
+      "community": 22,
       "norm_label": "mocktranslationadapter.js"
     },
     {
@@ -1611,7 +1719,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\MockTranslationAdapter.js",
       "source_location": "L8",
       "id": "mocktranslationadapter_mocktranslationadapter",
-      "community": 21,
+      "community": 22,
       "norm_label": "mocktranslationadapter"
     },
     {
@@ -1620,7 +1728,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\MockTranslationAdapter.js",
       "source_location": "L12",
       "id": "mocktranslationadapter_mocktranslationadapter_constructor",
-      "community": 21,
+      "community": 22,
       "norm_label": ".constructor()"
     },
     {
@@ -1629,7 +1737,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\MockTranslationAdapter.js",
       "source_location": "L24",
       "id": "mocktranslationadapter_mocktranslationadapter_translatebatch",
-      "community": 21,
+      "community": 22,
       "norm_label": ".translatebatch()"
     },
     {
@@ -1638,7 +1746,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\TranslationProvider.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_translator_providers_translationprovider_js",
-      "community": 9,
+      "community": 8,
       "norm_label": "translationprovider.js"
     },
     {
@@ -1647,7 +1755,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\TranslationProvider.js",
       "source_location": "L6",
       "id": "translationprovider_translationprovider",
-      "community": 9,
+      "community": 8,
       "norm_label": "translationprovider"
     },
     {
@@ -1656,7 +1764,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\TranslationProvider.js",
       "source_location": "L7",
       "id": "translationprovider_translationprovider_constructor",
-      "community": 9,
+      "community": 8,
       "norm_label": ".constructor()"
     },
     {
@@ -1665,7 +1773,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\providers\\TranslationProvider.js",
       "source_location": "L21",
       "id": "translationprovider_translationprovider_translatebatch",
-      "community": 9,
+      "community": 8,
       "norm_label": ".translatebatch()"
     },
     {
@@ -1674,7 +1782,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_dirinjector_js",
-      "community": 13,
+      "community": 14,
       "norm_label": "dirinjector.js"
     },
     {
@@ -1683,7 +1791,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L22",
       "id": "dirinjector_atomicwritefile",
-      "community": 13,
+      "community": 14,
       "norm_label": "atomicwritefile()"
     },
     {
@@ -1692,7 +1800,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L44",
       "id": "dirinjector_computerelativeimport",
-      "community": 13,
+      "community": 14,
       "norm_label": "computerelativeimport()"
     },
     {
@@ -1701,7 +1809,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L93",
       "id": "dirinjector_parsesource",
-      "community": 13,
+      "community": 14,
       "norm_label": "parsesource()"
     },
     {
@@ -1710,7 +1818,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L107",
       "id": "dirinjector_findlastimportend",
-      "community": 13,
+      "community": 14,
       "norm_label": "findlastimportend()"
     },
     {
@@ -1719,7 +1827,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\dirInjector.js",
       "source_location": "L134",
       "id": "dirinjector_injectdirattribute",
-      "community": 13,
+      "community": 14,
       "norm_label": "injectdirattribute()"
     },
     {
@@ -1728,7 +1836,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\fileUtils.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_fileutils_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "fileutils.js"
     },
     {
@@ -1737,7 +1845,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\fileUtils.js",
       "source_location": "L10",
       "id": "fileutils_atomicwritefile",
-      "community": 4,
+      "community": 3,
       "norm_label": "atomicwritefile()"
     },
     {
@@ -1746,7 +1854,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\fileUtils.js",
       "source_location": "L30",
       "id": "fileutils_computerelativeimport",
-      "community": 4,
+      "community": 3,
       "norm_label": "computerelativeimport()"
     },
     {
@@ -1791,7 +1899,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18nextracttransform_js",
-      "community": 10,
+      "community": 11,
       "norm_label": "i18nextracttransform.js"
     },
     {
@@ -1800,7 +1908,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
       "source_location": "L9",
       "id": "i18nextracttransform_findlastimportend",
-      "community": 10,
+      "community": 11,
       "norm_label": "findlastimportend()"
     },
     {
@@ -1809,7 +1917,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
       "source_location": "L19",
       "id": "i18nextracttransform_findhookinsertionpoint",
-      "community": 10,
+      "community": 11,
       "norm_label": "findhookinsertionpoint()"
     },
     {
@@ -1818,7 +1926,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
       "source_location": "L64",
       "id": "i18nextracttransform_extractandtransformjsx",
-      "community": 10,
+      "community": 11,
       "norm_label": "extractandtransformjsx()"
     },
     {
@@ -1827,7 +1935,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\injection.test.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_injection_test_js",
-      "community": 40,
+      "community": 42,
       "norm_label": "injection.test.js"
     },
     {
@@ -1836,7 +1944,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_nextconfigfixer_js",
-      "community": 11,
+      "community": 12,
       "norm_label": "nextconfigfixer.js"
     },
     {
@@ -1845,7 +1953,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L10",
       "id": "nextconfigfixer_parsenextconfig",
-      "community": 11,
+      "community": 12,
       "norm_label": "parsenextconfig()"
     },
     {
@@ -1854,7 +1962,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L26",
       "id": "nextconfigfixer_resolvevariabletoobject",
-      "community": 11,
+      "community": 12,
       "norm_label": "resolvevariabletoobject()"
     },
     {
@@ -1863,7 +1971,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L50",
       "id": "nextconfigfixer_findconfigexportnode",
-      "community": 11,
+      "community": 12,
       "norm_label": "findconfigexportnode()"
     },
     {
@@ -1872,7 +1980,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L100",
       "id": "nextconfigfixer_findproperty",
-      "community": 11,
+      "community": 12,
       "norm_label": "findproperty()"
     },
     {
@@ -1881,7 +1989,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L112",
       "id": "nextconfigfixer_injectlocales",
-      "community": 11,
+      "community": 12,
       "norm_label": "injectlocales()"
     },
     {
@@ -1890,7 +1998,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L143",
       "id": "nextconfigfixer_injectdefaultlocale",
-      "community": 11,
+      "community": 12,
       "norm_label": "injectdefaultlocale()"
     },
     {
@@ -1899,7 +2007,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L168",
       "id": "nextconfigfixer_injecti18nproperty",
-      "community": 11,
+      "community": 12,
       "norm_label": "injecti18nproperty()"
     },
     {
@@ -1908,7 +2016,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.js",
       "source_location": "L207",
       "id": "nextconfigfixer_nextconfigfixer",
-      "community": 11,
+      "community": 12,
       "norm_label": "nextconfigfixer()"
     },
     {
@@ -1917,7 +2025,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextConfigFixer.test.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_nextconfigfixer_test_js",
-      "community": 41,
+      "community": 43,
       "norm_label": "nextconfigfixer.test.js"
     },
     {
@@ -1926,7 +2034,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_nextdocumentfixer_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "nextdocumentfixer.js"
     },
     {
@@ -1935,7 +2043,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L9",
       "id": "nextdocumentfixer_parsesource",
-      "community": 4,
+      "community": 3,
       "norm_label": "parsesource()"
     },
     {
@@ -1944,7 +2052,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L14",
       "id": "nextdocumentfixer_finddocumentnodes",
-      "community": 4,
+      "community": 3,
       "norm_label": "finddocumentnodes()"
     },
     {
@@ -1953,7 +2061,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L41",
       "id": "nextdocumentfixer_getinitialpropsedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "getinitialpropsedits()"
     },
     {
@@ -1962,7 +2070,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L69",
       "id": "nextdocumentfixer_gethtmlattributesedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "gethtmlattributesedits()"
     },
     {
@@ -1971,7 +2079,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L85",
       "id": "nextdocumentfixer_getimportsedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "getimportsedits()"
     },
     {
@@ -1980,7 +2088,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextDocumentFixer.js",
       "source_location": "L116",
       "id": "nextdocumentfixer_nextdocumentfixer",
-      "community": 4,
+      "community": 3,
       "norm_label": "nextdocumentfixer()"
     },
     {
@@ -1989,7 +2097,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextFixer.test.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_nextfixer_test_js",
-      "community": 42,
+      "community": 44,
       "norm_label": "nextfixer.test.js"
     },
     {
@@ -1998,7 +2106,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_nextlayoutfixer_js",
-      "community": 4,
+      "community": 3,
       "norm_label": "nextlayoutfixer.js"
     },
     {
@@ -2007,7 +2115,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L9",
       "id": "nextlayoutfixer_parsesource",
-      "community": 4,
+      "community": 3,
       "norm_label": "parsesource()"
     },
     {
@@ -2016,7 +2124,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L14",
       "id": "nextlayoutfixer_findlayoutnodes",
-      "community": 4,
+      "community": 3,
       "norm_label": "findlayoutnodes()"
     },
     {
@@ -2025,7 +2133,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L38",
       "id": "nextlayoutfixer_getparamsinjectionedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "getparamsinjectionedits()"
     },
     {
@@ -2034,7 +2142,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L57",
       "id": "nextlayoutfixer_gethtmlattributesedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "gethtmlattributesedits()"
     },
     {
@@ -2043,7 +2151,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L73",
       "id": "nextlayoutfixer_getimportsedits",
-      "community": 4,
+      "community": 3,
       "norm_label": "getimportsedits()"
     },
     {
@@ -2052,7 +2160,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\nextLayoutFixer.js",
       "source_location": "L103",
       "id": "nextlayoutfixer_nextlayoutfixer",
-      "community": 4,
+      "community": 3,
       "norm_label": "nextlayoutfixer()"
     },
     {
@@ -2160,7 +2268,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_tailwindclassrewriter_js",
-      "community": 8,
+      "community": 9,
       "norm_label": "tailwindclassrewriter.js"
     },
     {
@@ -2169,7 +2277,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L66",
       "id": "tailwindclassrewriter_atomicwritefile",
-      "community": 8,
+      "community": 9,
       "norm_label": "atomicwritefile()"
     },
     {
@@ -2178,7 +2286,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L87",
       "id": "tailwindclassrewriter_collectjsxfiles",
-      "community": 8,
+      "community": 9,
       "norm_label": "collectjsxfiles()"
     },
     {
@@ -2187,7 +2295,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L116",
       "id": "tailwindclassrewriter_splitsupportedvariants",
-      "community": 8,
+      "community": 9,
       "norm_label": "splitsupportedvariants()"
     },
     {
@@ -2196,7 +2304,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L143",
       "id": "tailwindclassrewriter_rewriteclasstoken",
-      "community": 8,
+      "community": 9,
       "norm_label": "rewriteclasstoken()"
     },
     {
@@ -2205,7 +2313,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L177",
       "id": "tailwindclassrewriter_rewriteclassnamevalue",
-      "community": 8,
+      "community": 9,
       "norm_label": "rewriteclassnamevalue()"
     },
     {
@@ -2214,7 +2322,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L245",
       "id": "tailwindclassrewriter_issafetoautomirror",
-      "community": 8,
+      "community": 9,
       "norm_label": "issafetoautomirror()"
     },
     {
@@ -2223,7 +2331,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L295",
       "id": "tailwindclassrewriter_parsejsxsource",
-      "community": 8,
+      "community": 9,
       "norm_label": "parsejsxsource()"
     },
     {
@@ -2232,7 +2340,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L320",
       "id": "tailwindclassrewriter_isgenuinelydynamic",
-      "community": 8,
+      "community": 9,
       "norm_label": "isgenuinelydynamic()"
     },
     {
@@ -2241,7 +2349,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L343",
       "id": "tailwindclassrewriter_rewritetemplateliteralclassname",
-      "community": 8,
+      "community": 9,
       "norm_label": "rewritetemplateliteralclassname()"
     },
     {
@@ -2250,7 +2358,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L375",
       "id": "tailwindclassrewriter_rewritestringliteralnode",
-      "community": 8,
+      "community": 9,
       "norm_label": "rewritestringliteralnode()"
     },
     {
@@ -2259,7 +2367,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindClassRewriter.js",
       "source_location": "L415",
       "id": "tailwindclassrewriter_rewritetailwindclasses",
-      "community": 8,
+      "community": 9,
       "norm_label": "rewritetailwindclasses()"
     },
     {
@@ -2268,7 +2376,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_tailwindinjector_js",
-      "community": 5,
+      "community": 4,
       "norm_label": "tailwindinjector.js"
     },
     {
@@ -2277,7 +2385,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L29",
       "id": "tailwindinjector_gettailwindlogicalpackagespec",
-      "community": 5,
+      "community": 4,
       "norm_label": "gettailwindlogicalpackagespec()"
     },
     {
@@ -2286,7 +2394,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L49",
       "id": "tailwindinjector_atomicwritefile",
-      "community": 5,
+      "community": 4,
       "norm_label": "atomicwritefile()"
     },
     {
@@ -2295,7 +2403,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L69",
       "id": "tailwindinjector_findtailwindconfigpath",
-      "community": 5,
+      "community": 4,
       "norm_label": "findtailwindconfigpath()"
     },
     {
@@ -2304,7 +2412,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L88",
       "id": "tailwindinjector_findcssentrypath",
-      "community": 5,
+      "community": 4,
       "norm_label": "findcssentrypath()"
     },
     {
@@ -2313,7 +2421,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L110",
       "id": "tailwindinjector_findrootconfigobject",
-      "community": 5,
+      "community": 4,
       "norm_label": "findrootconfigobject()"
     },
     {
@@ -2322,7 +2430,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L142",
       "id": "tailwindinjector_findobjectproperty",
-      "community": 5,
+      "community": 4,
       "norm_label": "findobjectproperty()"
     },
     {
@@ -2331,7 +2439,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L160",
       "id": "tailwindinjector_istailwindlogicalpluginnode",
-      "community": 5,
+      "community": 4,
       "norm_label": "istailwindlogicalpluginnode()"
     },
     {
@@ -2340,7 +2448,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L171",
       "id": "tailwindinjector_findpluginsarray",
-      "community": 5,
+      "community": 4,
       "norm_label": "findpluginsarray()"
     },
     {
@@ -2349,7 +2457,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L210",
       "id": "tailwindinjector_injectv3config",
-      "community": 5,
+      "community": 4,
       "norm_label": "injectv3config()"
     },
     {
@@ -2358,7 +2466,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L251",
       "id": "tailwindinjector_ensurev2logicalvariants",
-      "community": 5,
+      "community": 4,
       "norm_label": "ensurev2logicalvariants()"
     },
     {
@@ -2367,7 +2475,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L312",
       "id": "tailwindinjector_findcssplugininsertionpoint",
-      "community": 5,
+      "community": 4,
       "norm_label": "findcssplugininsertionpoint()"
     },
     {
@@ -2376,7 +2484,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L330",
       "id": "tailwindinjector_injectv4css",
-      "community": 5,
+      "community": 4,
       "norm_label": "injectv4css()"
     },
     {
@@ -2385,7 +2493,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L355",
       "id": "tailwindinjector_injectrtlmirrorcss",
-      "community": 5,
+      "community": 4,
       "norm_label": "injectrtlmirrorcss()"
     },
     {
@@ -2394,7 +2502,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\tailwindInjector.js",
       "source_location": "L386",
       "id": "tailwindinjector_injecttailwindlogical",
-      "community": 5,
+      "community": 4,
       "norm_label": "injecttailwindlogical()"
     },
     {
@@ -2421,7 +2529,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\applyEdits.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_applyedits_js",
-      "community": 5,
+      "community": 4,
       "norm_label": "applyedits.js"
     },
     {
@@ -2430,7 +2538,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\applyEdits.js",
       "source_location": "L1",
       "id": "applyedits_applyedits",
-      "community": 5,
+      "community": 4,
       "norm_label": "applyedits()"
     },
     {
@@ -2443,10 +2551,19 @@
       "norm_label": "extractjsx.js"
     },
     {
+      "label": "assertNotDataPromoted()",
+      "file_type": "code",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
+      "source_location": "L6",
+      "id": "extractjsx_assertnotdatapromoted",
+      "community": 1,
+      "norm_label": "assertnotdatapromoted()"
+    },
+    {
       "label": "isMemberExpressionLike()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L24",
+      "source_location": "L37",
       "id": "extractjsx_ismemberexpressionlike",
       "community": 1,
       "norm_label": "ismemberexpressionlike()"
@@ -2455,7 +2572,7 @@
       "label": "isCallExpressionLike()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L27",
+      "source_location": "L40",
       "id": "extractjsx_iscallexpressionlike",
       "community": 1,
       "norm_label": "iscallexpressionlike()"
@@ -2464,7 +2581,7 @@
       "label": "generateCode()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L30",
+      "source_location": "L43",
       "id": "extractjsx_generatecode",
       "community": 1,
       "norm_label": "generatecode()"
@@ -2473,7 +2590,7 @@
       "label": "getJsxPropName()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L35",
+      "source_location": "L48",
       "id": "extractjsx_getjsxpropname",
       "community": 1,
       "norm_label": "getjsxpropname()"
@@ -2482,7 +2599,7 @@
       "label": "addTranslationEdit()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L38",
+      "source_location": "L51",
       "id": "extractjsx_addtranslationedit",
       "community": 1,
       "norm_label": "addtranslationedit()"
@@ -2491,7 +2608,7 @@
       "label": "addStringLiteralEdit()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L55",
+      "source_location": "L68",
       "id": "extractjsx_addstringliteraledit",
       "community": 1,
       "norm_label": "addstringliteraledit()"
@@ -2500,7 +2617,7 @@
       "label": "isTranslatableField()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L70",
+      "source_location": "L83",
       "id": "extractjsx_istranslatablefield",
       "community": 1,
       "norm_label": "istranslatablefield()"
@@ -2509,7 +2626,7 @@
       "label": "registryHasField()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L77",
+      "source_location": "L90",
       "id": "extractjsx_registryhasfield",
       "community": 1,
       "norm_label": "registryhasfield()"
@@ -2518,7 +2635,7 @@
       "label": "shouldWrapMemberExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L86",
+      "source_location": "L99",
       "id": "extractjsx_shouldwrapmemberexpression",
       "community": 1,
       "norm_label": "shouldwrapmemberexpression()"
@@ -2527,7 +2644,7 @@
       "label": "extractMemberInfo()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L102",
+      "source_location": "L115",
       "id": "extractjsx_extractmemberinfo",
       "community": 1,
       "norm_label": "extractmemberinfo()"
@@ -2536,7 +2653,7 @@
       "label": "findTranslatableFieldInExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L125",
+      "source_location": "L138",
       "id": "extractjsx_findtranslatablefieldinexpression",
       "community": 1,
       "norm_label": "findtranslatablefieldinexpression()"
@@ -2545,7 +2662,7 @@
       "label": "hasMethodCall()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L160",
+      "source_location": "L173",
       "id": "extractjsx_hasmethodcall",
       "community": 1,
       "norm_label": "hasmethodcall()"
@@ -2554,7 +2671,7 @@
       "label": "findNearestArrowFunction()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L177",
+      "source_location": "L190",
       "id": "extractjsx_findnearestarrowfunction",
       "community": 1,
       "norm_label": "findnearestarrowfunction()"
@@ -2563,7 +2680,7 @@
       "label": "getMapSourceExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L185",
+      "source_location": "L198",
       "id": "extractjsx_getmapsourceexpression",
       "community": 1,
       "norm_label": "getmapsourceexpression()"
@@ -2572,7 +2689,7 @@
       "label": "shouldTranslateMapIdentifier()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L208",
+      "source_location": "L221",
       "id": "extractjsx_shouldtranslatemapidentifier",
       "community": 1,
       "norm_label": "shouldtranslatemapidentifier()"
@@ -2581,7 +2698,7 @@
       "label": "findTranslatableMember()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L214",
+      "source_location": "L227",
       "id": "extractjsx_findtranslatablemember",
       "community": 1,
       "norm_label": "findtranslatablemember()"
@@ -2590,7 +2707,7 @@
       "label": "getMethodChainToMember()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L234",
+      "source_location": "L247",
       "id": "extractjsx_getmethodchaintomember",
       "community": 1,
       "norm_label": "getmethodchaintomember()"
@@ -2599,7 +2716,7 @@
       "label": "shouldTranslateMapCallbackOnly()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L255",
+      "source_location": "L268",
       "id": "extractjsx_shouldtranslatemapcallbackonly",
       "community": 1,
       "norm_label": "shouldtranslatemapcallbackonly()"
@@ -2608,7 +2725,7 @@
       "label": "isSimpleInterpolationExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L263",
+      "source_location": "L276",
       "id": "extractjsx_issimpleinterpolationexpression",
       "community": 1,
       "norm_label": "issimpleinterpolationexpression()"
@@ -2617,7 +2734,7 @@
       "label": "getInterpolationName()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L266",
+      "source_location": "L279",
       "id": "extractjsx_getinterpolationname",
       "community": 1,
       "norm_label": "getinterpolationname()"
@@ -2626,7 +2743,7 @@
       "label": "isTranslatableInterpolation()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L274",
+      "source_location": "L287",
       "id": "extractjsx_istranslatableinterpolation",
       "community": 1,
       "norm_label": "istranslatableinterpolation()"
@@ -2635,7 +2752,7 @@
       "label": "collectTextRun()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L280",
+      "source_location": "L293",
       "id": "extractjsx_collecttextrun",
       "community": 1,
       "norm_label": "collecttextrun()"
@@ -2644,7 +2761,7 @@
       "label": "getOnlyExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L320",
+      "source_location": "L333",
       "id": "extractjsx_getonlyexpression",
       "community": 1,
       "norm_label": "getonlyexpression()"
@@ -2653,7 +2770,7 @@
       "label": "shouldWrapBareExpression()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L327",
+      "source_location": "L340",
       "id": "extractjsx_shouldwrapbareexpression",
       "community": 1,
       "norm_label": "shouldwrapbareexpression()"
@@ -2662,7 +2779,7 @@
       "label": "pushRemovalPlaceholders()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L336",
+      "source_location": "L349",
       "id": "extractjsx_pushremovalplaceholders",
       "community": 1,
       "norm_label": "pushremovalplaceholders()"
@@ -2671,7 +2788,7 @@
       "label": "buildTextReplacement()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L346",
+      "source_location": "L359",
       "id": "extractjsx_buildtextreplacement",
       "community": 1,
       "norm_label": "buildtextreplacement()"
@@ -2680,7 +2797,7 @@
       "label": "handleAttributeStrings()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L367",
+      "source_location": "L380",
       "id": "extractjsx_handleattributestrings",
       "community": 1,
       "norm_label": "handleattributestrings()"
@@ -2689,7 +2806,7 @@
       "label": "hasMeridianIgnore()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L389",
+      "source_location": "L403",
       "id": "extractjsx_hasmeridianignore",
       "community": 1,
       "norm_label": "hasmeridianignore()"
@@ -2698,7 +2815,7 @@
       "label": "handleTextRun()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L394",
+      "source_location": "L408",
       "id": "extractjsx_handletextrun",
       "community": 1,
       "norm_label": "handletextrun()"
@@ -2707,9 +2824,9 @@
       "label": "buildExtractVisitor()",
       "file_type": "code",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L453",
+      "source_location": "L468",
       "id": "extractjsx_buildextractvisitor",
-      "community": 10,
+      "community": 11,
       "norm_label": "buildextractvisitor()"
     },
     {
@@ -2736,7 +2853,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\injectTranslation.js",
       "source_location": "L1",
       "id": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_injecttranslation_js",
-      "community": 10,
+      "community": 11,
       "norm_label": "injecttranslation.js"
     },
     {
@@ -2745,7 +2862,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\injectTranslation.js",
       "source_location": "L4",
       "id": "injecttranslation_isreactcomponent",
-      "community": 10,
+      "community": 11,
       "norm_label": "isreactcomponent()"
     },
     {
@@ -2754,7 +2871,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\injectTranslation.js",
       "source_location": "L17",
       "id": "injecttranslation_getreactcomponentancestor",
-      "community": 10,
+      "community": 11,
       "norm_label": "getreactcomponentancestor()"
     },
     {
@@ -2772,7 +2889,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\injectTranslation.js",
       "source_location": "L43",
       "id": "injecttranslation_injectimportstatements",
-      "community": 10,
+      "community": 11,
       "norm_label": "injectimportstatements()"
     },
     {
@@ -2781,7 +2898,7 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\injectTranslation.js",
       "source_location": "L72",
       "id": "injecttranslation_processhookedits",
-      "community": 10,
+      "community": 11,
       "norm_label": "processhookedits()"
     },
     {
@@ -3687,7 +3804,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L591",
+      "source_location": "L595",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_runner_js",
       "_tgt": "runner_applytailwindlogicalsupport",
@@ -3699,7 +3816,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L652",
+      "source_location": "L656",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_runner_js",
       "_tgt": "runner_writetranslationjson",
@@ -3711,7 +3828,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L681",
+      "source_location": "L685",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_runner_js",
       "_tgt": "runner_createsupporttemplates",
@@ -3723,7 +3840,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L750",
+      "source_location": "L754",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_runner_js",
       "_tgt": "runner_injectrtldirattribute",
@@ -3735,7 +3852,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
-      "source_location": "L785",
+      "source_location": "L789",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_cli_utils_runner_js",
       "_tgt": "runner_printsuccessstatistics",
@@ -4198,6 +4315,18 @@
       "_tgt": "i18nextracttransform_extractandtransformjsx",
       "source": "runner_processsourcefiles",
       "target": "i18nextracttransform_extractandtransformjsx"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
+      "source_location": "L582",
+      "weight": 1.0,
+      "_src": "runner_processsourcefiles",
+      "_tgt": "keygenerator_savekeymap",
+      "source": "runner_processsourcefiles",
+      "target": "keygenerator_savekeymap"
     },
     {
       "relation": "calls",
@@ -5306,6 +5435,222 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_resetkeygeneratorstatefortesting",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_resetkeygeneratorstatefortesting",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_loadkeymap",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_loadkeymap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_savekeymap",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_savekeymap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_getsourcetexthash",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_getsourcetexthash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_getnamespace",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_getnamespace",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_getastpathsignature",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_getastpathsignature",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L138",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_getscope",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_getscope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_slugify",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_slugify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L175",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_getrole",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_getrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L247",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "_tgt": "keygenerator_generatecontextawarekey",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_extractors_keygenerator_js",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L248",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_loadkeymap",
+      "source": "keygenerator_loadkeymap",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L251",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_getsourcetexthash",
+      "source": "keygenerator_getsourcetexthash",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L259",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_getnamespace",
+      "source": "keygenerator_getnamespace",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L252",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_getastpathsignature",
+      "source": "keygenerator_getastpathsignature",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L266",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_getscope",
+      "source": "keygenerator_getscope",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L243",
+      "weight": 1.0,
+      "_src": "keygenerator_getrole",
+      "_tgt": "keygenerator_slugify",
+      "source": "keygenerator_slugify",
+      "target": "keygenerator_getrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\extractors\\keyGenerator.js",
+      "source_location": "L267",
+      "weight": 1.0,
+      "_src": "keygenerator_generatecontextawarekey",
+      "_tgt": "keygenerator_getrole",
+      "source": "keygenerator_getrole",
+      "target": "keygenerator_generatecontextawarekey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
+      "source_location": "L440",
+      "weight": 1.0,
+      "_src": "extractjsx_handletextrun",
+      "_tgt": "keygenerator_generatecontextawarekey",
+      "source": "keygenerator_generatecontextawarekey",
+      "target": "extractjsx_handletextrun"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\translator\\index.js",
       "source_location": "L8",
       "weight": 1.0,
@@ -5787,7 +6132,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
-      "source_location": "L110",
+      "source_location": "L111",
       "weight": 1.0,
       "_src": "i18nextracttransform_extractandtransformjsx",
       "_tgt": "i18nextracttransform_findlastimportend",
@@ -5799,7 +6144,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18nExtractTransform.js",
-      "source_location": "L126",
+      "source_location": "L127",
       "weight": 1.0,
       "_src": "i18nextracttransform_extractandtransformjsx",
       "_tgt": "i18nextracttransform_findhookinsertionpoint",
@@ -7347,7 +7692,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L24",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
+      "_tgt": "extractjsx_assertnotdatapromoted",
+      "source": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
+      "target": "extractjsx_assertnotdatapromoted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
+      "source_location": "L37",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7359,7 +7716,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L27",
+      "source_location": "L40",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7371,7 +7728,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L30",
+      "source_location": "L43",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_generatecode",
@@ -7383,7 +7740,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L35",
+      "source_location": "L48",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_getjsxpropname",
@@ -7395,7 +7752,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L38",
+      "source_location": "L51",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_addtranslationedit",
@@ -7407,7 +7764,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L55",
+      "source_location": "L68",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_addstringliteraledit",
@@ -7419,7 +7776,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L70",
+      "source_location": "L83",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_istranslatablefield",
@@ -7431,7 +7788,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L77",
+      "source_location": "L90",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_registryhasfield",
@@ -7443,7 +7800,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L86",
+      "source_location": "L99",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_shouldwrapmemberexpression",
@@ -7455,7 +7812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L102",
+      "source_location": "L115",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_extractmemberinfo",
@@ -7467,7 +7824,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L125",
+      "source_location": "L138",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_findtranslatablefieldinexpression",
@@ -7479,7 +7836,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L160",
+      "source_location": "L173",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_hasmethodcall",
@@ -7491,7 +7848,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L177",
+      "source_location": "L190",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_findnearestarrowfunction",
@@ -7503,7 +7860,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L185",
+      "source_location": "L198",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_getmapsourceexpression",
@@ -7515,7 +7872,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L208",
+      "source_location": "L221",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_shouldtranslatemapidentifier",
@@ -7527,7 +7884,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L214",
+      "source_location": "L227",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_findtranslatablemember",
@@ -7539,7 +7896,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L234",
+      "source_location": "L247",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_getmethodchaintomember",
@@ -7551,7 +7908,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L255",
+      "source_location": "L268",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_shouldtranslatemapcallbackonly",
@@ -7563,7 +7920,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L263",
+      "source_location": "L276",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_issimpleinterpolationexpression",
@@ -7575,7 +7932,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L266",
+      "source_location": "L279",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_getinterpolationname",
@@ -7587,7 +7944,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L274",
+      "source_location": "L287",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_istranslatableinterpolation",
@@ -7599,7 +7956,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L280",
+      "source_location": "L293",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_collecttextrun",
@@ -7611,7 +7968,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L320",
+      "source_location": "L333",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_getonlyexpression",
@@ -7623,7 +7980,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L327",
+      "source_location": "L340",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_shouldwrapbareexpression",
@@ -7635,7 +7992,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L336",
+      "source_location": "L349",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_pushremovalplaceholders",
@@ -7647,7 +8004,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L346",
+      "source_location": "L359",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_buildtextreplacement",
@@ -7659,7 +8016,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L367",
+      "source_location": "L380",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_handleattributestrings",
@@ -7671,7 +8028,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L389",
+      "source_location": "L403",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_hasmeridianignore",
@@ -7683,7 +8040,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L394",
+      "source_location": "L408",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_handletextrun",
@@ -7695,7 +8052,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L453",
+      "source_location": "L468",
       "weight": 1.0,
       "_src": "c_users_taimk_desktop_hackthon_project_1_meridian_suite_packages_core_src_utils_i18n_extractjsx_js",
       "_tgt": "extractjsx_buildextractvisitor",
@@ -7707,7 +8064,19 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L103",
+      "source_location": "L439",
+      "weight": 1.0,
+      "_src": "extractjsx_handletextrun",
+      "_tgt": "extractjsx_assertnotdatapromoted",
+      "source": "extractjsx_assertnotdatapromoted",
+      "target": "extractjsx_handletextrun",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
+      "source_location": "L116",
       "weight": 1.0,
       "_src": "extractjsx_extractmemberinfo",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7719,7 +8088,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L128",
+      "source_location": "L141",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablefieldinexpression",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7731,7 +8100,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L167",
+      "source_location": "L180",
       "weight": 1.0,
       "_src": "extractjsx_hasmethodcall",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7743,7 +8112,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L198",
+      "source_location": "L211",
       "weight": 1.0,
       "_src": "extractjsx_getmapsourceexpression",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7755,7 +8124,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L215",
+      "source_location": "L228",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablemember",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7767,7 +8136,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L242",
+      "source_location": "L255",
       "weight": 1.0,
       "_src": "extractjsx_getmethodchaintomember",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7779,7 +8148,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L264",
+      "source_location": "L277",
       "weight": 1.0,
       "_src": "extractjsx_issimpleinterpolationexpression",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7791,7 +8160,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L268",
+      "source_location": "L281",
       "weight": 1.0,
       "_src": "extractjsx_getinterpolationname",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7803,7 +8172,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L275",
+      "source_location": "L288",
       "weight": 1.0,
       "_src": "extractjsx_istranslatableinterpolation",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7815,7 +8184,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L328",
+      "source_location": "L341",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapbareexpression",
       "_tgt": "extractjsx_ismemberexpressionlike",
@@ -7827,7 +8196,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L153",
+      "source_location": "L166",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablefieldinexpression",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7839,7 +8208,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L163",
+      "source_location": "L176",
       "weight": 1.0,
       "_src": "extractjsx_hasmethodcall",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7851,7 +8220,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L194",
+      "source_location": "L207",
       "weight": 1.0,
       "_src": "extractjsx_getmapsourceexpression",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7863,7 +8232,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L227",
+      "source_location": "L240",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablemember",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7875,7 +8244,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L238",
+      "source_location": "L251",
       "weight": 1.0,
       "_src": "extractjsx_getmethodchaintomember",
       "_tgt": "extractjsx_iscallexpressionlike",
@@ -7887,7 +8256,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L49",
+      "source_location": "L62",
       "weight": 1.0,
       "_src": "extractjsx_addtranslationedit",
       "_tgt": "extractjsx_generatecode",
@@ -7899,7 +8268,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L65",
+      "source_location": "L78",
       "weight": 1.0,
       "_src": "extractjsx_addstringliteraledit",
       "_tgt": "extractjsx_generatecode",
@@ -7911,7 +8280,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L356",
+      "source_location": "L369",
       "weight": 1.0,
       "_src": "extractjsx_buildtextreplacement",
       "_tgt": "extractjsx_generatecode",
@@ -7923,7 +8292,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L412",
+      "source_location": "L426",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_generatecode",
@@ -7959,7 +8328,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L99",
+      "source_location": "L112",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapmemberexpression",
       "_tgt": "extractjsx_istranslatablefield",
@@ -7971,7 +8340,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L129",
+      "source_location": "L142",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablefieldinexpression",
       "_tgt": "extractjsx_istranslatablefield",
@@ -7983,7 +8352,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L220",
+      "source_location": "L233",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablemember",
       "_tgt": "extractjsx_istranslatablefield",
@@ -7995,7 +8364,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L278",
+      "source_location": "L291",
       "weight": 1.0,
       "_src": "extractjsx_istranslatableinterpolation",
       "_tgt": "extractjsx_istranslatablefield",
@@ -8007,7 +8376,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L333",
+      "source_location": "L346",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapbareexpression",
       "_tgt": "extractjsx_istranslatablefield",
@@ -8019,7 +8388,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L94",
+      "source_location": "L107",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapmemberexpression",
       "_tgt": "extractjsx_registryhasfield",
@@ -8031,7 +8400,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L330",
+      "source_location": "L343",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapbareexpression",
       "_tgt": "extractjsx_shouldwrapmemberexpression",
@@ -8043,7 +8412,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L216",
+      "source_location": "L229",
       "weight": 1.0,
       "_src": "extractjsx_findtranslatablemember",
       "_tgt": "extractjsx_extractmemberinfo",
@@ -8055,7 +8424,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L329",
+      "source_location": "L342",
       "weight": 1.0,
       "_src": "extractjsx_shouldwrapbareexpression",
       "_tgt": "extractjsx_extractmemberinfo",
@@ -8067,7 +8436,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L210",
+      "source_location": "L223",
       "weight": 1.0,
       "_src": "extractjsx_shouldtranslatemapidentifier",
       "_tgt": "extractjsx_findtranslatablefieldinexpression",
@@ -8079,7 +8448,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L211",
+      "source_location": "L224",
       "weight": 1.0,
       "_src": "extractjsx_shouldtranslatemapidentifier",
       "_tgt": "extractjsx_hasmethodcall",
@@ -8091,7 +8460,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L209",
+      "source_location": "L222",
       "weight": 1.0,
       "_src": "extractjsx_shouldtranslatemapidentifier",
       "_tgt": "extractjsx_findnearestarrowfunction",
@@ -8103,7 +8472,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L209",
+      "source_location": "L222",
       "weight": 1.0,
       "_src": "extractjsx_shouldtranslatemapidentifier",
       "_tgt": "extractjsx_getmapsourceexpression",
@@ -8115,7 +8484,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L256",
+      "source_location": "L269",
       "weight": 1.0,
       "_src": "extractjsx_shouldtranslatemapcallbackonly",
       "_tgt": "extractjsx_getmethodchaintomember",
@@ -8127,7 +8496,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L299",
+      "source_location": "L312",
       "weight": 1.0,
       "_src": "extractjsx_collecttextrun",
       "_tgt": "extractjsx_issimpleinterpolationexpression",
@@ -8139,7 +8508,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L301",
+      "source_location": "L314",
       "weight": 1.0,
       "_src": "extractjsx_collecttextrun",
       "_tgt": "extractjsx_getinterpolationname",
@@ -8151,7 +8520,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L396",
+      "source_location": "L410",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_collecttextrun",
@@ -8163,7 +8532,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L436",
+      "source_location": "L451",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_getonlyexpression",
@@ -8175,7 +8544,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L437",
+      "source_location": "L452",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_shouldwrapbareexpression",
@@ -8187,7 +8556,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L421",
+      "source_location": "L435",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_pushremovalplaceholders",
@@ -8199,7 +8568,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\core\\src\\utils\\i18n\\extractJSX.js",
-      "source_location": "L430",
+      "source_location": "L445",
       "weight": 1.0,
       "_src": "extractjsx_handletextrun",
       "_tgt": "extractjsx_buildtextreplacement",
