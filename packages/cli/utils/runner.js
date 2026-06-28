@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, extractAndTransformJSX, saveKeyMap, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, saveKeyMap, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml, getAdapter, detectAdapter } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
@@ -146,6 +146,30 @@ function walkFiles(dir, fileList = []) {
   return fileList;
 }
 
+export function getActiveAdapterInstance(cwd) {
+  const configPath = path.join(cwd, '.meridian', 'config.json');
+  let adapterName = null;
+  if (fs.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      adapterName = config.adapter;
+    } catch (e) {}
+  }
+
+  if (!adapterName) {
+    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
+    try {
+      const detected = detectAdapter(cwd);
+      adapterName = detected.name;
+    } catch (err) {
+      console.log(chalk.red(`❌ Error: ${err.message}`));
+      process.exit(1);
+    }
+  }
+
+  return getAdapter(adapterName);
+}
+
 /**
  * Runs Meridian's project modernization pipeline.
  *
@@ -161,6 +185,8 @@ function walkFiles(dir, fileList = []) {
 export async function runModifications(cwd, config, dependencies = {}) {
   console.log(chalk.blue('\n🔍 Scanning project files for RTL issues...'));
 
+  const adapter = getActiveAdapterInstance(cwd);
+
   // 1. Git Safety Check
   const isGitRepo = await verifyGitSafety(cwd);
 
@@ -175,8 +201,15 @@ export async function runModifications(cwd, config, dependencies = {}) {
     console.log(chalk.red(`  ❌ Failed to generate locales.ts: ${err.message}`));
   }
 
-  // 3. Initial Setup (i18next)
-  await initializeI18n(cwd, config, isNextJs, dependencies);
+  // 3. Initial Setup via Adapter
+  console.log(chalk.blue(`\n📦 Setting up runtime adapter: ${adapter.name}...`));
+  try {
+    await adapter.install(cwd);
+    await adapter.injectRuntime(cwd, config);
+    console.log(chalk.green(`  ✓ Adapter runtime injected successfully.`));
+  } catch (err) {
+    console.log(chalk.red(`  ❌ Error during adapter setup: ${err.message}`));
+  }
 
   // 4. Find targeting files
   const targetFiles = discoverSourceFiles(cwd);
@@ -233,6 +266,13 @@ export async function runModifications(cwd, config, dependencies = {}) {
   // 12. Automatic Translation Step
   if (config.translation) {
     await runTranslations(cwd, config);
+  }
+
+  // 13. Write adapter locale files
+  try {
+    await adapter.writeLocaleFiles(null, cwd);
+  } catch (err) {
+    console.log(chalk.red(`  ❌ Failed to write adapter locale files: ${err.message}`));
   }
 }
 
@@ -656,7 +696,7 @@ async function applyTailwindLogicalSupport(cwd, config) {
 function writeTranslationJson(cwd, config, allExtractedStrings) {
   if (Object.keys(allExtractedStrings).length > 0) {
     const defaultLanguage = config.defaultLanguage || 'en';
-    const localesFolder = path.join(cwd, 'public', 'locales', defaultLanguage);
+    const localesFolder = path.join(cwd, 'src', 'i18n', 'messages');
     if (!fs.existsSync(localesFolder)) {
       fs.mkdirSync(localesFolder, { recursive: true });
     }
@@ -667,7 +707,7 @@ function writeTranslationJson(cwd, config, allExtractedStrings) {
       sortedStrings[key] = allExtractedStrings[key];
     });
 
-    const translationPath = path.join(localesFolder, 'translation.json');
+    const translationPath = path.join(localesFolder, `${defaultLanguage}.json`);
     fs.writeFileSync(translationPath, JSON.stringify(sortedStrings, null, 2), 'utf8');
     console.log(chalk.green(`  Created: ${path.relative(cwd, translationPath)}`));
   }

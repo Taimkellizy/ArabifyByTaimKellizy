@@ -15,7 +15,7 @@ import { runTranslations } from '../utils/translator-runner.js';
 import { runSync } from '../utils/sync-runner.js';
 import { runSyncConfig } from '../utils/sync-config.js';
 import { runDoctor } from '../utils/doctor.js';
-import { getToggleTemplate } from '@meridian/core';
+import { getToggleTemplate, detectAdapter } from '@meridian/core';
 import { getModeQuestion, getQuickStartQuestions, getAdvancedQuestions } from '../utils/prompts.js';
 import { checkEnvironment } from '../utils/envChecker.js';
 
@@ -40,7 +40,8 @@ program
 program
   .command('init')
   .description('Initialize meridian in your project and setup i18n')
-  .action(async () => {
+  .option('--adapter <adapter>', 'Specify translation adapter: pages-router or app-router')
+  .action(async (options) => {
     // Display Banner
     console.log('');
     console.log(chalk.cyan(figlet.textSync('MERIDIAN', { font: 'isometric3', horizontalLayout: 'fitted' })));
@@ -54,6 +55,26 @@ program
       process.exit(1);
     }
 
+    const projectRoot = process.cwd();
+    let detected;
+    try {
+      detected = detectAdapter(projectRoot, options.adapter);
+      console.log(chalk.green(`✓ Selected adapter "${detected.name}" because: ${detected.reason}`));
+    } catch (err) {
+      console.log(chalk.red(`❌ Error: ${err.message}`));
+      process.exit(1);
+    }
+
+    const meridianDir = path.join(projectRoot, '.meridian');
+    if (!fs.existsSync(meridianDir)) {
+      fs.mkdirSync(meridianDir, { recursive: true });
+    }
+    fs.writeFileSync(
+      path.join(meridianDir, 'config.json'),
+      JSON.stringify({ adapter: detected.name }, null, 2),
+      'utf8'
+    );
+
     /**
      * @typedef {Object} ModeAnswer
      * @property {string[]} mode
@@ -64,7 +85,6 @@ program
 
     /** @type {Object} */
     let answers;
-    const projectRoot = process.cwd();
     const tailwindDetection = detectTailwind(projectRoot);
 
     if (mode[0] === 'Quick Start') {

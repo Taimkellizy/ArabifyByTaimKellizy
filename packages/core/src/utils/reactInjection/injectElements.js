@@ -8,18 +8,43 @@ const traverse = _traverse.default || _traverse;
  * @param {import('@babel/parser').ParseResult} ast - The parsed AST
  * @returns {Object} Export default information
  */
+function findIdentifierInExpression(node) {
+    if (!node) return null;
+    if (t.isIdentifier(node)) return node.name;
+    if (t.isCallExpression(node)) {
+        for (const arg of node.arguments) {
+            const res = findIdentifierInExpression(arg);
+            if (res) return res;
+        }
+        return findIdentifierInExpression(node.callee);
+    }
+    return null;
+}
+
 export const analyzeExportDefault = (ast) => {
     let exportDefaultNode = null;
     let exportName = "App";
+    let hocWrapper = null;
     
     traverse(ast, {
         ExportDefaultDeclaration(path) {
             exportDefaultNode = path.node;
-            if (t.isIdentifier(path.node.declaration)) {
-                exportName = path.node.declaration.name;
-            } else if (t.isFunctionDeclaration(path.node.declaration) || t.isClassDeclaration(path.node.declaration)) {
-                if (path.node.declaration.id) {
-                    exportName = path.node.declaration.id.name;
+            const decl = path.node.declaration;
+            if (t.isIdentifier(decl)) {
+                exportName = decl.name;
+            } else if (t.isFunctionDeclaration(decl) || t.isClassDeclaration(decl)) {
+                if (decl.id) {
+                    exportName = decl.id.name;
+                }
+            } else if (t.isCallExpression(decl)) {
+                if (t.isIdentifier(decl.callee) && decl.arguments.length === 1 && t.isIdentifier(decl.arguments[0])) {
+                    hocWrapper = decl.callee.name;
+                    exportName = decl.arguments[0].name;
+                } else {
+                    const found = findIdentifierInExpression(decl);
+                    if (found) {
+                        exportName = found;
+                    }
                 }
             }
         }
@@ -31,7 +56,8 @@ export const analyzeExportDefault = (ast) => {
         node: exportDefaultNode,
         start: exportDefaultNode.start,
         end: exportDefaultNode.end,
-        exportName
+        exportName,
+        hocWrapper
     };
 };
 
@@ -91,12 +117,16 @@ export const generateProviderWrapperEdit = (source, exportInfo, isAppRouterLayou
 
     if (!exportInfo || !exportInfo.start || !exportInfo.end) return null;
     
-    const { exportName, start, end } = exportInfo;
+    const { exportName, start, end, hocWrapper } = exportInfo;
+    let exportStatement = `export default ${exportName}WithLang;`;
+    if (hocWrapper) {
+        exportStatement = `export default ${hocWrapper}(${exportName}WithLang);`;
+    }
     const wrappedCode = `const ${exportName}WithLang = (props) => (
   <LanguageProvider>
     <${exportName} {...props} />
   </LanguageProvider>
-);\nexport default ${exportName}WithLang;`;
+);\n${exportStatement}`;
     
     return {
         start,

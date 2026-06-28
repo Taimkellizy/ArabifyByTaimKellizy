@@ -13,8 +13,10 @@ async function runTests() {
   const fixtureDir = path.join(__dirname, 'fixtures', 'sync-test-project');
   
   // 1. Setup fixtures
-  await fs.mkdir(path.join(fixtureDir, 'public', 'locales', 'en'), { recursive: true });
-  await fs.mkdir(path.join(fixtureDir, 'public', 'locales', 'ar'), { recursive: true });
+  await fs.mkdir(path.join(fixtureDir, '.meridian'), { recursive: true });
+  await fs.writeFile(path.join(fixtureDir, '.meridian', 'config.json'), JSON.stringify({ adapter: 'next-i18next' }));
+
+  await fs.mkdir(path.join(fixtureDir, 'src', 'i18n', 'messages'), { recursive: true });
   await fs.mkdir(path.join(fixtureDir, 'src', 'config'), { recursive: true });
   await fs.mkdir(path.join(fixtureDir, 'src', 'components'), { recursive: true });
 
@@ -44,8 +46,8 @@ async function runTests() {
   `;
 
   await fs.writeFile(path.join(fixtureDir, 'src', 'config', 'index.json'), JSON.stringify(configJson, null, 2));
-  await fs.writeFile(path.join(fixtureDir, 'public', 'locales', 'en', 'translation.json'), JSON.stringify(enTranslations, null, 2));
-  await fs.writeFile(path.join(fixtureDir, 'public', 'locales', 'ar', 'translation.json'), JSON.stringify(arTranslations, null, 2));
+  await fs.writeFile(path.join(fixtureDir, 'src', 'i18n', 'messages', 'en.json'), JSON.stringify(enTranslations, null, 2));
+  await fs.writeFile(path.join(fixtureDir, 'src', 'i18n', 'messages', 'ar.json'), JSON.stringify(arTranslations, null, 2));
   await fs.writeFile(path.join(fixtureDir, 'src', 'components', 'Header.tsx'), headerTsx);
 
   const config = {
@@ -76,12 +78,12 @@ async function runTests() {
   // Assert no orphans
   assert(!output1.includes('orphaned keys'), 'Should not flag data-promoted keys as orphaned');
   // Assert ar is missing "Some static key"
-  assert(output1.includes('[ar] Missing 1 translations in \'translation\''), 'Should flag missing static key in ar');
+  assert(output1.includes('[ar] Missing 1 translations'), 'Should flag missing static key in ar');
   // Assert coverage is not 100%
   assert(output1.includes('Overall Coverage: 66.67%'), 'Coverage should be accurately calculated');
 
   // Assert _data is never written
-  const postEn = JSON.parse(await fs.readFile(path.join(fixtureDir, 'public', 'locales', 'en', 'translation.json'), 'utf8'));
+  const postEn = JSON.parse(await fs.readFile(path.join(fixtureDir, 'src', 'i18n', 'messages', 'en.json'), 'utf8'));
   assert(postEn._data === undefined, '_data should not exist in output');
 
   // Clear logs

@@ -7,13 +7,41 @@ import {
   GoogleProvider, 
   DeepLProvider, 
   LibreProvider, 
-  MockTranslationAdapter 
+  MockTranslationAdapter,
+  getAdapter,
+  detectAdapter
 } from '@meridian/core';
+
+export function getActiveAdapterInstance(cwd) {
+  const configPath = path.join(cwd, '.meridian', 'config.json');
+  let adapterName = null;
+  if (fs.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      adapterName = config.adapter;
+    } catch (e) {}
+  }
+
+  if (!adapterName) {
+    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
+    try {
+      const detected = detectAdapter(cwd);
+      adapterName = detected.name;
+    } catch (err) {
+      console.log(chalk.red(`❌ Error: ${err.message}`));
+      process.exit(1);
+    }
+  }
+
+  return getAdapter(adapterName);
+}
 
 export async function runTranslations(cwd, config, spinner = null, explicitLangs = [], deltaKeys = null) {
   if (!config || !config.translation || !config.translation.provider || config.translation.provider === 'manual') {
     return;
   }
+
+  const adapter = getActiveAdapterInstance(cwd);
 
   // Load .env if it exists
   dotenv.config({ path: path.join(cwd, '.env') });
@@ -46,7 +74,7 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
   const translator = new TranslatorService(provider);
   
   const defaultLang = config.defaultLanguage || 'en';
-  const sourcePath = path.join(cwd, 'public', 'locales', defaultLang, 'translation.json');
+  const sourcePath = path.join(cwd, 'src', 'i18n', 'messages', `${defaultLang}.json`);
 
   if (!fs.existsSync(sourcePath)) {
     if (spinner) spinner.error({ text: 'Source language file missing' });
@@ -127,12 +155,12 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
     try {
       const translatedObj = await translator.translateObject(translationPayload, lang, defaultLang);
       
-      const targetDir = path.join(cwd, 'public', 'locales', lang);
+      const targetDir = path.join(cwd, 'src', 'i18n', 'messages');
       if (!fs.existsSync(targetDir)) {
         fs.mkdirSync(targetDir, { recursive: true });
       }
       
-      const targetPath = path.join(targetDir, 'translation.json');
+      const targetPath = path.join(targetDir, `${lang}.json`);
       let existingTarget = {};
       if (deltaKeys && fs.existsSync(targetPath)) {
         try {
@@ -148,7 +176,13 @@ export async function runTranslations(cwd, config, spinner = null, explicitLangs
       console.log(chalk.green(`  ✓ Generated: ${path.relative(cwd, targetPath)}`));
     } catch (err) {
       console.error(chalk.red(`  ❌ Failed to translate ${lang}: ${err.message}`));
-      // We don't throw to avoid crashing the whole process; let it attempt other languages.
     }
+  }
+
+  // Call adapter writeLocaleFiles
+  try {
+    await adapter.writeLocaleFiles(null, cwd);
+  } catch (err) {
+    console.log(chalk.red(`  ❌ Failed to write adapter locale files: ${err.message}`));
   }
 }

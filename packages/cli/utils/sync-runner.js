@@ -7,7 +7,7 @@ import inquirer from 'inquirer';
 import { scanDataFiles, extractDataPaths } from './scanDataFiles.js';
 import { runTranslations } from './translator-runner.js';
 import { detectFrameworks } from './runner.js';
-import { extractAndTransformJSX, saveKeyMap } from '@meridian/core';
+import { extractAndTransformJSX, saveKeyMap, getAdapter, detectAdapter } from '@meridian/core';
 
 function atomicWriteFileSync(filePath, content) {
   const dir = path.dirname(filePath);
@@ -46,7 +46,7 @@ async function runIncrementalExtraction(projectRoot, config, options) {
   let modifiedFilesCount = 0;
   let newStringsCount = 0;
   const defaultLang = config.defaultLanguage || 'en';
-  const localesDir = path.join(projectRoot, 'public', 'locales');
+  const localesDir = path.join(projectRoot, 'src', 'i18n', 'messages');
   
   for (const file of targetFiles) {
     const stat = await fs.stat(file);
@@ -63,7 +63,7 @@ async function runIncrementalExtraction(projectRoot, config, options) {
           for (const [key, val] of extraction.extractedStrings.entries()) {
             newStringsCount++;
             
-            const defaultNsPath = path.join(localesDir, defaultLang, 'translation.json');
+            const defaultNsPath = path.join(localesDir, `${defaultLang}.json`);
             let defaultData = {};
             if (fsSync.existsSync(defaultNsPath)) {
               defaultData = JSON.parse(await fs.readFile(defaultNsPath, 'utf8'));
@@ -75,21 +75,19 @@ async function runIncrementalExtraction(projectRoot, config, options) {
                atomicWriteFileSync(defaultNsPath, JSON.stringify(defaultData, null, 2));
             }
             
-            if (fsSync.existsSync(localesDir)) {
-              const availableLocales = fsSync.readdirSync(localesDir).filter(dir => fsSync.statSync(path.join(localesDir, dir)).isDirectory());
-              for (const loc of availableLocales) {
-                if (loc === defaultLang) continue;
-                const locNsPath = path.join(localesDir, loc, 'translation.json');
-                let locData = {};
-                if (fsSync.existsSync(locNsPath)) {
-                   locData = JSON.parse(await fs.readFile(locNsPath, 'utf8'));
-                } else {
-                   fsSync.mkdirSync(path.dirname(locNsPath), { recursive: true });
-                }
-                if (locData[key] === undefined) {
-                   locData[key] = "";
-                   atomicWriteFileSync(locNsPath, JSON.stringify(locData, null, 2));
-                }
+            const availableLocales = config.languages || [defaultLang];
+            for (const loc of availableLocales) {
+              if (loc === defaultLang) continue;
+              const locNsPath = path.join(localesDir, `${loc}.json`);
+              let locData = {};
+              if (fsSync.existsSync(locNsPath)) {
+                 locData = JSON.parse(await fs.readFile(locNsPath, 'utf8'));
+              } else {
+                 fsSync.mkdirSync(path.dirname(locNsPath), { recursive: true });
+              }
+              if (locData[key] === undefined) {
+                 locData[key] = "";
+                 atomicWriteFileSync(locNsPath, JSON.stringify(locData, null, 2));
               }
             }
           }
@@ -370,23 +368,24 @@ async function loadExistingTranslations(translationPath) {
 async function runReconciliationCheck(projectRoot, defaultLang, validKeys, options, config) {
   console.log(chalk.blue('\n🔍 Running Translation Reconciliation Check...'));
   
-  const localesDir = path.join(projectRoot, 'public', 'locales');
+  const localesDir = path.join(projectRoot, 'src', 'i18n', 'messages');
   if (!existsSync(localesDir)) {
     console.log(chalk.red('  ❌ Locales directory not found.'));
     if (options.ci) process.exit(1);
     return;
   }
 
-  const availableLocales = fsSync.readdirSync(localesDir).filter(dir => fsSync.statSync(path.join(localesDir, dir)).isDirectory());
+  const availableLocales = fsSync.readdirSync(localesDir)
+    .filter(f => f.endsWith('.json'))
+    .map(f => path.basename(f, '.json'));
+
   if (!availableLocales.includes(defaultLang)) {
     console.log(chalk.red(`  ❌ Default locale '${defaultLang}' not found.`));
     if (options.ci) process.exit(1);
     return;
   }
 
-  const namespaces = fsSync.readdirSync(path.join(localesDir, defaultLang))
-    .filter(f => f.endsWith('.json'))
-    .map(f => f.replace('.json', ''));
+  const namespaces = [defaultLang];
 
   const orphanedKeysByNamespace = {};
   const missingKeysByLocaleAndNamespace = {};
@@ -395,7 +394,7 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
   let hasOrphans = false;
 
   for (const ns of namespaces) {
-    const defaultNsPath = path.join(localesDir, defaultLang, `${ns}.json`);
+    const defaultNsPath = path.join(localesDir, `${ns}.json`);
     const defaultNsData = JSON.parse(await fs.readFile(defaultNsPath, 'utf8'));
     
     const defaultKeys = Object.keys(defaultNsData).filter(k => k !== '_deprecated');
@@ -410,7 +409,7 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
 
     for (const loc of availableLocales) {
       if (loc === defaultLang) continue;
-      const locNsPath = path.join(localesDir, loc, `${ns}.json`);
+      const locNsPath = path.join(localesDir, `${loc}.json`);
       let locKeys = [];
       
       if (existsSync(locNsPath)) {
@@ -433,16 +432,16 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
   console.log('----------------------------------------------------');
   for (const ns of namespaces) {
     if (orphanedKeysByNamespace[ns].length > 0 && !options.prune) {
-      console.log(chalk.yellow(`Namespace '${ns}' has ${orphanedKeysByNamespace[ns].length} orphaned keys (run with --prune to remove)`));
+      console.log(chalk.yellow(`Locale '${ns}' has ${orphanedKeysByNamespace[ns].length} orphaned keys (run with --prune to remove)`));
     }
     
     for (const loc of availableLocales) {
       if (loc === defaultLang) continue;
       const missingCount = missingKeysByLocaleAndNamespace[loc][ns].length;
       if (missingCount > 0) {
-        console.log(chalk.red(`  [${loc}] Missing ${missingCount} translations in '${ns}'`));
+        console.log(chalk.red(`  [${loc}] Missing ${missingCount} translations`));
       } else {
-        console.log(chalk.green(`  [${loc}] 100% coverage in '${ns}'`));
+        console.log(chalk.green(`  [${loc}] 100% coverage`));
       }
     }
   }
@@ -476,17 +475,53 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
  * @param {string[]} cliLanguages - Languages specified in the CLI.
  * @param {Object} options - Sync CLI flags.
  */
+export function getActiveAdapterInstance(cwd) {
+  const configPath = path.join(cwd, '.meridian', 'config.json');
+  let adapterName = null;
+  if (fsSync.existsSync(configPath)) {
+    try {
+      const config = JSON.parse(fsSync.readFileSync(configPath, 'utf8'));
+      adapterName = config.adapter;
+    } catch (e) {}
+  }
+
+  if (!adapterName) {
+    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
+    try {
+      const detected = detectAdapter(cwd);
+      adapterName = detected.name;
+    } catch (err) {
+      console.log(chalk.red(`❌ Error: ${err.message}`));
+      process.exit(1);
+    }
+  }
+
+  return getAdapter(adapterName);
+}
+
+/**
+ * Main orchestration function for Meridian Sync.
+ * Coordinates detection, extraction, syncing, and reconciliation.
+ *
+ * @param {string} projectRoot - Root of the project.
+ * @param {Object} config - Configuration object.
+ * @param {Object} spinner - Ora spinner instance.
+ * @param {string[]} cliLanguages - Languages specified in the CLI.
+ * @param {Object} options - Sync CLI flags.
+ */
 export async function runSync(projectRoot, config, spinner, cliLanguages, options = {}) {
+  const adapter = getActiveAdapterInstance(projectRoot);
+
   detectFrameworks(projectRoot, config);
 
   await runIncrementalExtraction(projectRoot, config, options);
 
   const defaultLang = config.defaultLanguage || 'en';
-  const translationPath = path.join(projectRoot, 'public', 'locales', defaultLang, 'translation.json');
+  const translationPath = path.join(projectRoot, 'src', 'i18n', 'messages', `${defaultLang}.json`);
 
   const existingTranslations = await loadExistingTranslations(translationPath);
   if (!existingTranslations) {
-    spinner.fail({ text: 'Failed to parse en/translation.json' });
+    spinner.fail({ text: 'Failed to parse canonical default language JSON file' });
     return;
   }
 
@@ -536,14 +571,14 @@ export async function runSync(projectRoot, config, spinner, cliLanguages, option
     } else {
       spinner.stop();
       console.log(chalk.blue('\n🔄 Migrating value edits across locales...'));
-      const localesDir = path.join(projectRoot, 'public', 'locales');
-      const availableLocales = fsSync.existsSync(localesDir) ? fsSync.readdirSync(localesDir).filter(dir => fsSync.statSync(path.join(localesDir, dir)).isDirectory()) : [];
+      const localesDir = path.join(projectRoot, 'src', 'i18n', 'messages');
+      const availableLocales = fsSync.existsSync(localesDir) ? fsSync.readdirSync(localesDir).filter(f => f.endsWith('.json')).map(f => path.basename(f, '.json')) : [];
       
       for (const edit of valueEdits) {
         validKeys.add(edit.newKey);
 
         for (const loc of availableLocales) {
-          const locNsPath = path.join(localesDir, loc, 'translation.json');
+          const locNsPath = path.join(localesDir, `${loc}.json`);
           if (fsSync.existsSync(locNsPath)) {
             const locData = JSON.parse(fsSync.readFileSync(locNsPath, 'utf8'));
             if (locData[edit.oldKey] !== undefined) {
@@ -609,4 +644,11 @@ export async function runSync(projectRoot, config, spinner, cliLanguages, option
   atomicWriteFileSync(lastDataScanPath, JSON.stringify(currentDataScan, null, 2));
   const lastSyncPath = path.join(projectRoot, '.meridian', 'last-sync');
   atomicWriteFileSync(lastSyncPath, Date.now().toString());
+
+  // Call adapter's writeLocaleFiles
+  try {
+    await adapter.writeLocaleFiles(null, projectRoot);
+  } catch (err) {
+    console.log(chalk.red(`  ❌ Failed to write adapter locale files: ${err.message}`));
+  }
 }

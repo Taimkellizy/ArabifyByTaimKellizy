@@ -29,14 +29,16 @@ async function runTest() {
     description: 'World'
   }));
 
-  fs.mkdirSync(path.join(tmpDir, 'public', 'locales', 'en'), { recursive: true });
-  fs.mkdirSync(path.join(tmpDir, 'public', 'locales', 'ar'), { recursive: true });
+  fs.mkdirSync(path.join(tmpDir, '.meridian'), { recursive: true });
+  fs.writeFileSync(path.join(tmpDir, '.meridian', 'config.json'), JSON.stringify({ adapter: 'next-i18next' }));
+
+  fs.mkdirSync(path.join(tmpDir, 'src', 'i18n', 'messages'), { recursive: true });
   
-  fs.writeFileSync(path.join(tmpDir, 'public', 'locales', 'en', 'translation.json'), JSON.stringify({
+  fs.writeFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'en.json'), JSON.stringify({
     'Hello': 'Hello',
     'World': 'World'
   }));
-  fs.writeFileSync(path.join(tmpDir, 'public', 'locales', 'ar', 'translation.json'), JSON.stringify({
+  fs.writeFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'ar.json'), JSON.stringify({
     'Hello': 'مرحبا',
     'World': 'عالم'
   }));
@@ -62,8 +64,8 @@ async function runTest() {
   resetKeyGeneratorStateForTesting();
   await runSync(tmpDir, config, mockSpinner, [], { migrateValue: true });
   
-  const enTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'public', 'locales', 'en', 'translation.json'), 'utf8'));
-  const arTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'public', 'locales', 'ar', 'translation.json'), 'utf8'));
+  const enTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'en.json'), 'utf8'));
+  const arTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'ar.json'), 'utf8'));
   
   // Assertions
   assert.strictEqual(enTranslations['Hello Everyone'], 'Hello Everyone');

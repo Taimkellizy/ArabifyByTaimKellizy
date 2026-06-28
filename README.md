@@ -43,6 +43,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 ## Key Features
 
 - **One-Command Setup**: `meridian init` handles the entire i18n process for you.
+- **Runtime Adapter System**: Meridian automatically detects your Next.js router type (Pages Router or App Router) and selects the correct runtime adapter — `next-i18next` or `next-intl` — using a 7-rule priority chain (CLI flag → `package.json` deps → filesystem heuristics → `next.config.js` flags). Use `--adapter pages-router` or `--adapter app-router` to override.
 - **Tailwind CSS Support**: Fully integrated with Tailwind CSS. meridian automatically scans, rewrites, and modernizes Tailwind utility classes, injecting dynamic RTL logical utilities.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`). Generates project-aware logical mappings for both Tailwind v2 and v3/v4.
 - **RTL Layout Symmetry**: Intelligently identifies layout-critical `translate-x` transformations and applies surgical `.meridian-rtl-mirror` and `.meridian-rtl-translate-reverse` CSS utilities to preserve exact spatial positioning and SVG mirroring in RTL mode without breaking original LTR layouts.
@@ -69,14 +70,15 @@ Meridian is a comprehensive internationalization automation tool that transforms
 | Remove a string that's no longer used | Remove it from source, run `meridian sync --check` to confirm it's orphaned, then `meridian sync --prune` |
 | Rename a translation key | Do not do this manually — keys are managed by Meridian. Change the value, not the key |
 
-> **Never rename \`t()\` keys manually in JSX.** Keys are owned by Meridian and tracked in \`.meridian/key-map.json\`. Manually renaming a key in a component will cause that string to fall back to displaying the raw key name at runtime. If a key name is wrong, file an issue or run \`meridian sync\` — it will regenerate keys for strings that have been significantly changed.
+> **Never rename `t()` keys manually in JSX.** Keys are owned by Meridian and tracked in `.meridian/key-map.json`. Manually renaming a key in a component will cause that string to fall back to displaying the raw key name at runtime. If a key name is wrong, file an issue or run `meridian sync` — it will regenerate keys for strings that have been significantly changed.
+
 ## Tech Stack
 
 - **Language**: JavaScript / Node.js
 - **Architecture**: Monorepo (using `Turborepo` & `npm workspaces`)
-- **Parsers**: PostCSS (CSS architecture), Babel (JSX AST processing)
+- **Parsers**: PostCSS (CSS architecture), Babel (JSX AST processing), Recast (format-preserving AST edits)
 - **Translators**: Third-party APIs (Google, DeepL, LibreTranslate)
-- **Target Integrations**: `i18next`, `react-i18next`
+- **Target Integrations**: `next-i18next` (Pages Router), `next-intl` (App Router), `react-i18next`
 - **Landing Page & Docs**: React, Tailwind CSS, GSAP (ScrollTrigger & Core for high-performance animations)
 
 ## Prerequisites
@@ -140,13 +142,31 @@ meridian-suite/
 │   └── examples/               # Sandboxed React repos to test Meridian against
 ├── packages/
 │   ├── cli/                    # Main CLI application (`meridian`)
+│   │   ├── bin/                # Executable entry point (meridian.js)
 │   │   ├── commands/           # Specific terminal commands (init, extract, etc.)
 │   │   ├── utils/              # Installers & config management components
+│   │   │   ├── runner.js       # Core init pipeline (adapter-aware)
+│   │   │   ├── sync-runner.js  # Incremental sync & reconciliation pipeline
+│   │   │   └── translator-runner.js # Translation dispatch (adapter-aware)
 │   │   └── templates/          # Boilerplates for injecting `i18next` and Button UI
 │   ├── core/                   # Shared parsers and logic
-│   │   ├── parsers/            # PostCSS, JSX (Babel), and TypeScript AST walkers
-│   │   ├── detectors/          # Heuristic engines for finding physical properties
-│   │   └── fixers/             # Replacers mapping physical -> logical properties
+│   │   ├── src/
+│   │   │   ├── adapters/       # Runtime adapter system
+│   │   │   │   ├── index.js              # getAdapter() & detectAdapter() factory
+│   │   │   │   ├── nextI18nextAdapter.js # Pages Router adapter
+│   │   │   │   ├── nextIntlAdapter.js    # App Router adapter
+│   │   │   │   ├── helpers.js            # Shared AST helpers for both adapters
+│   │   │   │   └── shared/
+│   │   │   │       ├── nextConfigHelper.js # mergeI18nBlock() & wrapWithPlugin()
+│   │   │   │       └── recastUtils.js      # hasImport(), hasJSXAttribute()
+│   │   │   ├── parsers/        # PostCSS, JSX (Babel), and TypeScript AST walkers
+│   │   │   ├── detectors/      # Heuristic engines for finding physical properties
+│   │   │   ├── utils/
+│   │   │   │   ├── reactGenerators.js         # LanguageContext & LanguageToggle templates
+│   │   │   │   └── reactInjection/
+│   │   │   │       └── injectElements.js      # Pure AST analysis & string-edit injection
+│   │   │   └── fixers/         # Replacers mapping physical -> logical properties
+│   │   └── index.js            # Public API surface (re-exports adapters + all utilities)
 │   ├── eslint-plugin/          # (Coming Soon) ESLint Plugin for real-time prevention
 │   ├── stylelint-plugin/       # (Coming Soon) Stylelint Plugin avoiding future broken CSS layouts
 │   └── translator/             # API connectors connecting to Google/DeepL/Libre
@@ -157,16 +177,36 @@ meridian-suite/
 ### Request Lifecycle (The `init` Flow)
 
 1. **User runs `meridian init`**: CLI collects targets (languages, endpoints) via interactive prompt.
-2. **PostCSS Modernizer**: `core/parsers/cssParser` walks CSS AST, translating `left`/`right` rules to `inline-start`/`inline-end` while preserving file formats.
-3. **Project Detection**: Detects React and Next.js projects, including Next.js App Router and Pages Router entry files.
-4. **i18next Scaffold**: CLI installs dependencies (`i18next`, `react-i18next`) and injects an `i18n` configuration. Next.js projects receive SSR-safe options such as disabled suspense and synchronous initialization.
-5. **Data Registry Scan**: Scans JSON/JS data files in common content directories and any `.meridianrc.json > dataFiles` entries. Display values from config files are promoted into `public/locales/<defaultLang>/translation.json`.
-6. **Babel String Extractor**: Walks the AST of the target project, detecting text nodes, attributes, member expressions, optional chaining, method chains, and mapped arrays. It applies surgical source edits so formatting is preserved as much as possible.
-7. **Auto-translator Pipeline**: Iterates over extracted JSON structures, forwarding payload chunks to the requested Translator Provider, waiting iteratively if rate-limit constraints surface.
-8. **Linter Installation (Coming Soon)**: CLI drops `.eslintrc.js` enhancements to integrate linting rules.
-9. **Report**: Success statistics display in the console.
+2. **Adapter Detection**: `detectAdapter()` applies a 7-rule priority chain to select the correct runtime adapter (`next-i18next` for Pages Router, `next-intl` for App Router). The result is persisted to `.meridian/config.json` for all future commands.
+3. **Adapter Install & Runtime Injection**: The selected adapter installs its dependencies and injects its runtime configuration files (e.g., `next-i18next.config.js`, `middleware.ts`, `src/i18n/request.ts`).
+4. **PostCSS Modernizer**: `core/parsers/cssParser` walks CSS AST, translating `left`/`right` rules to `inline-start`/`inline-end` while preserving file formats.
+5. **Project Detection**: Detects React and Next.js projects, including Next.js App Router and Pages Router entry files.
+6. **Data Registry Scan**: Scans JSON/JS data files in common content directories and any `.meridianrc.json > dataFiles` entries. Display values from config files are promoted into `src/i18n/messages/<defaultLang>.json`.
+7. **Babel String Extractor**: Walks the AST of the target project, detecting text nodes, attributes, member expressions, optional chaining, method chains, and mapped arrays. It applies surgical source edits so formatting is preserved as much as possible.
+8. **Auto-translator Pipeline**: Iterates over extracted JSON structures, forwarding payload chunks to the requested Translator Provider, waiting iteratively if rate-limit constraints surface. The active adapter's `writeLocaleFiles()` is then called to distribute translations into the adapter-specific directory structure.
+9. **Linter Installation (Coming Soon)**: CLI drops `.eslintrc.js` enhancements to integrate linting rules.
+10. **Report**: Success statistics display in the console.
 
 ### Key Components
+
+**Runtime Adapter System**
+
+Meridian's adapter system (`packages/core/src/adapters/`) provides a clean interface over the two dominant Next.js i18n strategies:
+
+| Adapter | Router type | Key files generated |
+| --- | --- | --- |
+| `NextI18nextAdapter` | Pages Router (`pages/`) | `next-i18next.config.js`, wraps `_app.tsx`, injects `getStaticProps` |
+| `NextIntlAdapter` | App Router (`app/`) | `src/i18n/request.ts`, `middleware.ts`, wraps `next.config.js` with `withNextIntl` |
+
+Both adapters share a common `helpers.js` for AST manipulation and `shared/nextConfigHelper.js` for safe `next.config.js` edits. Detection uses a 7-rule priority chain exposed via `detectAdapter(projectRoot, flagValue?)`:
+
+1. CLI `--adapter` flag
+2. `next-intl` in `package.json` (wins)
+3. `next-i18next` in `package.json` (wins)
+4. Both present → throws ambiguity error
+5. `app/` directory only → `next-intl`
+6. `pages/` directory only → `next-i18next`
+7. Both or neither → throws descriptive error
 
 **CSS Modernization Tracker**
 
@@ -180,10 +220,11 @@ meridian-suite/
 - **Double-Wrap Prevention**: Astutely scans root layouts (like `_app.tsx`) to guarantee that `I18nextProvider` and `LanguageProvider` are never redundantly injected multiple times.
 - Dynamically generates the UI footprint: Renders simple buttons for 2 languages, but securely auto-scales to native `<select>` dropdown menus when 3 or more languages are requested.
 - Recognizes application indent spacing and adapts to it.
+- The injection engine (`injectElements.js`) operates via pure AST analysis functions (`analyzeExportDefault`, `analyzeAppRouterLayout`, `analyzeToggleTarget`) that return coordinate objects, and separate string-edit generators (`generateProviderWrapperEdit`, `generateToggleInsertEdit`) that produce precise character-range replacements — ensuring source formatting is never destroyed.
 
 **Next.js SSR Locale Routing**
 
-- For Pages Router projects, Meridian automatically injects Next.js native `i18n` configurations directly into your `next.config.js` via safe AST manipulation, instantly fixing SSR flash issues and establishing correct `lang` HTML outputs for crawlers.
+- For Pages Router projects, the `NextI18nextAdapter` uses `mergeI18nBlock()` to safely inject the `i18n` block into `next.config.js` via AST, then wraps `_app.tsx` with `appWithTranslation` and injects `getStaticProps` + `serverSideTranslations` into each page file.
 - **Manual Injection Note:** If your `next.config.js` is wrapped in higher-order functions or plugins (e.g. `module.exports = withBundleAnalyzer(...)`), Meridian's safety constraints will intentionally **abort** the injection to prevent breaking your build. In this scenario, you must add the block manually inside the exported object:
   ```javascript
   module.exports = withBundleAnalyzer({
@@ -191,7 +232,7 @@ meridian-suite/
     i18n: { locales: ['en', 'ar', 'es'], defaultLocale: 'en' }
   });
   ```
-- For App Router projects, it updates your root `layout.tsx` to pull `dir` and `lang` directly from route segment `params`. If your layout has no parameters at all (`export default function Layout() { ... }`), Meridian will throw a descriptive error requesting you to manually add `({ children, params })` to the signature for safe insertion.
+- For App Router projects, the `NextIntlAdapter` uses `wrapWithPlugin()` (Recast-based) to wrap the default export in `next.config.js` with `withNextIntl(...)`, generates `src/i18n/request.ts` and `middleware.ts`, and updates the root `layout.tsx` to pull `dir` and `lang` directly from route segment `params`. If your layout has no parameters at all (`export default function Layout() { ... }`), Meridian will throw a descriptive error requesting you to manually add `({ children, params })` to the signature for safe insertion.
 
 **Data-Aware JSX Extraction**
 
@@ -209,6 +250,13 @@ meridian-suite/
   - **Role**: Discovered dynamically via explicit developer comments (`{/* i18n: headline */}`), JSX attributes (`alt`, `title`), HTML tags, or sluggified strings.
 - Keys are collision-safe, auto-incrementing safely within a namespace (e.g., `hero.body`, `hero.body2`).
 - Generated keys are stored with deterministic AST traversal signatures in `.meridian/key-map.json`, guaranteeing perfectly idempotent generations on successive extractions without overwriting manual developer overrides.
+
+**Incremental Sync Pipeline**
+
+- `meridian sync` uses a timestamp-based incremental extraction strategy: only files modified since the last sync (tracked in `.meridian/last-sync`) are re-processed.
+- New strings are immediately appended to the default locale file and stubbed as empty strings in all other locale files, ready for translation.
+- Delta translation support: when new strings are detected, only the newly added keys are forwarded to the translation API rather than re-translating the entire file, dramatically reducing API costs.
+- After translation, the active adapter's `writeLocaleFiles()` is called to ensure translations are distributed to the adapter-specific directory structure (e.g., `public/locales/` for `next-i18next`, `src/i18n/messages/` for `next-intl`).
 
 ## Environment Variables
 
@@ -272,7 +320,9 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 | `npm run test`                      | Runs workspace test scripts; package-level test scripts are currently placeholders |
 | `npm run build --workspace apps/web` | Builds the Vite documentation/landing app                                         |
 | `npm run dev --workspace apps/web`  | Starts the Vite documentation/landing app locally                                  |
-| `meridian init`                     | Runs the full interactive automation flow                                          |
+| `meridian init`                     | Runs the full interactive automation flow (detects and persists adapter)           |
+| `meridian init --adapter pages-router` | Forces next-i18next (Pages Router) adapter regardless of project heuristics    |
+| `meridian init --adapter app-router` | Forces next-intl (App Router) adapter regardless of project heuristics           |
 | `meridian sync [languages...]`      | Syncs newly discovered strings and optionally translates requested languages        |
 | `meridian sync --check`             | Runs a read-only reconciliation check to report orphaned keys and translation gaps  |
 | `meridian sync --ci`                | Same as `--check`, but exits with code 1 if coverage is below the target threshold  |

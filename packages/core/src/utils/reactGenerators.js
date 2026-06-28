@@ -49,6 +49,59 @@ export const getI18nContextTemplate = (languages, defaultLang = 'en', isNextJs =
   const tsInterface = isTs ? `\nexport interface LanguageContextType {\n  lang: string;\n  toggleLanguage: () => void;\n  changeLanguage: (lang: string) => void;\n}\n` : '';
   const tsType = isTs ? '<LanguageContextType | null>' : '';
 
+  if (isNextJs) {
+    return `${useClient}import React, { createContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/router';
+import { locales, defaultLocale } from '../i18n/locales';
+${tsInterface}
+export const LanguageContext = createContext${tsType}(null);
+
+export const LanguageProvider = ({ children }${isTs ? ': { children: React.ReactNode }' : ''}) => {
+  const { i18n } = useTranslation();
+  const router = useRouter();
+  const currentLocale = router?.locale || defaultLocale;
+  const [lang, setLang] = useState${isTs ? '<string>' : ''}(currentLocale);
+  
+  useEffect(() => {
+    if (router?.locale && router.locale !== lang) {
+      setLang(router.locale);
+    }
+  }, [router?.locale]);
+
+  const _languages = locales.map(l => l.code);
+  const toggleLanguage = () => {
+    const currentIdx = _languages.indexOf(lang${isTs ? ' as any' : ''});
+    const nextIdx = (currentIdx + 1) % _languages.length;
+    const newLang = _languages[nextIdx];
+    changeLanguage(newLang || defaultLocale);
+  };
+
+  const changeLanguage = (newLang${isTs ? ': string' : ''}) => {
+    setLang(newLang);
+    if (router) {
+      router.push(router.pathname, router.asPath, { locale: newLang });
+    } else {
+      i18n.changeLanguage(newLang);
+    }
+  };
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    const localeObj = locales.find(l => l.code === lang);
+    document.documentElement.dir = localeObj ? localeObj.dir : 'ltr';
+    localStorage.setItem('appLang', lang);
+  }, [lang]);
+
+  return (
+    <LanguageContext.Provider value={{ lang, toggleLanguage, changeLanguage }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+`;
+  }
+
   return `${useClient}import React, { createContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { locales, defaultLocale } from '../i18n/locales';

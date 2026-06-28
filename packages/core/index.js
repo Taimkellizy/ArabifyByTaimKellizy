@@ -18,6 +18,8 @@ import DeepLProvider from './src/translator/providers/DeepLProvider.js';
 import LibreProvider from './src/translator/providers/LibreProvider.js';
 import MockTranslationAdapter from './src/translator/providers/MockTranslationAdapter.js';
 
+import { NextI18nextAdapter, NextIntlAdapter, getAdapter, detectAdapter } from './src/adapters/index.js';
+
 export { 
     analyzeCSS, 
     analyzeJSX, 
@@ -39,5 +41,9 @@ export {
     GoogleProvider,
     DeepLProvider,
     LibreProvider,
-    MockTranslationAdapter
+    MockTranslationAdapter,
+    NextI18nextAdapter,
+    NextIntlAdapter,
+    getAdapter,
+    detectAdapter
 };

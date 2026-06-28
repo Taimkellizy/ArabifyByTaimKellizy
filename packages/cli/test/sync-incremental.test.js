@@ -29,11 +29,12 @@ async function runTest() {
     }
   `);
 
-  fs.mkdirSync(path.join(tmpDir, 'public', 'locales', 'en'), { recursive: true });
-  fs.writeFileSync(path.join(tmpDir, 'public', 'locales', 'en', 'translation.json'), JSON.stringify({}));
+  fs.mkdirSync(path.join(tmpDir, '.meridian'), { recursive: true });
+  fs.writeFileSync(path.join(tmpDir, '.meridian', 'config.json'), JSON.stringify({ adapter: 'next-i18next' }));
 
-  fs.mkdirSync(path.join(tmpDir, 'public', 'locales', 'ar'), { recursive: true });
-  fs.writeFileSync(path.join(tmpDir, 'public', 'locales', 'ar', 'translation.json'), JSON.stringify({}));
+  fs.mkdirSync(path.join(tmpDir, 'src', 'i18n', 'messages'), { recursive: true });
+  fs.writeFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'en.json'), JSON.stringify({}));
+  fs.writeFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'ar.json'), JSON.stringify({}));
   
   const config = JSON.parse(fs.readFileSync(path.join(tmpDir, '.meridianrc.json'), 'utf8'));
 
@@ -41,7 +42,7 @@ async function runTest() {
   resetKeyGeneratorStateForTesting();
   await runSync(tmpDir, config, mockSpinner, [], {});
   
-  const originalEnTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'public', 'locales', 'en', 'translation.json'), 'utf8'));
+  const originalEnTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'en.json'), 'utf8'));
   const originalKeys = Object.keys(originalEnTranslations);
   assert.strictEqual(originalKeys.length, 1);
   const keyName = originalKeys[0];
@@ -71,8 +72,8 @@ async function runTest() {
   assert.ok(!modifiedCode.includes('>New Hardcoded Text<'), 'Should remove raw New Hardcoded Text');
   assert.ok(modifiedCode.includes('t('), 'Should have t()');
   
-  const enTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'public', 'locales', 'en', 'translation.json'), 'utf8'));
-  const arTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'public', 'locales', 'ar', 'translation.json'), 'utf8'));
+  const enTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'en.json'), 'utf8'));
+  const arTranslations = JSON.parse(fs.readFileSync(path.join(tmpDir, 'src', 'i18n', 'messages', 'ar.json'), 'utf8'));
   
   const newKeys = Object.keys(enTranslations).filter(k => k !== keyName);
   assert.strictEqual(newKeys.length, 1);
