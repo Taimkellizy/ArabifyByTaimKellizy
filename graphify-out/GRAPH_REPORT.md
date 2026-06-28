@@ -1,12 +1,12 @@
-# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-19)
+# Graph Report - C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite  (2026-06-28)
 
 ## Corpus Check
-- 85 files · ~85,556 words
+- 92 files · ~92,408 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 336 nodes · 506 edges · 45 communities detected
-- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 105 edges (avg confidence: 0.8)
+- 385 nodes · 591 edges · 46 communities detected
+- Extraction: 77% EXTRACTED · 23% INFERRED · 0% AMBIGUOUS · INFERRED: 135 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -55,30 +55,31 @@
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
 - [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `runModifications()` - 29 edges
-2. `runSync()` - 16 edges
+1. `runModifications()` - 32 edges
+2. `runSync()` - 18 edges
 3. `injectProvider()` - 14 edges
 4. `applyEdits()` - 11 edges
 5. `isMemberExpressionLike()` - 11 edges
 6. `handleTextRun()` - 11 edges
 7. `analyzeJSX()` - 10 edges
-8. `injectTailwindLogical()` - 10 edges
-9. `extractAndTransformJSX()` - 9 edges
-10. `nextDocumentFixer()` - 9 edges
+8. `nextLayoutFixer()` - 10 edges
+9. `injectTailwindLogical()` - 10 edges
+10. `extractAndTransformJSX()` - 9 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `analyzeJSX()` --calls--> `detectRTLVisitor()`  [INFERRED]
-  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\core\src\analyzeJSX.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\core\src\analyzers\jsx\detectRTL.js
+- `runTest()` --calls--> `runSync()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\test\sync-incremental.test.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\sync-runner.js
+- `runTest()` --calls--> `runSync()`  [INFERRED]
+  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\test\sync-migration.test.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\sync-runner.js
 - `runTests()` --calls--> `runSync()`  [INFERRED]
   C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\test\sync-reconciliation.test.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\sync-runner.js
 - `runModifications()` --calls--> `runSyncConfig()`  [INFERRED]
   C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\sync-config.js
 - `runModifications()` --calls--> `runTranslations()`  [INFERRED]
   C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\translator-runner.js
-- `runModifications()` --calls--> `scanDataFiles()`  [INFERRED]
-  C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\runner.js → C:\Users\taimk\Desktop\Hackthon project 1\meridian-suite\packages\cli\utils\scanDataFiles.js
 
 ## Hyperedges (group relationships)
 - **Meridian Website UI Composition** — app, hero, solution, masonry_gallery, workflow_filmstrip, comparison, code_example, cta_section, topnav [EXTRACTED 1.00]
@@ -94,84 +95,84 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.07
-Nodes (32): analyzeCSS(), analyzeJSX(), injectI18nImport(), detectA11yVisitor(), fixStylesVisitor(), atomicWriteFile(), findIndexHtml(), injectDirToHtml() (+24 more)
+Cohesion: 0.09
+Nodes (27): analyzeCSS(), injectI18nImport(), atomicWriteFile(), findIndexHtml(), injectDirToHtml(), generateI18nConfig(), installI18nDependencies(), saveKeyMap() (+19 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.14
-Nodes (29): addStringLiteralEdit(), addTranslationEdit(), assertNotDataPromoted(), buildTextReplacement(), collectTextRun(), extractMemberInfo(), findNearestArrowFunction(), findTranslatableFieldInExpression() (+21 more)
+Cohesion: 0.11
+Nodes (27): applyEdits(), computeRelativeImport(), findDocumentNodes(), getHtmlAttributesEdits(), getImportsEdits(), getInitialPropsEdits(), nextDocumentFixer(), parseSource() (+19 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.1
 Nodes (25): analyzeProviderScope(), analyzeAppRouterLayout(), analyzeExportDefault(), analyzeToggleTarget(), generateProviderWrapperEdit(), generateToggleInsertEdit(), injectToggleNode(), wrapExportWithProvider() (+17 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.12
-Nodes (25): generateContextAwareKey(), getAstPathSignature(), getNamespace(), getRole(), getScope(), getSourceTextHash(), loadKeyMap(), resetKeyGeneratorStateForTesting() (+17 more)
+Cohesion: 0.14
+Nodes (29): addStringLiteralEdit(), addTranslationEdit(), assertNotDataPromoted(), buildTextReplacement(), collectTextRun(), extractMemberInfo(), findNearestArrowFunction(), findTranslatableFieldInExpression() (+21 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.19
-Nodes (13): computeRelativeImport(), findDocumentNodes(), getHtmlAttributesEdits(), getImportsEdits(), getInitialPropsEdits(), nextDocumentFixer(), parseSource(), findLayoutNodes() (+5 more)
+Cohesion: 0.1
+Nodes (21): buildLocaleNode(), checkIsESM(), ensureSkipLibCheck(), findAppLayoutFile(), findPageFiles(), findPagesAppFile(), findProperty(), injectServerSideTranslationsToPage() (+13 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.24
-Nodes (14): applyEdits(), atomicWriteFile(), ensureV2LogicalVariants(), findCssEntryPath(), findCssPluginInsertionPoint(), findObjectProperty(), findPluginsArray(), findRootConfigObject() (+6 more)
+Cohesion: 0.12
+Nodes (20): detectAdapter(), getAdapter(), NextIntlAdapter, getActiveAdapterInstance(), runTests(), atomicWriteFileSync(), computeSyncDeltas(), extractDynamicKeysFromData() (+12 more)
 
 ### Community 6 - "Community 6"
+Cohesion: 0.07
+Nodes (12): analyzeHTML(), analyzeJSX(), detectA11y(), detectA11yVisitor(), detectMeta(), detectRTLVisitor(), detectStructure(), fixStylesVisitor() (+4 more)
+
+### Community 7 - "Community 7"
+Cohesion: 0.22
+Nodes (11): generateContextAwareKey(), getAstPathSignature(), getNamespace(), getRole(), getScope(), getSourceTextHash(), loadKeyMap(), resetKeyGeneratorStateForTesting() (+3 more)
+
+### Community 8 - "Community 8"
 Cohesion: 0.25
 Nodes (12): scanAndPromoteDataFiles(), classifyString(), collectValues(), extractDataPaths(), findDataFiles(), getAllFiles(), parseJsFile(), parseJsonFile() (+4 more)
 
-### Community 7 - "Community 7"
-Cohesion: 0.14
-Nodes (6): analyzeHTML(), detectA11y(), detectMeta(), detectStructure(), parseHTML(), applyPenalty()
-
-### Community 8 - "Community 8"
-Cohesion: 0.17
-Nodes (4): TranslatorService, runTest(), TranslationProvider, runTranslations()
-
 ### Community 9 - "Community 9"
-Cohesion: 0.24
-Nodes (8): atomicWriteFile(), parseJsxSource(), rewriteClassNameValue(), rewriteClassToken(), rewriteStringLiteralNode(), rewriteTailwindClasses(), rewriteTemplateLiteralClassName(), splitSupportedVariants()
+Cohesion: 0.22
+Nodes (9): applyTailwindLogicalSupport(), atomicWriteFile(), parseJsxSource(), rewriteClassNameValue(), rewriteClassToken(), rewriteStringLiteralNode(), rewriteTailwindClasses(), rewriteTemplateLiteralClassName() (+1 more)
 
 ### Community 10 - "Community 10"
+Cohesion: 0.2
+Nodes (3): TranslatorService, runTest(), TranslationProvider
+
+### Community 11 - "Community 11"
 Cohesion: 0.27
 Nodes (7): buildExtractVisitor(), extractAndTransformJSX(), findHookInsertionPoint(), findLastImportEnd(), getReactComponentAncestor(), injectImportStatements(), isReactComponent()
 
-### Community 11 - "Community 11"
+### Community 12 - "Community 12"
 Cohesion: 0.44
 Nodes (7): findConfigExportNode(), findProperty(), injectDefaultLocale(), injectI18nProperty(), injectLocales(), nextConfigFixer(), parseNextConfig()
 
-### Community 12 - "Community 12"
+### Community 13 - "Community 13"
 Cohesion: 0.25
 Nodes (0): 
 
-### Community 13 - "Community 13"
+### Community 14 - "Community 14"
 Cohesion: 0.6
 Nodes (5): atomicWriteFile(), computeRelativeImport(), findLastImportEnd(), injectDirAttribute(), parseSource()
 
-### Community 14 - "Community 14"
+### Community 15 - "Community 15"
 Cohesion: 0.5
 Nodes (2): Hero(), useMousePosition()
 
-### Community 15 - "Community 15"
+### Community 16 - "Community 16"
 Cohesion: 0.5
 Nodes (1): MyDocument
 
-### Community 16 - "Community 16"
+### Community 17 - "Community 17"
 Cohesion: 0.83
 Nodes (3): getRegexForLanguages(), runDoctor(), scanDir()
 
-### Community 17 - "Community 17"
+### Community 18 - "Community 18"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 18 - "Community 18"
-Cohesion: 0.5
-Nodes (2): detectRTLAndFix(), applyFixes()
-
 ### Community 19 - "Community 19"
 Cohesion: 0.5
-Nodes (1): detectRTLVisitor()
+Nodes (2): detectRTLAndFix(), applyFixes()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.5
@@ -194,16 +195,16 @@ Cohesion: 0.67
 Nodes (0): 
 
 ### Community 25 - "Community 25"
+Cohesion: 0.67
+Nodes (0): 
+
+### Community 26 - "Community 26"
 Cohesion: 1.0
 Nodes (2): checkEnvironment(), getMajorVersion()
 
-### Community 26 - "Community 26"
+### Community 27 - "Community 27"
 Cohesion: 0.67
 Nodes (1): DeepLProvider
-
-### Community 27 - "Community 27"
-Cohesion: 1.0
-Nodes (0): 
 
 ### Community 28 - "Community 28"
 Cohesion: 1.0
@@ -273,57 +274,61 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 45 - "Community 45"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **Thin community `Community 27`** (2 nodes): `App()`, `App.jsx`
+- **Thin community `Community 28`** (2 nodes): `App()`, `App.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (2 nodes): `CodeExample.jsx`, `CodeExample()`
+- **Thin community `Community 29`** (2 nodes): `CodeExample.jsx`, `CodeExample()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (2 nodes): `Comparison.jsx`, `Comparison()`
+- **Thin community `Community 30`** (2 nodes): `Comparison.jsx`, `Comparison()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (2 nodes): `CtaSection.jsx`, `CtaSection()`
+- **Thin community `Community 31`** (2 nodes): `CtaSection.jsx`, `CtaSection()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (2 nodes): `Solution.jsx`, `Solution()`
+- **Thin community `Community 32`** (2 nodes): `Solution.jsx`, `Solution()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (2 nodes): `TerminalDemo.jsx`, `TerminalDemo()`
+- **Thin community `Community 33`** (2 nodes): `TerminalDemo.jsx`, `TerminalDemo()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `TopNav.jsx`, `TopNav()`
+- **Thin community `Community 34`** (2 nodes): `TopNav.jsx`, `TopNav()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `WorkflowFilmstrip.jsx`, `WorkflowFilmstrip()`
+- **Thin community `Community 35`** (2 nodes): `WorkflowFilmstrip.jsx`, `WorkflowFilmstrip()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `eslint.config.js`
+- **Thin community `Community 36`** (1 nodes): `eslint.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `vite.config.js`
+- **Thin community `Community 37`** (1 nodes): `vite.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `main.jsx`
+- **Thin community `Community 38`** (1 nodes): `main.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (1 nodes): `index.js`
+- **Thin community `Community 39`** (1 nodes): `index.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `scratch.js`
+- **Thin community `Community 40`** (1 nodes): `scratch.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `constants.js`
+- **Thin community `Community 41`** (1 nodes): `constants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `keyGenerator.test.js`
+- **Thin community `Community 42`** (1 nodes): `keyGenerator.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `injection.test.js`
+- **Thin community `Community 43`** (1 nodes): `injection.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `nextConfigFixer.test.js`
+- **Thin community `Community 44`** (1 nodes): `nextConfigFixer.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `nextFixer.test.js`
+- **Thin community `Community 45`** (1 nodes): `nextFixer.test.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `runModifications()` connect `Community 0` to `Community 5`, `Community 6`, `Community 8`, `Community 9`, `Community 10`, `Community 13`?**
-  _High betweenness centrality (0.278) - this node is a cross-community bridge._
-- **Why does `extractAndTransformJSX()` connect `Community 10` to `Community 0`, `Community 3`, `Community 5`?**
-  _High betweenness centrality (0.182) - this node is a cross-community bridge._
-- **Why does `applyEdits()` connect `Community 5` to `Community 2`, `Community 4`, `Community 9`, `Community 10`, `Community 13`?**
-  _High betweenness centrality (0.151) - this node is a cross-community bridge._
-- **Are the 17 inferred relationships involving `runModifications()` (e.g. with `runSyncConfig()` and `runTranslations()`) actually correct?**
-  _`runModifications()` has 17 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 7 inferred relationships involving `runSync()` (e.g. with `runTest()` and `runTest()`) actually correct?**
-  _`runSync()` has 7 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `runModifications()` connect `Community 0` to `Community 1`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 9`, `Community 11`, `Community 14`?**
+  _High betweenness centrality (0.318) - this node is a cross-community bridge._
+- **Why does `extractAndTransformJSX()` connect `Community 11` to `Community 0`, `Community 1`, `Community 5`?**
+  _High betweenness centrality (0.167) - this node is a cross-community bridge._
+- **Why does `applyEdits()` connect `Community 1` to `Community 9`, `Community 2`, `Community 11`, `Community 14`?**
+  _High betweenness centrality (0.136) - this node is a cross-community bridge._
+- **Are the 20 inferred relationships involving `runModifications()` (e.g. with `runSyncConfig()` and `.install()`) actually correct?**
+  _`runModifications()` has 20 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 8 inferred relationships involving `runSync()` (e.g. with `runTest()` and `runTest()`) actually correct?**
+  _`runSync()` has 8 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `injectProvider()` (e.g. with `handleInjections()` and `analyzeProviderScope()`) actually correct?**
   _`injectProvider()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 10 inferred relationships involving `applyEdits()` (e.g. with `injectDirAttribute()` and `extractAndTransformJSX()`) actually correct?**
