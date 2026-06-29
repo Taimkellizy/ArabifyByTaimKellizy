@@ -189,7 +189,7 @@ meridian-suite/
 
 ### Key Components
 
-**Runtime Adapter System**
+#### Runtime Adapter System
 
 Meridian's adapter system (`packages/core/src/adapters/`) provides a clean interface over the two dominant Next.js i18n strategies:
 
@@ -208,12 +208,12 @@ Both adapters share a common `helpers.js` for AST manipulation and `shared/nextC
 6. `pages/` directory only → `next-i18next`
 7. Both or neither → throws descriptive error
 
-**CSS Modernization Tracker**
+#### CSS Modernization Tracker
 
 - Replaces physical CSS attributes securely without guessing context by determining if it's applied inside a legitimate stylistic container.
 - Fully supports shorthand replacements (4-value and 2-value margins and paddings).
 
-**Intelligent React Injector**
+#### Intelligent React Injector
 
 - Features granular DOM injection controls: Target components explicitly by HTML Tag (e.g. `nav`, `aside`, `custom`), or target exact elements by HTML ID.
 - Supports both `Append` and `Prepend` injection modes for flawless structural alignment.
@@ -222,19 +222,21 @@ Both adapters share a common `helpers.js` for AST manipulation and `shared/nextC
 - Recognizes application indent spacing and adapts to it.
 - The injection engine (`injectElements.js`) operates via pure AST analysis functions (`analyzeExportDefault`, `analyzeAppRouterLayout`, `analyzeToggleTarget`) that return coordinate objects, and separate string-edit generators (`generateProviderWrapperEdit`, `generateToggleInsertEdit`) that produce precise character-range replacements — ensuring source formatting is never destroyed.
 
-**Next.js SSR Locale Routing**
+#### Next.js SSR Locale Routing
 
 - For Pages Router projects, the `NextI18nextAdapter` uses `mergeI18nBlock()` to safely inject the `i18n` block into `next.config.js` via AST, then wraps `_app.tsx` with `appWithTranslation` and injects `getStaticProps` + `serverSideTranslations` into each page file.
 - **Manual Injection Note:** If your `next.config.js` is wrapped in higher-order functions or plugins (e.g. `module.exports = withBundleAnalyzer(...)`), Meridian's safety constraints will intentionally **abort** the injection to prevent breaking your build. In this scenario, you must add the block manually inside the exported object:
+
   ```javascript
   module.exports = withBundleAnalyzer({
     // ... your existing config
     i18n: { locales: ['en', 'ar', 'es'], defaultLocale: 'en' }
   });
   ```
+
 - For App Router projects, the `NextIntlAdapter` uses `wrapWithPlugin()` (Recast-based) to wrap the default export in `next.config.js` with `withNextIntl(...)`, generates `src/i18n/request.ts` and `middleware.ts`, and updates the root `layout.tsx` to pull `dir` and `lang` directly from route segment `params`. If your layout has no parameters at all (`export default function Layout() { ... }`), Meridian will throw a descriptive error requesting you to manually add `({ children, params })` to the signature for safe insertion.
 
-**Data-Aware JSX Extraction**
+#### Data-Aware JSX Extraction
 
 - Wraps config-backed expressions such as `{product.title}`, `{plan.name}`, `{plan.price}`, and `{plan.priceDetails}` only when the scanned data registry marks those fields as display text.
 - Handles optional chaining and method chains, including patterns such as `product.title.split(' ').map(...)`.
@@ -242,7 +244,7 @@ Both adapters share a common `helpers.js` for AST manipulation and `shared/nextC
 - Promotes JSON array items such as pricing features into locale files so runtime `t(feature)` calls have matching keys.
 - Uses flat runtime keys for promoted data values, where the English source string is both the key and the default value. This matches dynamic calls like `t(plan.name)` and `t(feature)`.
 
-**Context-Aware Translation Keys**
+#### Context-Aware Translation Keys
 
 - Meridian intelligently infers contextual translation keys using a `<namespace>.<scope>.<role>` format:
   - **Namespace**: Derived from the file path and stem (e.g., `src/components/Hero.jsx` -> `hero`).
@@ -251,7 +253,7 @@ Both adapters share a common `helpers.js` for AST manipulation and `shared/nextC
 - Keys are collision-safe, auto-incrementing safely within a namespace (e.g., `hero.body`, `hero.body2`).
 - Generated keys are stored with deterministic AST traversal signatures in `.meridian/key-map.json`, guaranteeing perfectly idempotent generations on successive extractions without overwriting manual developer overrides.
 
-**Incremental Sync Pipeline**
+#### Incremental Sync Pipeline
 
 - `meridian sync` uses a timestamp-based incremental extraction strategy: only files modified since the last sync (tracked in `.meridian/last-sync`) are re-processed.
 - New strings are immediately appended to the default locale file and stubbed as empty strings in all other locale files, ready for translation.
@@ -315,27 +317,28 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 
 ## Available Scripts
 
-| Command                              | Description                                                                        |
-| ------------------------------------ | ---------------------------------------------------------------------------------- |
-| `npm test`                          | Runs the unified native Node.js test runner suite (`node --test`) covering all core and CLI workspace tests |
-| `npm run build --workspace apps/web` | Builds the Vite documentation/landing app                                         |
-| `npm run dev --workspace apps/web`  | Starts the Vite documentation/landing app locally                                  |
-| `meridian init`                     | Runs the full interactive automation flow (detects and persists adapter)           |
-| `meridian init --adapter pages-router` | Forces next-i18next (Pages Router) adapter regardless of project heuristics    |
-| `meridian init --adapter app-router` | Forces next-intl (App Router) adapter regardless of project heuristics           |
-| `meridian sync [languages...]`      | Syncs newly discovered strings and optionally translates requested languages        |
-| `meridian sync --check`             | Runs a read-only reconciliation check to report orphaned keys and translation gaps  |
-| `meridian sync --ci`                | Same as `--check`, but exits with code 1 if coverage is below the target threshold  |
-| `meridian translate [languages...]` | Translates strings, updates `i18n` config, and regenerates language controls        |
-| `meridian add-button`               | Re-runs language switcher injection using the saved `.meridianrc.json` config       |
-| `meridian doctor`                   | Scans the project for hardcoded language arrays to ensure the single source of truth is maintained |
-| `meridian sync-config`              | Generates or updates `src/i18n/locales.ts` as the single source of truth for supported languages |
+| Command                                | Description                                                                                                 |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm test`                             | Runs the unified native Node.js test runner suite (`node --test`) covering all core and CLI workspace tests |
+| `npm run build --workspace apps/web`   | Builds the Vite documentation/landing app                                                                   |
+| `npm run dev --workspace apps/web`     | Starts the Vite documentation/landing app locally                                                           |
+| `meridian init`                        | Runs the full interactive automation flow (detects and persists adapter)                                    |
+| `meridian init --adapter pages-router` | Forces next-i18next (Pages Router) adapter regardless of project heuristics                                 |
+| `meridian init --adapter app-router`   | Forces next-intl (App Router) adapter regardless of project heuristics                                      |
+| `meridian sync [languages...]`         | Syncs newly discovered strings and optionally translates requested languages                                |
+| `meridian sync --check`                | Runs a read-only reconciliation check to report orphaned keys and translation gaps                          |
+| `meridian sync --ci`                   | Same as `--check`, but exits with code 1 if coverage is below the target threshold                          |
+| `meridian translate [languages...]`    | Translates strings, updates `i18n` config, and regenerates language controls                                |
+| `meridian add-button`                  | Re-runs language switcher injection using the saved `.meridianrc.json` config                               |
+| `meridian doctor`                      | Scans the project for hardcoded language arrays to ensure the single source of truth is maintained          |
+| `meridian sync-config`                 | Generates or updates `src/i18n/locales.ts` as the single source of truth for supported languages            |
 
 ### `meridian add-button`
 
 If your UI changes and the language switcher is lost, or if you skipped injecting it during initialization, use this command to manually inject the structural language toggle into your React components.
 
 **Options:**
+
 - `-p, --position <position>`: Where to inject (e.g., `nav`, `header`, `floating`, `custom`)
 - `--tag <tag>`: Custom HTML tag if position is `custom`
 - `--id <id>`: Target element HTML ID
@@ -344,6 +347,7 @@ If your UI changes and the language switcher is lost, or if you skipped injectin
 - `--class <className>`: Custom CSS class for the toggle component
 
 **Examples:**
+
 ```bash
 # Inject into a specific file
 meridian add-button --file src/components/Header.tsx --mode append
@@ -372,6 +376,7 @@ This project includes a [graphify](https://github.com/safishamsi/graphify) knowl
 ```
 
 Outputs are in `graphify-out/`:
+
 - `graph.html` - interactive visualization
 - `graph.json` - raw graph data
 - `GRAPH_REPORT.md` - audit report

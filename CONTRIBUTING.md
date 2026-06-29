@@ -19,14 +19,13 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [I Have a Question](#i-have-a-question)
-  - [I Want To Contribute](#i-want-to-contribute)
+- [I Want To Contribute](#i-want-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Your First Code Contribution](#your-first-code-contribution)
-  - [Improving The Documentation](#improving-the-documentation)
-- [Styleguides](#styleguides)
-  - [Commit Messages](#commit-messages)
-- [Join The Project Team](#join-the-project-team)
+  - [Testing](#testing)
+  - [Deployment (Publishing)](#deployment-publishing)
+  - [Troubleshooting](#troubleshooting)
 
 ## Code of Conduct
 
@@ -144,16 +143,21 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/Taimke
 To get started with local development on Meridian:
 
 1. **Clone the repo**
+
    ```bash
    git clone https://github.com/Taimkellizy/meridian-suite.git
    cd meridian-suite
    ```
+
 2. **Install Dependencies**
    The project uses `Turborepo` and `npm workspaces`. Installing at the root will natively wire up all local package symlinks.
+
    ```bash
    npm install
    ```
+
 3. **Run the Build**
+
    ```bash
    npm run build
    ```
