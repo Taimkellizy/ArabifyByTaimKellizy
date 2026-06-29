@@ -15,6 +15,7 @@ import { runTranslations } from '../utils/translator-runner.js';
 import { runSync } from '../utils/sync-runner.js';
 import { runSyncConfig } from '../utils/sync-config.js';
 import { runDoctor } from '../utils/doctor.js';
+import { getActiveAdapterInstance } from '../utils/adapter-utils.js';
 import { getToggleTemplate, detectAdapter } from '@meridian/core';
 import { getModeQuestion, getQuickStartQuestions, getAdvancedQuestions } from '../utils/prompts.js';
 import { checkEnvironment } from '../utils/envChecker.js';
@@ -359,6 +360,24 @@ program
           fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
           console.log(chalk.green(`✓ Added new target language(s) to configuration: ${newLangs.join(', ')}`));
           
+          // Regenerate single source of truth locales.ts/js
+          try {
+            runSyncConfig(process.cwd(), config);
+          } catch (e) {
+            console.log(chalk.red(`  ❌ Failed to regenerate locales configuration: ${e.message}`));
+          }
+
+          // Update active adapter configurations (e.g. next-i18next.config.js, next.config.js, middleware)
+          let isNextJs = false;
+          try {
+            const adapter = getActiveAdapterInstance(process.cwd());
+            isNextJs = ['next-i18next', 'next-intl'].includes(adapter.name);
+            await adapter.injectRuntime(process.cwd(), config.languages);
+            console.log(chalk.green(`✓ Updated configuration in next.config.js and adapter runtime.`));
+          } catch (e) {
+            console.log(chalk.red(`  ❌ Failed to update adapter runtime config: ${e.message}`));
+          }
+
           if (config.i18next) {
               const i18nPath = path.join(process.cwd(), 'src', 'i18n.js');
               if (fs.existsSync(i18nPath)) {
@@ -402,7 +421,7 @@ program
                   
                   if (foundPath) {
                       const isTs = foundPath.endsWith('.tsx');
-                      fs.writeFileSync(foundPath, getToggleTemplate(config.languages, config.isNextJs || false, isTs), 'utf8');
+                      fs.writeFileSync(foundPath, getToggleTemplate(config.languages, isNextJs, isTs), 'utf8');
                       console.log(chalk.green(`✓ Regenerated Language Toggle at ${path.relative(process.cwd(), foundPath)}`));
                   } else {
                       console.log(chalk.yellow(`⚠️ LanguageToggle.jsx not found in standard paths. You may need to update the options list manually.`));

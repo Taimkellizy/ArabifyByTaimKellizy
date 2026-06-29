@@ -3,13 +3,14 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { execSync } from 'child_process';
-import { analyzeCSS, analyzeJSX, extractAndTransformJSX, saveKeyMap, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml, getAdapter, detectAdapter } from '@meridian/core';
+import { analyzeCSS, analyzeJSX, extractAndTransformJSX, saveKeyMap, getContextTemplate, getI18nContextTemplate, getToggleTemplate, injectTailwindLogical, rewriteTailwindClasses, injectDirAttribute, injectDirToHtml, getAdapter, detectAdapter, nextDocumentFixer, nextLayoutFixer, nextConfigFixer } from '@meridian/core';
 import { installI18nDependencies } from './installer.js';
 import { generateI18nConfig } from '../templates/i18n-generator.js';
 import { injectI18nImport } from './ast-injector.js';
 import { runTranslations } from './translator-runner.js';
 import { scanDataFiles, promoteDataFileKeys } from './scanDataFiles.js';
 import { runSyncConfig } from './sync-config.js';
+import { getActiveAdapterInstance } from './adapter-utils.js';
 
 const TAILWIND_CSS_ENTRY_CANDIDATES = [
   'src/index.css',
@@ -146,29 +147,7 @@ function walkFiles(dir, fileList = []) {
   return fileList;
 }
 
-export function getActiveAdapterInstance(cwd) {
-  const configPath = path.join(cwd, '.meridian', 'config.json');
-  let adapterName = null;
-  if (fs.existsSync(configPath)) {
-    try {
-      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      adapterName = config.adapter;
-    } catch (e) {}
-  }
 
-  if (!adapterName) {
-    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
-    try {
-      const detected = detectAdapter(cwd);
-      adapterName = detected.name;
-    } catch (err) {
-      console.log(chalk.red(`❌ Error: ${err.message}`));
-      process.exit(1);
-    }
-  }
-
-  return getAdapter(adapterName);
-}
 
 /**
  * Runs Meridian's project modernization pipeline.
@@ -322,7 +301,6 @@ async function verifyGitSafety(cwd) {
   return isGitRepo;
 }
 
-import { nextDocumentFixer, nextLayoutFixer, nextConfigFixer } from '@meridian/core';
 
 /**
  * Recursively find a file by name within a directory.
@@ -596,7 +574,7 @@ async function processSourceFiles(targetFiles, cwd, config, allExtractedStrings,
            let isModified = finalCode !== content;
 
            if (config.i18next || config.translation) {
-               const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath, registry: dataRegistry });
+               const extraction = extractAndTransformJSX(finalCode, { fileName: relativePath, registry: dataRegistry, useNextI18next: config.i18next });
                if (extraction.modifiedCode !== finalCode) {
                    finalCode = extraction.modifiedCode;
                    isModified = true;
@@ -744,8 +722,8 @@ function createSupportTemplates(cwd, config, targetFiles, isNextJs) {
       const contextPath = path.join(contextDir, `LanguageContext${ext}`);
       if (!fs.existsSync(contextPath)) {
         const templateToUse = config.i18next 
-          ? getI18nContextTemplate(config.languages, config.defaultLanguage, isNextJs, isTs) 
-          : getContextTemplate(config.languages, config.defaultLanguage, isNextJs, isTs);
+          ? getI18nContextTemplate(config.defaultLanguage, isNextJs, isTs) 
+          : getContextTemplate(config.defaultLanguage, isNextJs, isTs);
         fs.writeFileSync(contextPath, templateToUse, 'utf8');
         console.log(chalk.green(`  Created: ${path.relative(cwd, contextPath)}`));
       }
@@ -821,6 +799,34 @@ function injectRtlDirAttribute(cwd, config) {
 }
 
 /**
+ * Checks for common ESLint config files that use tsconfig "project" paths but lack "tsconfigRootDir".
+ *
+ * @param {string} projectRoot - Absolute project root.
+ * @returns {boolean} True if a potential issue is detected.
+ */
+function checkEslintConfigDiagnostics(projectRoot) {
+  const eslintFiles = [
+    '.eslintrc', '.eslintrc.json', '.eslintrc.js', '.eslintrc.cjs', '.eslintrc.yaml', '.eslintrc.yml'
+  ];
+  for (const file of eslintFiles) {
+    const filePath = path.join(projectRoot, file);
+    if (fs.existsSync(filePath)) {
+      try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        if (content.includes('"project"') || content.includes("'project'")) {
+          if (!content.includes('tsconfigRootDir')) {
+            return true;
+          }
+        }
+      } catch (e) {
+        // Safe to ignore
+      }
+    }
+  }
+  return false;
+}
+
+/**
  * Prints the results summary and modernizer statistics to console.
  *
  * @param {Object} stats - Collected metrics for printing.
@@ -861,5 +867,11 @@ function printSuccessStatistics(stats) {
   if (config.languageSwitcher && config.languageSwitcher.position && config.languageSwitcher.position.tag !== 'skip' && !wasSwitcherInjected) {
     console.log(chalk.yellow(`⚠️  Warning: Could not automatically inject the Language Switcher.`));
     console.log(chalk.yellow(`   Please check your file path or HTML ID targeting options, or manually add <LanguageToggle />\n`));
+  }
+
+  const hasEslintTsconfigIssue = checkEslintConfigDiagnostics(process.cwd());
+  if (hasEslintTsconfigIssue) {
+    console.log(chalk.yellow(`⚠️  ESLint Tip: If you open a parent directory of this project in your editor, ESLint might fail to resolve your tsconfig.json.`));
+    console.log(chalk.yellow(`   Consider setting "tsconfigRootDir": __dirname inside your ESLint overrides block to prevent relative path parsing errors.\n`));
   }
 }

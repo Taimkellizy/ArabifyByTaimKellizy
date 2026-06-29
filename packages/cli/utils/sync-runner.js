@@ -7,7 +7,8 @@ import inquirer from 'inquirer';
 import { scanDataFiles, extractDataPaths } from './scanDataFiles.js';
 import { runTranslations } from './translator-runner.js';
 import { detectFrameworks } from './runner.js';
-import { extractAndTransformJSX, saveKeyMap, getAdapter, detectAdapter } from '@meridian/core';
+import { extractAndTransformJSX, saveKeyMap } from '@meridian/core';
+import { getActiveAdapterInstance } from './adapter-utils.js';
 
 function atomicWriteFileSync(filePath, content) {
   const dir = path.dirname(filePath);
@@ -53,7 +54,7 @@ async function runIncrementalExtraction(projectRoot, config, options) {
     if (stat.mtimeMs > lastSyncMs) {
       const code = await fs.readFile(file, 'utf8');
       const relativePath = path.relative(projectRoot, file);
-      const extraction = extractAndTransformJSX(code, { fileName: relativePath });
+      const extraction = extractAndTransformJSX(code, { fileName: relativePath, useNextI18next: config.i18next });
       
       if (extraction.modifiedCode !== code) {
         atomicWriteFileSync(file, extraction.modifiedCode);
@@ -475,29 +476,7 @@ async function runReconciliationCheck(projectRoot, defaultLang, validKeys, optio
  * @param {string[]} cliLanguages - Languages specified in the CLI.
  * @param {Object} options - Sync CLI flags.
  */
-export function getActiveAdapterInstance(cwd) {
-  const configPath = path.join(cwd, '.meridian', 'config.json');
-  let adapterName = null;
-  if (fsSync.existsSync(configPath)) {
-    try {
-      const config = JSON.parse(fsSync.readFileSync(configPath, 'utf8'));
-      adapterName = config.adapter;
-    } catch (e) {}
-  }
 
-  if (!adapterName) {
-    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
-    try {
-      const detected = detectAdapter(cwd);
-      adapterName = detected.name;
-    } catch (err) {
-      console.log(chalk.red(`❌ Error: ${err.message}`));
-      process.exit(1);
-    }
-  }
-
-  return getAdapter(adapterName);
-}
 
 /**
  * Main orchestration function for Meridian Sync.

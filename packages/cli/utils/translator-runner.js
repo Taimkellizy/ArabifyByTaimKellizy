@@ -7,34 +7,10 @@ import {
   GoogleProvider, 
   DeepLProvider, 
   LibreProvider, 
-  MockTranslationAdapter,
-  getAdapter,
-  detectAdapter
+  MockTranslationAdapter
 } from '@meridian/core';
+import { getActiveAdapterInstance } from './adapter-utils.js';
 
-export function getActiveAdapterInstance(cwd) {
-  const configPath = path.join(cwd, '.meridian', 'config.json');
-  let adapterName = null;
-  if (fs.existsSync(configPath)) {
-    try {
-      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      adapterName = config.adapter;
-    } catch (e) {}
-  }
-
-  if (!adapterName) {
-    console.log(chalk.yellow('⚠️  Warning: .meridian/config.json not found. Falling back to dynamic adapter detection.'));
-    try {
-      const detected = detectAdapter(cwd);
-      adapterName = detected.name;
-    } catch (err) {
-      console.log(chalk.red(`❌ Error: ${err.message}`));
-      process.exit(1);
-    }
-  }
-
-  return getAdapter(adapterName);
-}
 
 export async function runTranslations(cwd, config, spinner = null, explicitLangs = [], deltaKeys = null) {
   if (!config || !config.translation || !config.translation.provider || config.translation.provider === 'manual') {

@@ -70,6 +70,19 @@ function findConfigExportNode(ast) {
           const res = resolveVariableToObject(ast, node.right.name);
           configObject = res.resolved;
           reason = res.reason;
+        } else if (n.CallExpression.check(node.right)) {
+          // If wrapped in a call expression like withBundleAnalyzer({ ... })
+          // The first argument is typically the config object
+          const arg = node.right.arguments[0];
+          if (n.ObjectExpression.check(arg)) {
+            configObject = arg;
+          } else if (n.Identifier.check(arg)) {
+            const res = resolveVariableToObject(ast, arg.name);
+            configObject = res.resolved;
+            reason = res.reason;
+          } else {
+            reason = 'module.exports is assigned to a CallExpression with a complex argument.';
+          }
         } else {
           reason = 'module.exports is assigned to a complex expression (wrapped or conditional).';
         }
@@ -85,6 +98,18 @@ function findConfigExportNode(ast) {
         const res = resolveVariableToObject(ast, node.declaration.name);
         configObject = res.resolved;
         reason = res.reason;
+      } else if (n.CallExpression.check(node.declaration)) {
+        // If wrapped in export default withBundleAnalyzer({ ... })
+        const arg = node.declaration.arguments[0];
+        if (n.ObjectExpression.check(arg)) {
+          configObject = arg;
+        } else if (n.Identifier.check(arg)) {
+          const res = resolveVariableToObject(ast, arg.name);
+          configObject = res.resolved;
+          reason = res.reason;
+        } else {
+          reason = 'export default is a CallExpression with a complex argument.';
+        }
       } else {
         reason = 'export default is assigned to a complex expression (wrapped or conditional).';
       }

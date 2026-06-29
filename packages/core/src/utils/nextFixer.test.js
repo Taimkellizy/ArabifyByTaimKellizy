@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { nextDocumentFixer } from './nextDocumentFixer.js';
 import { nextLayoutFixer } from './nextLayoutFixer.js';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert/strict';
 
 describe('Next.js Fixers', () => {
   let tmpDir;
@@ -41,12 +42,12 @@ export default MyDocument;
     nextDocumentFixer(filePath);
 
     const updatedSource = fs.readFileSync(filePath, 'utf8');
-    expect(updatedSource).not.toMatch(/lang="en"/);
-    expect(updatedSource).not.toMatch(/lang={'en'}/);
-    expect(updatedSource).toMatch(/lang={this\.props\.locale}/);
-    expect(updatedSource).toMatch(/dir={dirFromLocale\(this\.props\.locale\)}/);
-    expect(updatedSource).toMatch(/locale:\s*ctx\.locale\s*\|\|\s*defaultLocale/);
-    expect(updatedSource).toMatch(/import.*defaultLocale.*from/);
+    assert.strictEqual(updatedSource.includes('lang="en"'), false);
+    assert.strictEqual(updatedSource.includes("lang={'en'}"), false);
+    assert.match(updatedSource, /lang={this\.props\.locale}/);
+    assert.match(updatedSource, /dir={dirFromLocale\(this\.props\.locale\)}/);
+    assert.match(updatedSource, /locale:\s*ctx\.locale\s*\|\|\s*defaultLocale/);
+    assert.match(updatedSource, /import.*defaultLocale.*from/);
   });
 
   it('nextDocumentFixer should throw explicit error if no Html tag is found', () => {
@@ -58,9 +59,9 @@ export default function MyDocument() {
     `;
     fs.writeFileSync(filePath, source);
 
-    expect(() => {
+    assert.throws(() => {
       nextDocumentFixer(filePath);
-    }).toThrow(/No <Html> tag found/);
+    }, /No <Html> tag found/);
   });
 
   it('nextLayoutFixer should correctly handle dynamic segment and not inject literal "en"', () => {
@@ -82,11 +83,11 @@ export default function RootLayout({ children }) {
     nextLayoutFixer(filePath);
 
     const updatedSource = fs.readFileSync(filePath, 'utf8');
-    expect(updatedSource).not.toMatch(/lang="en"/);
-    expect(updatedSource).not.toMatch(/lang={'en'}/);
-    expect(updatedSource).toMatch(/lang={params\.locale}/);
-    expect(updatedSource).toMatch(/dir={dirFromLocale\(params\.locale\)}/);
-    expect(updatedSource).toMatch(/params,/); 
+    assert.strictEqual(updatedSource.includes('lang="en"'), false);
+    assert.strictEqual(updatedSource.includes("lang={'en'}"), false);
+    assert.match(updatedSource, /lang={params\.locale}/);
+    assert.match(updatedSource, /dir={dirFromLocale\(params\.locale\)}/);
+    assert.match(updatedSource, /params,/); 
   });
 
   it('nextLayoutFixer should throw explicit error if component has no parameters', () => {
@@ -105,8 +106,8 @@ export default function RootLayout() {
     `;
     fs.writeFileSync(filePath, source);
 
-    expect(() => {
+    assert.throws(() => {
       nextLayoutFixer(filePath);
-    }).toThrow(/The default exported layout component has no parameters/);
+    }, /The default exported layout component has no parameters/);
   });
 });

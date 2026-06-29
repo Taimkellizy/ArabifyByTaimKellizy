@@ -43,7 +43,7 @@ Meridian is a comprehensive internationalization automation tool that transforms
 ## Key Features
 
 - **One-Command Setup**: `meridian init` handles the entire i18n process for you.
-- **Runtime Adapter System**: Meridian automatically detects your Next.js router type (Pages Router or App Router) and selects the correct runtime adapter — `next-i18next` or `next-intl` — using a 7-rule priority chain (CLI flag → `package.json` deps → filesystem heuristics → `next.config.js` flags). Use `--adapter pages-router` or `--adapter app-router` to override.
+- **Runtime Adapter System**: Meridian automatically detects your Next.js router type (Pages Router or App Router) and selects the correct runtime adapter — `next-i18next` or `next-intl` — using a 7-rule priority chain (CLI flag → `package.json` deps → filesystem heuristics → `next.config.js` flags). It supports wrapped configuration exports (e.g. Sentry or bundle-analyzer wrappers) out of the box. Use `--adapter pages-router` or `--adapter app-router` to override.
 - **Tailwind CSS Support**: Fully integrated with Tailwind CSS. meridian automatically scans, rewrites, and modernizes Tailwind utility classes, injecting dynamic RTL logical utilities.
 - **CSS Modernization**: Automatically detects and replaces physical CSS properties (e.g., `margin-left`) with logical ones (e.g., `margin-inline-start`). Generates project-aware logical mappings for both Tailwind v2 and v3/v4.
 - **RTL Layout Symmetry**: Intelligently identifies layout-critical `translate-x` transformations and applies surgical `.meridian-rtl-mirror` and `.meridian-rtl-translate-reverse` CSS utilities to preserve exact spatial positioning and SVG mirroring in RTL mode without breaking original LTR layouts.
@@ -317,7 +317,7 @@ Data-file strings are promoted as flat keys in `public/locales/<defaultLang>/tra
 
 | Command                              | Description                                                                        |
 | ------------------------------------ | ---------------------------------------------------------------------------------- |
-| `npm run test`                      | Runs workspace test scripts; package-level test scripts are currently placeholders |
+| `npm test`                          | Runs the unified native Node.js test runner suite (`node --test`) covering all core and CLI workspace tests |
 | `npm run build --workspace apps/web` | Builds the Vite documentation/landing app                                         |
 | `npm run dev --workspace apps/web`  | Starts the Vite documentation/landing app locally                                  |
 | `meridian init`                     | Runs the full interactive automation flow (detects and persists adapter)           |

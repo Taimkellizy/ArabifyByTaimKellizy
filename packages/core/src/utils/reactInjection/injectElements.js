@@ -276,10 +276,18 @@ export const generateToggleInsertEdit = (source, targetInfo) => {
     };
 };
 
+/**
+ * Wraps export default with a language provider.
+ * @deprecated Kept for backward compatibility - actual wrapping is done via string edits.
+ */
 export const wrapExportWithProvider = (ast, exportDefaultPath, exportName) => {
     // Kept for backward compatibility - actual wrapping done via string edits
 };
 
+/**
+ * Injects a language toggle node into the target layout.
+ * @deprecated Kept for backward compatibility - actual injection is done via string edits.
+ */
 export const injectToggleNode = (ast, targetConfig) => {
     // Kept for backward compatibility - actual injection done via string edits
     const targetInfo = analyzeToggleTarget(ast, targetConfig);

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
 import { nextConfigFixer } from './nextConfigFixer.js';
 
 describe('nextConfigFixer', () => {
@@ -12,12 +13,12 @@ module.exports = {
 };
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(true);
-    expect(result.modified).toBe(true);
-    expect(result.code).toMatch(/i18n: {/);
-    expect(result.code).toMatch(/locales: \[(['"]en['"],\s*){0,1}['"]en['"],\s*['"]ar['"],\s*['"]es['"]\]/);
-    expect(result.code).toMatch(/defaultLocale: ['"]en['"]/);
-    expect(result.code).toMatch(/swcMinify: true/); // Preserves existing
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, true);
+    assert.match(result.code, /i18n: {/);
+    assert.match(result.code, /locales: \[(['"]en['"],\s*){0,1}['"]en['"],\s*['"]ar['"],\s*['"]es['"]\]/);
+    assert.match(result.code, /defaultLocale: ['"]en['"]/);
+    assert.match(result.code, /swcMinify: true/); // Preserves existing
   });
 
   it('should inject i18n block into a standard ESM export default', () => {
@@ -28,12 +29,12 @@ export default {
 };
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(true);
-    expect(result.modified).toBe(true);
-    expect(result.code).toMatch(/i18n: {/);
-    expect(result.code).toMatch(/locales: \[['"]en['"],\s*['"]ar['"],\s*['"]es['"]\]/);
-    expect(result.code).toMatch(/defaultLocale: ['"]en['"]/);
-    expect(result.code).toMatch(/images: {/); // Preserves existing
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, true);
+    assert.match(result.code, /i18n: {/);
+    assert.match(result.code, /locales: \[['"]en['"],\s*['"]ar['"],\s*['"]es['"]\]/);
+    assert.match(result.code, /defaultLocale: ['"]en['"]/);
+    assert.match(result.code, /images: {/); // Preserves existing
   });
 
   it('should handle variable references in CommonJS', () => {
@@ -45,9 +46,9 @@ const nextConfig = {
 module.exports = nextConfig;
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(true);
-    expect(result.modified).toBe(true);
-    expect(result.code).toMatch(/i18n: {/);
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, true);
+    assert.match(result.code, /i18n: {/);
   });
 
   it('should safely merge into an existing i18n block', () => {
@@ -60,11 +61,11 @@ module.exports = {
 };
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(true);
-    expect(result.modified).toBe(true);
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, true);
     // Should merge ar and es into the array, and update defaultLocale to en
-    expect(result.code).toMatch(/locales: \[['"]en['"],\s*['"]fr['"],\s*['"]ar['"],\s*['"]es['"]\]/);
-    expect(result.code).toMatch(/defaultLocale: ['"]en['"]/);
+    assert.match(result.code, /locales: \[['"]en['"],\s*['"]fr['"],\s*['"]ar['"],\s*['"]es['"]\]/);
+    assert.match(result.code, /defaultLocale: ['"]en['"]/);
   });
 
   it('should return not modified if everything is already configured perfectly', () => {
@@ -77,11 +78,11 @@ module.exports = {
 };
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(true);
-    expect(result.modified).toBe(false);
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, false);
   });
 
-  it('should bailout and fail on wrapped configuration exports', () => {
+  it('should support and inject into wrapped configuration exports', () => {
     const source = `
 const withBundleAnalyzer = require('@next/bundle-analyzer')();
 module.exports = withBundleAnalyzer({
@@ -89,9 +90,10 @@ module.exports = withBundleAnalyzer({
 });
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(false);
-    expect(result.modified).toBe(false);
-    expect(result.reason).toContain('complex expression');
+    assert.strictEqual(result.success, true);
+    assert.strictEqual(result.modified, true);
+    assert.match(result.code, /i18n: {/);
+    assert.match(result.code, /reactStrictMode: true/);
   });
 
   it('should bailout on async function exports', () => {
@@ -103,9 +105,9 @@ module.exports = async (phase, { defaultConfig }) => {
 };
 `;
     const result = nextConfigFixer(source, defaultOpts);
-    expect(result.success).toBe(false);
-    expect(result.modified).toBe(false);
-    expect(result.reason).toContain('complex expression');
+    assert.strictEqual(result.success, false);
+    assert.strictEqual(result.modified, false);
+    assert.match(result.reason, /complex expression|async function/);
   });
 
   it('should bailout on conditional variables', () => {
@@ -120,7 +122,7 @@ module.exports = config;
 `;
     const result = nextConfigFixer(source, defaultOpts);
     // Our resolver won't find a direct ObjectExpression init for config
-    expect(result.success).toBe(false);
-    expect(result.modified).toBe(false);
+    assert.strictEqual(result.success, false);
+    assert.strictEqual(result.modified, false);
   });
 });

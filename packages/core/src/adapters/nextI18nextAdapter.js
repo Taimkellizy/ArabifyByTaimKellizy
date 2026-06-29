@@ -12,9 +12,7 @@ import {
   ensureSkipLibCheck
 } from './helpers.js';
 import { mergeI18nBlock } from './shared/nextConfigHelper.js';
-import { hasImport } from './shared/recastUtils.js';
-import recast from 'recast';
-import { parse } from '@babel/parser';
+import { hasImport, parseSource } from './shared/recastUtils.js';
 
 const execAsync = promisify(exec);
 
@@ -60,9 +58,16 @@ export class NextI18nextAdapter {
     const localesData = readLocalesFromTs(projectRoot);
     const configPath = path.join(projectRoot, 'next-i18next.config.js');
 
-    // Step 1 - Generate next-i18next.config.js at project root
+    // Step 1 - Generate or update next-i18next.config.js at project root
     if (fs.existsSync(configPath)) {
-      console.log(`- Config file next-i18next.config.js already exists, skipping.`);
+      let content = fs.readFileSync(configPath, 'utf8');
+      const localesList = JSON.stringify(localesData.locales);
+      const localesRegex = /locales:\s*\[[\s\S]*?\]/;
+      if (localesRegex.test(content)) {
+        content = content.replace(localesRegex, `locales: ${localesList}`);
+        fs.writeFileSync(configPath, content, 'utf8');
+        console.log(`✓ Updated locales in next-i18next.config.js`);
+      }
     } else {
       let configContent = '';
       const localesList = JSON.stringify(localesData.locales);
@@ -97,17 +102,7 @@ export class NextI18nextAdapter {
     if (appFile) {
       const sourceCode = fs.readFileSync(appFile, 'utf8');
       // Parse to check for existing import
-      const ast = recast.parse(sourceCode, {
-        parser: {
-          parse(source) {
-            return parse(source, {
-              sourceType: 'module',
-              plugins: ['jsx', 'typescript'],
-              tokens: true
-            });
-          }
-        }
-      });
+      const ast = parseSource(sourceCode);
 
       if (hasImport(ast, 'next-i18next')) {
         console.log(`- next-i18next wrapper already present in ${path.basename(appFile)}, skipping wrapper injection.`);
@@ -126,22 +121,7 @@ export class NextI18nextAdapter {
     const pages = findPageFiles(projectRoot);
     for (const page of pages) {
       const sourceCode = fs.readFileSync(page, 'utf8');
-      const ast = recast.parse(sourceCode, {
-        parser: {
-          parse(source) {
-            try {
-              return parse(source, {
-                sourceType: 'module',
-                plugins: ['jsx', 'typescript'],
-                tokens: true
-              });
-            } catch (err) {
-              console.error("BABEL PARSE ERROR IN ADAPTER:", err);
-              throw err;
-            }
-          }
-        }
-      });
+      const ast = parseSource(sourceCode);
 
       if (hasImport(ast, 'next-i18next/serverSideTranslations')) {
         console.log(`- serverSideTranslations already imported in ${path.relative(projectRoot, page)}, skipping.`);

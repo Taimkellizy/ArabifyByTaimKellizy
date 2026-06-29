@@ -612,6 +612,21 @@ export function ensureSkipLibCheck(projectRoot) {
       const jsonStr = content.replace(/\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm, '$1');
       const tsconfig = JSON.parse(jsonStr);
       tsconfig.compilerOptions = tsconfig.compilerOptions || {};
+
+      // Warn about deprecated moduleResolution option without modifying it directly
+      if (
+        tsconfig.compilerOptions.moduleResolution &&
+        String(tsconfig.compilerOptions.moduleResolution).toLowerCase() === 'node' &&
+        tsconfig.compilerOptions.ignoreDeprecations === undefined
+      ) {
+        console.warn(
+          `\n⚠️  TSConfig Warning: Option 'moduleResolution: "node"' (node10) is deprecated in newer TypeScript versions.`
+        );
+        console.warn(
+          `   Consider adding '"ignoreDeprecations": "6.0"' to compilerOptions inside tsconfig.json to silence this warning.\n`
+        );
+      }
+
       if (tsconfig.compilerOptions.skipLibCheck !== true) {
         tsconfig.compilerOptions.skipLibCheck = true;
         fs.writeFileSync(tsconfigPath, JSON.stringify(tsconfig, null, 2), 'utf8');

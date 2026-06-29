@@ -43,8 +43,9 @@ export function detectAdapter(projectRoot, flagValue = null) {
       const pkg = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
       const deps = { ...pkg.dependencies, ...pkg.devDependencies };
       if ('next-intl' in deps) hasNextIntl = true;
-      if ('next-i18next' in deps) hasNextI18n = true;
-    } catch (e) {}
+    } catch (e) {
+      // package.json parsing issues are ignored; fallback to filesystem rules
+    }
   }
 
   if (hasNextIntl && !hasNextI18n) {
@@ -83,7 +84,9 @@ export function detectAdapter(projectRoot, flagValue = null) {
           hasAppDirInConfig = true;
           break;
         }
-      } catch (e) {}
+      } catch (e) {
+        // next.config read issues are ignored; fallback to filesystem rules
+      }
     }
   }
 

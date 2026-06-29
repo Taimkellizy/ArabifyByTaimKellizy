@@ -109,18 +109,19 @@ export const extractAndTransformJSX = (codeString, options = {}) => {
     
     if (ctx.needsImport || ctx.needsHook) {
         const lastImportEnd = findLastImportEnd(ast);
+        const importLibrary = options.useNextI18next ? 'next-i18next' : 'react-i18next';
         
         if (lastImportEnd >= 0) {
             uniqueEdits.push({
                 start: lastImportEnd,
                 end: lastImportEnd,
-                replacement: '\nimport { useTranslation } from "react-i18next";'
+                replacement: `\nimport { useTranslation } from "${importLibrary}";`
             });
         } else {
             uniqueEdits.push({
                 start: 0,
                 end: 0,
-                replacement: 'import { useTranslation } from "react-i18next";\n'
+                replacement: `import { useTranslation } from "${importLibrary}";\n`
             });
         }
         

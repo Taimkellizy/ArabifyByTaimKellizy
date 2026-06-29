@@ -5,12 +5,11 @@ import { parse } from '@babel/parser';
 const n = recast.types.namedTypes;
 
 /**
- * Parses the raw source file into a Recast AST.
- * @param {string} filePath - Absolute path to the file.
+ * Parses raw source code into a Recast AST.
+ * @param {string} sourceCode - The source code to parse.
  * @returns {import('recast').AST} The parsed AST.
  */
-export function parseFile(filePath) {
-  const sourceCode = fs.readFileSync(filePath, 'utf8');
+export function parseSource(sourceCode) {
   return recast.parse(sourceCode, {
     parser: {
       parse(source) {
@@ -22,6 +21,16 @@ export function parseFile(filePath) {
       }
     }
   });
+}
+
+/**
+ * Parses the raw source file into a Recast AST.
+ * @param {string} filePath - Absolute path to the file.
+ * @returns {import('recast').AST} The parsed AST.
+ */
+export function parseFile(filePath) {
+  const sourceCode = fs.readFileSync(filePath, 'utf8');
+  return parseSource(sourceCode);
 }
 
 /**

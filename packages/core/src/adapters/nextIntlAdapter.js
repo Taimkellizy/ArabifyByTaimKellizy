@@ -9,10 +9,10 @@ import {
   ensureSkipLibCheck
 } from './helpers.js';
 import { wrapWithPlugin } from './shared/nextConfigHelper.js';
-import { hasImport, hasJSXAttribute } from './shared/recastUtils.js';
+import { hasImport, hasJSXAttribute, parseSource } from './shared/recastUtils.js';
 import { nextLayoutFixer } from '../utils/nextLayoutFixer.js';
-import recast from 'recast';
-import { parse } from '@babel/parser';
+
+const NEXT_INTL_PLUGIN_SOURCE = 'next-intl/plugin';
 
 const execAsync = promisify(exec);
 
@@ -99,17 +99,7 @@ export default getRequestConfig(async ({ locale }) => {
 
     if (fs.existsSync(midFile)) {
       const sourceCode = fs.readFileSync(midFile, 'utf8');
-      const ast = recast.parse(sourceCode, {
-        parser: {
-          parse(source) {
-            return parse(source, {
-              sourceType: 'module',
-              plugins: ['jsx', 'typescript'],
-              tokens: true
-            });
-          }
-        }
-      });
+      const ast = parseSource(sourceCode);
 
       if (hasImport(ast, 'next-intl/middleware')) {
         console.log(`- middleware already has next-intl import in ${path.basename(midFile)}, skipping.`);
@@ -147,23 +137,13 @@ export const config = {
     }
 
     // Step 3 - Modify next.config.js / next.config.ts
-    wrapWithPlugin(projectRoot, 'next-intl/plugin', 'withNextIntl');
+    wrapWithPlugin(projectRoot, NEXT_INTL_PLUGIN_SOURCE, 'withNextIntl');
 
     // Step 4 - Modify root layout file
     const layoutInfo = findAppLayoutFile(projectRoot);
     if (layoutInfo) {
       const sourceCode = fs.readFileSync(layoutInfo.filePath, 'utf8');
-      const ast = recast.parse(sourceCode, {
-        parser: {
-          parse(source) {
-            return parse(source, {
-              sourceType: 'module',
-              plugins: ['jsx', 'typescript'],
-              tokens: true
-            });
-          }
-        }
-      });
+      const ast = parseSource(sourceCode);
 
       if (hasJSXAttribute(ast, 'html', 'lang')) {
         console.log(`- layout file ${path.basename(layoutInfo.filePath)} already has lang attribute, skipping.`);
