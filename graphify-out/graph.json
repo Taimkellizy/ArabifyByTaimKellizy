@@ -4098,8 +4098,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\runner.js",
       "source_location": "L167",
       "weight": 1.0,
-      "_src": "runner_runmodifications",
-      "_tgt": "adapter_utils_getactiveadapterinstance",
+      "_src": "adapter_utils_getactiveadapterinstance",
+      "_tgt": "runner_runmodifications",
       "source": "adapter_utils_getactiveadapterinstance",
       "target": "runner_runmodifications"
     },
@@ -4110,8 +4110,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\sync-runner.js",
       "source_location": "L492",
       "weight": 1.0,
-      "_src": "sync_runner_runsync",
-      "_tgt": "adapter_utils_getactiveadapterinstance",
+      "_src": "adapter_utils_getactiveadapterinstance",
+      "_tgt": "sync_runner_runsync",
       "source": "adapter_utils_getactiveadapterinstance",
       "target": "sync_runner_runsync"
     },
@@ -4122,8 +4122,8 @@
       "source_file": "C:\\Users\\taimk\\Desktop\\Hackthon project 1\\meridian-suite\\packages\\cli\\utils\\translator-runner.js",
       "source_location": "L20",
       "weight": 1.0,
-      "_src": "translator_runner_runtranslations",
-      "_tgt": "adapter_utils_getactiveadapterinstance",
+      "_src": "adapter_utils_getactiveadapterinstance",
+      "_tgt": "translator_runner_runtranslations",
       "source": "adapter_utils_getactiveadapterinstance",
       "target": "translator_runner_runtranslations"
     },
