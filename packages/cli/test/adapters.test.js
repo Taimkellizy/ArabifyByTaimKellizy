@@ -382,4 +382,24 @@ module.exports = withNextIntl({
       cleanupProject(dir);
     }
   });
+
+  await t.test('Scenario 7: Project with next-i18next in package.json (even with both app/ and pages/ present)', () => {
+    const dir = createTempProject();
+    try {
+      fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
+        dependencies: {
+          'next-i18next': '^15.0.0'
+        }
+      }));
+      fs.mkdirSync(path.join(dir, 'pages'));
+      fs.mkdirSync(path.join(dir, 'app'));
+
+      const detection = detectAdapter(dir);
+      assert.equal(detection.name, 'next-i18next');
+      assert.match(detection.reason, /next-i18next package is listed/);
+
+    } finally {
+      cleanupProject(dir);
+    }
+  });
 });

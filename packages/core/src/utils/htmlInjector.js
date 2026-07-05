@@ -6,16 +6,7 @@ const RTL_LANGUAGE_CODES = new Set([
   'ar', 'he', 'fa', 'ur', 'ku', 'dv', 'ps', 'sd', 'ug', 'yi'
 ]);
 
-/**
- * The inline script injected before `</head>` so that the HTML direction is
- * applied synchronously before React hydrates, preventing a flash of LTR
- * content on RTL page loads.
- */
-const RTL_DETECTION_SCRIPT = `
-<script>
-  document.documentElement.dir =
-    localStorage.getItem('i18nextLng') === 'ar' ? 'rtl' : 'ltr';
-</script>`;
+
 
 /**
  * Writes file contents through Meridian's temp-file swap pattern.
@@ -87,9 +78,22 @@ export function injectDirToHtml(projectRoot, languages) {
   // 1. Add static dir="ltr" default to the <html> opening tag.
   source = source.replace(/(<html)(\s|>)/, '$1 dir="ltr"$2');
 
+  // Generate dynamic RTL detection script
+  const configuredRtlLangs = languages.filter(l => RTL_LANGUAGE_CODES.has(l));
+  const rtlDetectionScript = `\n<script>
+  (function() {
+    var rtlLangs = ${JSON.stringify(configuredRtlLangs)};
+    var currentLng = localStorage.getItem('i18nextLng') || '';
+    var isRtl = rtlLangs.some(function(lang) {
+      return currentLng === lang || currentLng.indexOf(lang + '-') === 0;
+    });
+    document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+  })();
+</script>`;
+
   // 2. Insert the detection script before </head>.
   if (source.includes('</head>')) {
-    source = source.replace('</head>', `${RTL_DETECTION_SCRIPT}\n</head>`);
+    source = source.replace('</head>', `${rtlDetectionScript}\n</head>`);
   }
 
   atomicWriteFile(htmlPath, source);

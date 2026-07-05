@@ -2,6 +2,8 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { injectVanillaLogic } from './vanillaInjector.js';
 import { injectProvider, injectToggle } from './reactInjector.js';
+import { injectDirToHtml } from './htmlInjector.js';
+import { injectDirAttribute } from './dirInjector.js';
 import fs from 'fs';
 
 describe('Vanilla Injector', () => {
@@ -195,5 +197,75 @@ function Navbar() {
         const { code: result } = injectToggle(code);
         assert.ok(result.includes('  <LanguageToggle />'));
     });
+  });
+});
+
+describe('HTML Injector', () => {
+  it('injects dynamic RTL script into index.html', async () => {
+    const path = await import('path');
+    const os = await import('os');
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meridian-html-test-'));
+    try {
+      const htmlPath = path.join(tmpDir, 'index.html');
+      fs.writeFileSync(htmlPath, '<html><head></head><body></body></html>');
+      
+      const modified = injectDirToHtml(tmpDir, ['he', 'en', 'fa']);
+      assert.strictEqual(modified, true);
+      
+      const content = fs.readFileSync(htmlPath, 'utf8');
+      assert.match(content, /dir="ltr"/);
+      assert.match(content, /rtlLangs = \["he","fa"\]/);
+      assert.match(content, /document\.documentElement\.dir = isRtl \? 'rtl' : 'ltr'/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('Dir Attribute Injector', () => {
+  it('injects dir attribute and imports into _document (files with existing imports)', async () => {
+    const path = await import('path');
+    const os = await import('os');
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meridian-dir-test-'));
+    try {
+      const docPath = path.join(tmpDir, '_document.tsx');
+      fs.writeFileSync(docPath, `import Document from 'next/document';
+export default function MyDocument() {
+  return <Html><body></body></Html>;
+}`);
+      
+      const modified = injectDirAttribute(docPath, ['he', 'en']);
+      assert.strictEqual(modified, true);
+      
+      const content = fs.readFileSync(docPath, 'utf8');
+      assert.match(content, /dir=\{locales\.find/);
+      assert.match(content, /import i18n from/);
+      assert.match(content, /import \{ locales \} from/);
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('injects dir attribute and imports into _document (files with NO imports)', async () => {
+    const path = await import('path');
+    const os = await import('os');
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'meridian-dir-no-import-test-'));
+    try {
+      const docPath = path.join(tmpDir, '_document.tsx');
+      fs.writeFileSync(docPath, `export default function MyDocument() {
+  return <Html><body></body></Html>;
+}`);
+      
+      const modified = injectDirAttribute(docPath, ['he', 'en']);
+      assert.strictEqual(modified, true);
+      
+      const content = fs.readFileSync(docPath, 'utf8');
+      assert.match(content, /dir=\{locales\.find/);
+      assert.match(content, /import i18n from/);
+      assert.match(content, /import \{ locales \} from/);
+      assert.ok(content.startsWith('import i18n from'));
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
   });
 });
